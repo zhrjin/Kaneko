@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{21285231-26F2-4FF3-8427-ED536D0EB602}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaneko.Dapper", "Src\Kaneko.Dapper\Kaneko.Dapper.csproj", "{BFEE2AD9-8123-4DB2-AD66-7A96FDB7C019}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaneko.Hosts", "Src\Kaneko.Hosts\Kaneko.Hosts.csproj", "{3375A885-0F6D-4044-B296-4BB8DA763F59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaneko.Core", "Src\Kaneko.Core\Kaneko.Core.csproj", "{FF5F4AC6-5ADE-4C5E-AB2F-DA7372AF8474}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B5247ECD-D532-41A8-A92C-C7702B750DED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaneko.OcelotGateway", "Samples\Kaneko.OcelotGateway\Kaneko.OcelotGateway.csproj", "{9971E112-9B15-4682-A30D-63DEFB26FBAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaneko.AuthCenter", "Samples\Kaneko.AuthCenter\Kaneko.AuthCenter.csproj", "{F95F0AFE-BF22-425B-B490-B12A0172B22F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFEE2AD9-8123-4DB2-AD66-7A96FDB7C019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFEE2AD9-8123-4DB2-AD66-7A96FDB7C019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFEE2AD9-8123-4DB2-AD66-7A96FDB7C019}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFEE2AD9-8123-4DB2-AD66-7A96FDB7C019}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3375A885-0F6D-4044-B296-4BB8DA763F59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3375A885-0F6D-4044-B296-4BB8DA763F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3375A885-0F6D-4044-B296-4BB8DA763F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3375A885-0F6D-4044-B296-4BB8DA763F59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF5F4AC6-5ADE-4C5E-AB2F-DA7372AF8474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF5F4AC6-5ADE-4C5E-AB2F-DA7372AF8474}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF5F4AC6-5ADE-4C5E-AB2F-DA7372AF8474}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF5F4AC6-5ADE-4C5E-AB2F-DA7372AF8474}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9971E112-9B15-4682-A30D-63DEFB26FBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9971E112-9B15-4682-A30D-63DEFB26FBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9971E112-9B15-4682-A30D-63DEFB26FBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9971E112-9B15-4682-A30D-63DEFB26FBAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F95F0AFE-BF22-425B-B490-B12A0172B22F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F95F0AFE-BF22-425B-B490-B12A0172B22F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F95F0AFE-BF22-425B-B490-B12A0172B22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F95F0AFE-BF22-425B-B490-B12A0172B22F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFEE2AD9-8123-4DB2-AD66-7A96FDB7C019} = {21285231-26F2-4FF3-8427-ED536D0EB602}
+		{3375A885-0F6D-4044-B296-4BB8DA763F59} = {21285231-26F2-4FF3-8427-ED536D0EB602}
+		{FF5F4AC6-5ADE-4C5E-AB2F-DA7372AF8474} = {21285231-26F2-4FF3-8427-ED536D0EB602}
+		{9971E112-9B15-4682-A30D-63DEFB26FBAA} = {B5247ECD-D532-41A8-A92C-C7702B750DED}
+		{F95F0AFE-BF22-425B-B490-B12A0172B22F} = {B5247ECD-D532-41A8-A92C-C7702B750DED}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F7C6488-1601-4F13-A0B4-1D4DE6AFCC50}
+	EndGlobalSection
+EndGlobal
