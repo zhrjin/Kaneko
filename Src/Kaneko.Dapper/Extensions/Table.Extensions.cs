@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Kaneko.Core.Contract;
 using Kaneko.Dapper.Contract;
 using System;
 using System.Collections.Concurrent;

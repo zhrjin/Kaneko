@@ -20,8 +20,7 @@ namespace Kaneko.OcelotGateway
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .UseUrls("http://192.168.0.103:6001");
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

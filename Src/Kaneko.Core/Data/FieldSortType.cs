@@ -1,4 +1,4 @@
-﻿namespace Kaneko.Dapper.Enums
+﻿namespace Kaneko.Core.Data
 {
     /// <summary>
     /// 字段排序类型

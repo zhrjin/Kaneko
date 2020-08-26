@@ -1,4 +1,5 @@
-﻿using Kaneko.Dapper.Params;
+﻿using Kaneko.Core.Contract;
+using Kaneko.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -11,10 +11,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-using Kaneko.Dapper.Contract;
-using Kaneko.Dapper.Attributes;
-using Kaneko.Dapper.Params;
 using Kaneko.Dapper.Enums;
+using Kaneko.Core.Contract;
+using Kaneko.Core.Data;
+using Kaneko.Core.Attributes;
 
 namespace Kaneko.Dapper.Extensions
 {

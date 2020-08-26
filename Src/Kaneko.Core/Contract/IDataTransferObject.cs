@@ -1,8 +1,8 @@
-﻿using Kaneko.Dapper.Params;
+﻿using Kaneko.Core.Data;
 using System;
 using System.Linq.Expressions;
 
-namespace Kaneko.Dapper.Contract
+namespace Kaneko.Core.Contract
 {
     /// <summary>
     /// 数据传输对象DTO抽象实现类

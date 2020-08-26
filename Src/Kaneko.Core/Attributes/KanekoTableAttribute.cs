@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Kaneko.Dapper.Attributes
+namespace Kaneko.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public  class KanekoTableAttribute:Attribute

@@ -66,6 +66,7 @@ namespace Kaneko.Hosts.Configuration
 
     public class ConsulConfig
     {
+        public bool Enable { get; set; } = true;
         public string ConnectionString { get; set; }
     }
 

@@ -1,7 +1,7 @@
-﻿using Kaneko.Dapper.Contract;
+﻿using Kaneko.Core.Contract;
 using System.Collections.Generic;
 
-namespace Kaneko.Dapper.Result
+namespace Kaneko.Core.ApiResult
 {
     /// <summary>
     /// 列表数据结果集

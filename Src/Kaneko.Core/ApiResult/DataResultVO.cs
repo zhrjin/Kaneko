@@ -1,6 +1,5 @@
-﻿using Kaneko.Dapper.Contract;
-
-namespace Kaneko.Dapper.Result
+﻿using Kaneko.Core.Contract;
+namespace Kaneko.Core.ApiResult
 {
     /// <summary>
     /// 单笔数据结果

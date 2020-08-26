@@ -1,9 +1,9 @@
-﻿using Kaneko.Dapper.Attributes;
+﻿using Kaneko.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kaneko.Dapper.Contract
+namespace Kaneko.Core.Contract
 {
     /// <summary>
     /// 领域实体DO抽象实现类

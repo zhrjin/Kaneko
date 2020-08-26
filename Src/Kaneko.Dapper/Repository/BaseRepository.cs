@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using Dapper;
 using Kaneko.Dapper.Contract;
 using Kaneko.Dapper.Extensions;
-using Kaneko.Dapper.Params;
+using Kaneko.Core.Contract;
+using Kaneko.Core.Data;
 
 namespace Kaneko.Dapper.Repository
 {

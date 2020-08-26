@@ -1,6 +1,18 @@
 ﻿{
   "Routes": [
     {
+      "DownstreamPathTemplate": "/swagger/v1/swagger.json",
+      "DownstreamScheme": "http",
+      "ServiceName": "MSDemo",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+      "UseServiceDiscovery": true,
+      "UpstreamPathTemplate": "/demo/swagger/v1/swagger.json",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ],
+      "DangerousAcceptAnyServerCertificateValidator": true //f you want to ignore SSL warnings / errors set the following in your Route config.
+    },
+    {
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/one/{url}",
@@ -51,12 +63,12 @@
     {
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/two/{url}",
+      "UpstreamPathTemplate": "/demo/{url}",
       "UpstreamHttpMethod": [
         "Get",
         "Post"
       ],
-      "ServiceName": "ApiTwo",
+      "ServiceName": "MSDemo",
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       },
@@ -74,7 +86,7 @@
       },
       "FileCacheOptions": {
         "TtlSeconds": 15,
-        "Region": "ApiOne"
+        "Region": "MSDemo"
       },
       "UseServiceDiscovery": true
     },
@@ -109,6 +121,6 @@
       "Host": "192.168.45.129",
       "Port": 8500
     }
-  }
-
+  },
+  "urls": "http://192.168.0.105:6001"
 }

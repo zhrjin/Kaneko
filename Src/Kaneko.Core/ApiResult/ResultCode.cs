@@ -1,4 +1,4 @@
-﻿namespace Kaneko.Dapper.Result
+﻿namespace Kaneko.Core.ApiResult
 {
     /// <summary>
     /// 异常码

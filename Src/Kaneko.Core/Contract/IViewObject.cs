@@ -1,4 +1,4 @@
-﻿namespace Kaneko.Dapper.Contract
+﻿namespace Kaneko.Core.Contract
 {
     /// <summary>
     /// 视图对象，用于展示层VO

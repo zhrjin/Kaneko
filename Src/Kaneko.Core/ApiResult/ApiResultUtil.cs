@@ -1,8 +1,8 @@
-﻿using Kaneko.Dapper.Contract;
+﻿using Kaneko.Core.Contract;
 using System;
 using System.Collections.Generic;
 
-namespace Kaneko.Dapper.Result
+namespace Kaneko.Core.ApiResult
 {
     /// <summary>
     /// 结果集

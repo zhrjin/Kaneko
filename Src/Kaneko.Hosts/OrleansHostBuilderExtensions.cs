@@ -143,14 +143,16 @@ namespace Kaneko.Hosts
 
         private static void SetSiloSource(ISiloBuilder silo)
         {
-            silo
-            //.UseConsulClustering(options =>
-            //{
-            //    options.Address = new Uri(OrleansConfig.Consul.ConnectionString);
-            //}).ConfigureEndpoints(siloPort: OrleansConfig.SiloNetworkingPort, gatewayPort: OrleansConfig.SiloGatewayPort)
+            if (OrleansConfig.Consul.Enable)
+            {
+                silo.UseConsulClustering(options => { options.Address = new Uri(OrleansConfig.Consul.ConnectionString); });
+            }
+            else
+            {
+                silo.UseLocalhostClustering();
+            }
 
-            .UseLocalhostClustering()
-            .ConfigureEndpoints(siloPort: OrleansConfig.SiloNetworkingPort, gatewayPort: OrleansConfig.SiloGatewayPort)
+            silo.ConfigureEndpoints(siloPort: OrleansConfig.SiloNetworkingPort, gatewayPort: OrleansConfig.SiloGatewayPort)
             .Configure<ClusterOptions>(options =>
             {
                 options.ClusterId = OrleansConfig.ClusterId;
@@ -198,11 +200,11 @@ namespace Kaneko.Hosts
                 //AutoMapper 注入
                 servicecollection.AddAutoMapper(autoMapperAssembly);
 
-                servicecollection.AddSingleton<IDDLExecutor, DDLExecutor>();
+                servicecollection.AddTransient<IDDLExecutor, DDLExecutor>();
                 Startup.Register(async serviceProvider =>
                 {
-                    var container = serviceProvider.GetService<IDDLExecutor>();
-                    await container.AutoAlterDbSchema(grainAssembly);
+                    var exec = serviceProvider.GetService<IDDLExecutor>();
+                    await exec.AutoAlterDbSchema(grainAssembly);
                 });
 
             }).AddStartupTask<SiloStartupTask>();
