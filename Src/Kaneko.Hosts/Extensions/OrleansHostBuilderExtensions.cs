@@ -20,14 +20,17 @@ using Kaneko.Core.Utils;
 using Kaneko.Core.AutoMapper;
 using Kaneko.Dapper;
 using Kaneko.Core.DependencyInjection;
+using MongoDB.Driver;
+using DotNetCore.CAP.Dashboard.NodeDiscovery;
+using Kaneko.Core.Orleans.Services;
 
-namespace Kaneko.Hosts
+namespace Kaneko.Hosts.Extensions
 {
     public static class OrleansHostBuilderExtensions
     {
         static OrleansOptions OrleansConfig;
 
-        public static IHostBuilder AddOrleans(this IHostBuilder hostBuilder, string siloName, Assembly grainAssembly, Assembly autoMapperAssembly)
+        public static IHostBuilder AddOrleans(this IHostBuilder hostBuilder, string serviceName, Assembly grainAssembly, Assembly autoMapperAssembly)
         {
             hostBuilder.UseOrleans((context, siloBuilder) =>
             {
@@ -37,11 +40,15 @@ namespace Kaneko.Hosts
                 .ConfigureApplicationParts(parts =>
                 {
                     parts.AddApplicationPart(grainAssembly).WithReferences();
+                    parts.AddApplicationPart(typeof(UtcUIDGrain).Assembly).WithReferences();
                 })
-                .Configure<SiloOptions>(options => options.SiloName = siloName)
+                .Configure<SiloOptions>(options => options.SiloName = serviceName)
                 .Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(30))
                 .UseLinuxEnvironmentStatistics()
                 .UsePerfCounterEnvironmentStatistics()
+                .AddNewRelicTelemetryConsumer()
+                //.AddIncomingGrainCallFilter<IncomingGrainCallFilter>()
+                //.AddOutgoingGrainCallFilter<OutgoingGrainCallFilter>()
                 ;
 
                 if (OrleansConfig.Dashboard.Enable)
@@ -77,6 +84,7 @@ namespace Kaneko.Hosts
                     options.ResponseTimeout = TimeSpan.FromMinutes(5);
                 });
 
+
                 SetReminder(siloBuilder);
                 SetStorage(siloBuilder);
                 SetStream(siloBuilder);
@@ -110,6 +118,18 @@ namespace Kaneko.Hosts
             if (OrleansConfig.MongoDB.Enable)
             {
                 silo.AddMongoDBGrainStorage("PubSubStore", op =>
+                {
+                    op.DatabaseName = OrleansConfig.MongoDB.DatabaseName;
+                    op.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
+                    op.ConfigureJsonSerializerSettings = settings =>
+                    {
+                        settings.NullValueHandling = NullValueHandling.Include;
+                        settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+                        settings.DefaultValueHandling = DefaultValueHandling.Populate;
+                    };
+                });
+
+                silo.AddMongoDBGrainStorage("RedisStore", op =>
                 {
                     op.DatabaseName = OrleansConfig.MongoDB.DatabaseName;
                     op.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
@@ -189,18 +209,55 @@ namespace Kaneko.Hosts
 
         private static void SetConfigureServices(ISiloBuilder silo, Assembly grainAssembly, Assembly autoMapperAssembly)
         {
-            silo.ConfigureServices((context, servicecollection) =>
+            silo.ConfigureServices((context, services) =>
             {
+                //cap
+                if (OrleansConfig.Cap.Enable)
+                {
+                    services.AddSingleton<IMongoClient>(new MongoClient(OrleansConfig.Cap.MongoDB.DatabaseConnection));
+                    services.AddCap(x =>
+                    {
+                        x.UseMongoDB(configure =>
+                        {
+                            configure.DatabaseConnection = OrleansConfig.Cap.MongoDB.DatabaseConnection;
+                        });
+                        x.UseRabbitMQ(configure =>
+                        {
+                            configure.HostName = OrleansConfig.Cap.RabbitMQ.HostName;
+                            configure.UserName = OrleansConfig.Cap.RabbitMQ.UserName;
+                            configure.Password = OrleansConfig.Cap.RabbitMQ.Password;
+                            configure.Port = OrleansConfig.Cap.RabbitMQ.Port;
+                            configure.VirtualHost = OrleansConfig.Cap.RabbitMQ.VirtualHost;
+                        });
+
+                        x.UseDashboard();
+
+                        if (OrleansConfig.Cap.ServiceDiscovery.Enable)
+                        {
+                            x.UseDiscovery(d =>
+                            {
+                                d.DiscoveryServerHostName = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.DiscoveryServerHostName;
+                                d.DiscoveryServerPort = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.DiscoveryServerPort;
+                                d.CurrentNodeHostName = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.CurrentNodeHostName;
+                                d.CurrentNodePort = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.CurrentNodePort;
+                                d.NodeId = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.NodeId;
+                                d.NodeName = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.NodeName;
+                                d.MatchPath = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.MatchPath;
+                            });
+                        }
+                    });
+                }
+
                 //对象转换注入
-                servicecollection.AddSingleton<Core.AutoMapper.IObjectMapper, AutoMapperObjectMapper>();
+                services.AddSingleton<Core.AutoMapper.IObjectMapper, AutoMapperObjectMapper>();
 
                 //自动注入接口
-                servicecollection.Scan(scan => scan.FromAssemblies(grainAssembly).AddClasses().UsingAttributes());
+                services.Scan(scan => scan.FromAssemblies(grainAssembly).AddClasses().UsingAttributes());
 
                 //AutoMapper 注入
-                servicecollection.AddAutoMapper(autoMapperAssembly);
+                services.AddAutoMapper(autoMapperAssembly);
 
-                servicecollection.AddTransient<IDDLExecutor, DDLExecutor>();
+                services.AddTransient<IDDLExecutor, DDLExecutor>();
                 Startup.Register(async serviceProvider =>
                 {
                     var exec = serviceProvider.GetService<IDDLExecutor>();

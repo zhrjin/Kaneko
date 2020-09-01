@@ -6,8 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Orleans;
 using Orleans.Hosting;
 using MSDemo.Grains.Service;
-using Kaneko.Hosts;
-using MSDemo.IGrains;
+using Microsoft.Extensions.Logging;
+using Kaneko.Hosts.Extensions;
+using MSDemo.IGrains.Service;
 
 namespace MSDemo
 {
@@ -29,8 +30,16 @@ namespace MSDemo
                       {
                           webBuilder.UseStartup<Startup>();
                       })
-                      .ConfigureLogging(builder =>
+                      .ConfigureLogging((hostingContext, logging) =>
                       {
+                          //logging.AddFilter("Orleans", LogLevel.Trace);
+                          //logging.AddFilter("Orleans", LogLevel.Warning);
+                          //logging.AddFilter("Orleans", LogLevel.Debug);
+                          //logging.AddConsole();
+                          //logging.AddDebug();
+                          //logging.AddEventSourceLogger();
+                          logging.SetMinimumLevel(LogLevel.Information);
+                          logging.AddConsole(options => options.IncludeScopes = true);
                       })
                       .ConfigureServices(services =>
                       {
@@ -39,6 +48,6 @@ namespace MSDemo
                               options.SuppressStatusMessages = true;
                           });
                       })
-                      .AddOrleans("MSDemo", typeof(TestGrain).Assembly, typeof(HealthCheckInfo).Assembly);
+                      .AddOrleans(nameof(MSDemo), typeof(TestGrain).Assembly, typeof(ITestGrain).Assembly);
     }
 }

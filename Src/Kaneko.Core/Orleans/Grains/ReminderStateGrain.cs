@@ -9,7 +9,7 @@ namespace Kaneko.Core.Orleans.Grains
     /// </summary>
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
-    public abstract class ReminderStateGrain<PrimaryKey, TState> : StateGrain<PrimaryKey, TState>, IRemindableGrain where TState : new()
+    public abstract class ReminderStateGrain<TState> : StateGrain<TState>, IReminderGrain where TState : new()
     {
         /// <summary>
         /// 异步获取提醒名称

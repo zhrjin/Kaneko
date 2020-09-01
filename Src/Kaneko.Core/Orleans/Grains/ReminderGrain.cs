@@ -14,7 +14,7 @@ namespace Kaneko.Core.Orleans.Grains
     /// 提醒Grain
     /// </summary>
     /// <typeparam name="TState"></typeparam>
-    public abstract class ReminderGrain : NormalGrain<string>, IRemindableGrain
+    public abstract class ReminderGrain : MainGrain, IReminderGrain
     {
         
         /// <summary>

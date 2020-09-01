@@ -16,7 +16,7 @@ namespace Kaneko.Core.Orleans.Grains
     /// <typeparam name="TState"></typeparam>
     [StorageProvider(ProviderName = "RedisStore")]
     [Reentrant]
-    public abstract class StateGrain<PrimaryKey, TState> : Grain<TState>, IIncomingGrainCallFilter where TState : new()
+    public abstract class StateGrain<TState> : Grain<TState>, IIncomingGrainCallFilter where TState : new()
     {
         /// <summary>
         /// Log
@@ -32,7 +32,7 @@ namespace Kaneko.Core.Orleans.Grains
         /// Primary key of actor
         /// Because there are multiple types, dynamic assignment in OnActivateAsync
         /// </summary>
-        public PrimaryKey GrainId { get; private set; }
+        public string GrainId { get; private set; }
 
         /// <summary>
         /// Reference to the object to object mapper.
@@ -44,35 +44,22 @@ namespace Kaneko.Core.Orleans.Grains
             this.GrainType = this.GetType();
         }
 
-        public override async Task OnActivateAsync()
+        public override Task OnActivateAsync()
         {
-            var type = typeof(PrimaryKey);
-            if (type == typeof(long) && this.GetPrimaryKeyLong() is PrimaryKey longKey)
-                GrainId = longKey;
-            else if (type == typeof(string) && this.GetPrimaryKeyString() is PrimaryKey stringKey)
-                GrainId = stringKey;
-            else if (type == typeof(Guid) && this.GetPrimaryKey() is PrimaryKey guidKey)
-                GrainId = guidKey;
-            else
-                throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
-
-            var dITask = DependencyInjection();
-            if (!dITask.IsCompletedSuccessfully)
-            {
-                await dITask;
-            }
+            GrainId = this.GetPrimaryKeyString();
+            DependencyInjection();
 
             var onReadDbTask = OnReadFromDbAsync();
-            if (!onReadDbTask.IsCompletedSuccessfully)
-                await onReadDbTask;
             var result = onReadDbTask.Result;
             if (result != null)
             {
                 State = result;
-                await WriteStateAsync();
+                WriteStateAsync();
             }
 
-            await base.OnActivateAsync();
+            base.OnActivateAsync();
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

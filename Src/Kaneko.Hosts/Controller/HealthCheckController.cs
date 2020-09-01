@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MSDemo.Application
+namespace Kaneko.Hosts.Controller
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class HealthCheckController : ControllerBase
+    public class HealthCheckController : KaneKoController
     {
         [HttpGet("")]
         [HttpHead("")]

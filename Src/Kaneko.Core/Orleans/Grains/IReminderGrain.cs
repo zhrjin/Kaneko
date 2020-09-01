@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Kaneko.Core.Orleans.Grains
 {
-    public interface IRemindableGrain : IRemindable, IGrainWithStringKey
+    public interface IReminderGrain : IRemindable, IMainGrain
     {
         Task<IGrainReminder> StartReminder(TimeSpan? timeSpan = null);
 

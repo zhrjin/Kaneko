@@ -11,11 +11,11 @@ namespace MSDemo.Application
 {
     [ApiVersion("1")]
     [Route("api/[controller]")]
-    public class TestController : KaneKoController
+    public class StateTestController : KaneKoController
     {
         private readonly IGrainFactory factory;
 
-        public TestController(IGrainFactory factory)
+        public StateTestController(IGrainFactory factory)
         {
             this.factory = factory;
         }
@@ -23,13 +23,11 @@ namespace MSDemo.Application
         [HttpPost]
         public Task<DataResultVO<TestVO>> GetResult(TestDTO dto)
         {
-            return factory.GetGrain<ITestGrain>("111").GetResult(dto);
-        }
+            var ddd= factory.GetGrain<IStateTestGrain>("111").GetResult(dto);
 
-        [HttpPost("CapBusTest")]
-        public Task<ResultVO> CapBusTest()
-        {
-            return factory.GetGrain<ITestGrain>("111").CapBusTest();
-        }
+         var dd=    ddd.Result;
+
+            return ddd;
+        } 
     }
 }

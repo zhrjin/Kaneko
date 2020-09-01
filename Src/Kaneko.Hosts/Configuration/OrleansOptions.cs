@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DotNetCore.CAP;
+using DotNetCore.CAP.Dashboard.NodeDiscovery;
+using DotNetCore.CAP.MongoDB;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using RabbitMQ.Client;
@@ -11,7 +14,7 @@ namespace Kaneko.Hosts.Configuration
 {
     public class OrleansOptions : IConfigObject
     {
-        public const string Position = "Orleans";
+        public const string Position = "HostSetting";
 
         public string MetricsTableWriteInterval { get; set; } = "00:00:30";
 
@@ -28,32 +31,7 @@ namespace Kaneko.Hosts.Configuration
 
         public RabbitMQConfig RabbitMQ { get; set; } = new RabbitMQConfig();
 
-        /// <summary>
-        /// Keyed by a category. Corresponding to OrleansLogAdapter Category.
-        /// Most probable case is a class name with namespace e.g. Orleans.Runtime.Catalog.
-        /// Use _ instead of . Meaning Orleans.Runtime.Catalog is Orleans_Runtime_Catalog.
-        /// The log entry will be tagged with IsOrleansLog_b: true.
-        /// </summary>
-        /// <example>
-        /// <![CDATA[
-        ///  <CategoryLogLevels>
-        ///      <Orleans_Runtime_Catalog LogLevel="None"/>
-        ///  </CategoryLogLevels>
-        /// ]]>
-        /// </example>
-        public IDictionary<string, OrleansLogLevel> CategoryLogLevels { get; set; } = new ConcurrentDictionary<string, OrleansLogLevel>();
-
-        /// <summary>
-        /// The default of log level, if not changed on the category level.
-        /// The default of default: Information.
-        /// </summary>
-        /// <example>
-        /// <![CDATA[
-        ///    <DefaultCategoryLogLevel>Information</DefaultCategoryLogLevel>
-        /// ]]>
-        /// </example>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public LogLevel DefaultCategoryLogLevel { get; set; } = LogLevel.Information;
+        public CapConfig Cap { get; set; } = new CapConfig();
 
         public int SiloGatewayPort { get; set; }
 
@@ -68,15 +46,6 @@ namespace Kaneko.Hosts.Configuration
     {
         public bool Enable { get; set; } = true;
         public string ConnectionString { get; set; }
-    }
-
-    public class OrleansLogLevel
-    {
-        /// <summary>
-        /// Value is <see cref="Microsoft.Extensions.Logging.LogLevel"/>.
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public LogLevel LogLevel;
     }
 
     public class GrainAgeLimitConfig
@@ -153,5 +122,23 @@ namespace Kaneko.Hosts.Configuration
                 return list;
             }
         }
+    }
+
+    public class CapConfig
+    {
+        public bool Enable { get; set; } = true;
+
+        public MongoDBOptions MongoDB { get; set; }
+
+        public RabbitMQOptions RabbitMQ { get; set; }
+
+        public ServiceDiscoveryConfig ServiceDiscovery { get; set; }
+    }
+
+    public class ServiceDiscoveryConfig
+    {
+        public bool Enable { get; set; } = true;
+
+        public DiscoveryOptions DiscoveryOptions { get; set; }
     }
 }

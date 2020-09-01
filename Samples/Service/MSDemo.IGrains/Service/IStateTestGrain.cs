@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MSDemo.IGrains.Service
 {
-    public interface ITestGrain : IMainGrain
+    public interface IStateTestGrain : IStateGrain
     {
         Task<DataResultVO<TestVO>> GetResult(TestDTO dto);
-
-        Task<ResultVO> CapBusTest();
     }
 }
