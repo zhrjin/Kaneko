@@ -8,7 +8,7 @@
         "Type": "RoundRobin"
       },
       "UseServiceDiscovery": true,
-      "UpstreamPathTemplate": "/demo/swagger/v1/swagger.json",
+      "UpstreamPathTemplate": "/MSDemo/swagger/v1/swagger.json",
       "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ],
       "DangerousAcceptAnyServerCertificateValidator": true //f you want to ignore SSL warnings / errors set the following in your Route config.
     },
@@ -63,7 +63,7 @@
     {
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/demo/{url}",
+      "UpstreamPathTemplate": "/MSDemo/{url}",
       "UpstreamHttpMethod": [
         "Get",
         "Post"
@@ -118,9 +118,9 @@
 
     // 使用Consul服务治理
     "ServiceDiscoveryProvider": {
-      "Host": "192.168.45.129",
+      "Host": "192.168.45.130",
       "Port": 8500
     }
   },
-  "urls": "http://192.168.0.105:6001"
+  "Urls": "http://192.168.0.106:6001"
 }

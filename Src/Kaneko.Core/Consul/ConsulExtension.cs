@@ -1,4 +1,5 @@
 ﻿using Consul;
+using Kaneko.Core.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
@@ -22,14 +23,14 @@ namespace Kaneko.Core.Consul
         public static IServiceCollection AddConsul(this IServiceCollection services, IConfiguration configuration)
         {
             // 配置Consul服务注册地址
-            services.Configure<ServiceDiscoveryOptions>(configuration.GetSection("ServiceDiscovery"));
+            services.Configure<KanekoOptions>(configuration);
             // 配置Consul客户端
             services.AddSingleton<IConsulClient>(sp => new ConsulClient(config =>
             {
-                var consulOptions = sp.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
-                if (!string.IsNullOrWhiteSpace(consulOptions.Consul.HttpEndPoint))
+                var consulOptions = sp.GetRequiredService<IOptions<KanekoOptions>>().Value;
+                if (!string.IsNullOrWhiteSpace(consulOptions.Consul.HostName))
                 {
-                    config.Address = new Uri(consulOptions.Consul.HttpEndPoint);
+                    config.Address = new Uri($"http://{consulOptions.Consul.HostName}:{consulOptions.Consul.Port}");
                 }
             }));
 
@@ -45,7 +46,7 @@ namespace Kaneko.Core.Consul
         {
             IConsulClient consul = app.ApplicationServices.GetRequiredService<IConsulClient>();
             IHostApplicationLifetime appLife = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
-            IOptions<ServiceDiscoveryOptions> serviceOptions = app.ApplicationServices.GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
+            IOptions<KanekoOptions> serviceOptions = app.ApplicationServices.GetRequiredService<IOptions<KanekoOptions>>();
             var features = app.Properties["server.Features"] as FeatureCollection;
             var addresses = features.Get<IServerAddressesFeature>()
                 .Addresses
@@ -61,7 +62,7 @@ namespace Kaneko.Core.Consul
                 {
                     DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
                     Interval = TimeSpan.FromSeconds(30),
-                    HTTP = new Uri(address, serviceOptions.Value.HealthCheckRelativeUri).OriginalString
+                    HTTP = new Uri(address, serviceOptions.Value.Consul.HealthCheckRelativeUri).OriginalString
                 };
 
                 var registration = new AgentServiceRegistration()

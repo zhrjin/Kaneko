@@ -8,13 +8,11 @@ using Orleans.Hosting;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using Orleans.Statistics;
 using System.Collections.Generic;
 using Orleans.Providers;
 using AutoMapper;
-using Kaneko.Hosts.Configuration;
 using Kaneko.Core.Extensions;
 using Kaneko.Core.Utils;
 using Kaneko.Core.AutoMapper;
@@ -23,18 +21,26 @@ using Kaneko.Core.DependencyInjection;
 using MongoDB.Driver;
 using DotNetCore.CAP.Dashboard.NodeDiscovery;
 using Kaneko.Core.Orleans.Services;
+using Kaneko.Core.Configuration;
+using Kaneko.Core.Orleans.HostServices;
+using Microsoft.Extensions.Logging;
 
 namespace Kaneko.Hosts.Extensions
 {
     public static class OrleansHostBuilderExtensions
     {
-        static OrleansOptions OrleansConfig;
+        static KanekoOptions OrleansConfig;
 
-        public static IHostBuilder AddOrleans(this IHostBuilder hostBuilder, string serviceName, Assembly grainAssembly, Assembly autoMapperAssembly)
+        public static IHostBuilder AddOrleans(this IHostBuilder hostBuilder, Assembly grainAssembly, Assembly autoMapperAssembly)
         {
+            hostBuilder.ConfigureServices(serviceCollection =>
+            {
+                serviceCollection.AddHostedService<ConsulCleanupService>();
+            });
+
             hostBuilder.UseOrleans((context, siloBuilder) =>
             {
-                OrleansConfig = context.Configuration.GetSection(OrleansOptions.Position).Get<OrleansOptions>();
+                OrleansConfig = context.Configuration.Get<KanekoOptions>();
 
                 siloBuilder
                 .ConfigureApplicationParts(parts =>
@@ -42,33 +48,42 @@ namespace Kaneko.Hosts.Extensions
                     parts.AddApplicationPart(grainAssembly).WithReferences();
                     parts.AddApplicationPart(typeof(UtcUIDGrain).Assembly).WithReferences();
                 })
-                .Configure<SiloOptions>(options => options.SiloName = serviceName)
+                .Configure<SiloOptions>(options => options.SiloName = OrleansConfig.ServiceName)
                 .Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(30))
                 .UseLinuxEnvironmentStatistics()
                 .UsePerfCounterEnvironmentStatistics()
-                .AddNewRelicTelemetryConsumer()
+                .AddNewRelicTelemetryConsumer().ConfigureLogging(logger =>
+                {
+                    logger.SetMinimumLevel(LogLevel.Warning);
+                    logger.AddConsole(options => options.IncludeScopes = true);
+                })
                 //.AddIncomingGrainCallFilter<IncomingGrainCallFilter>()
                 //.AddOutgoingGrainCallFilter<OutgoingGrainCallFilter>()
                 ;
 
-                if (OrleansConfig.Dashboard.Enable)
+                if (OrleansConfig.Orleans.Dashboard.Enable)
                 {
                     siloBuilder.UseDashboard(o =>
                     {
-                        o.Port = OrleansConfig.Dashboard.SiloDashboardPort;
-                        o.CounterUpdateIntervalMs = (int)TimeSpan.Parse(OrleansConfig.Dashboard.WriteInterval).TotalMilliseconds;
-                        o.HideTrace = OrleansConfig.Dashboard.HideTrace;
-                        o.Username = OrleansConfig.Dashboard.UserName;
-                        o.Password = OrleansConfig.Dashboard.Password;
+                        o.Port = OrleansConfig.Orleans.Dashboard.SiloDashboardPort;
+                        o.CounterUpdateIntervalMs = (int)TimeSpan.Parse(OrleansConfig.Orleans.Dashboard.WriteInterval).TotalMilliseconds;
+                        o.HideTrace = OrleansConfig.Orleans.Dashboard.HideTrace;
+                        o.Username = OrleansConfig.Orleans.Dashboard.UserName;
+                        o.Password = OrleansConfig.Orleans.Dashboard.Password;
                     });
                 }
 
                 SetGrainCollectionOptions(siloBuilder, grainAssembly);
 
-                siloBuilder.Configure<PerformanceTuningOptions>(options =>
+                siloBuilder.Configure<ClusterMembershipOptions>(options =>
                 {
-                    options.DefaultConnectionLimit = ServicePointManager.DefaultConnectionLimit;
+                    options.IAmAliveTablePublishTimeout = TimeSpan.FromMinutes(1.0);//失活的节点默认忽略时间
                 });
+
+                //siloBuilder.Configure<PerformanceTuningOptions>(options =>
+                //{
+                //    options.DefaultConnectionLimit = ServicePointManager.DefaultConnectionLimit;
+                //});
                 siloBuilder.Configure<SchedulingOptions>(options =>
                 {
                     options.PerformDeadlockDetection = true;
@@ -94,7 +109,7 @@ namespace Kaneko.Hosts.Extensions
                 siloBuilder.Configure<StatisticsOptions>(o =>
                 {
                     o.LogWriteInterval = TimeSpan.FromMinutes(10);
-                    o.PerfCountersWriteInterval = TimeSpan.Parse(OrleansConfig.MetricsTableWriteInterval);
+                    o.PerfCountersWriteInterval = TimeSpan.Parse(OrleansConfig.Orleans.MetricsTableWriteInterval);
                 });
             });
             return hostBuilder;
@@ -107,7 +122,7 @@ namespace Kaneko.Hosts.Extensions
                 silo.UseMongoDBClient(OrleansConfig.MongoDB.ConnectionString)
                   .UseMongoDBReminders(options =>
                   {
-                      options.DatabaseName = OrleansConfig.MongoDB.DatabaseName;
+                      options.DatabaseName = OrleansConfig.MongoDB.DatabaseName + "_reminder";
                       options.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
                   });
             }
@@ -117,21 +132,25 @@ namespace Kaneko.Hosts.Extensions
         {
             if (OrleansConfig.MongoDB.Enable)
             {
-                silo.AddMongoDBGrainStorage("PubSubStore", op =>
+                silo.AddMongoDBGrainStorageAsDefault(op =>
                 {
-                    op.DatabaseName = OrleansConfig.MongoDB.DatabaseName;
-                    op.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
-                    op.ConfigureJsonSerializerSettings = settings =>
+                    op.Configure(ooop =>
                     {
-                        settings.NullValueHandling = NullValueHandling.Include;
-                        settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-                        settings.DefaultValueHandling = DefaultValueHandling.Populate;
-                    };
+                        ooop.DatabaseName = OrleansConfig.MongoDB.DatabaseName + "_defaultgrain";
+                        ooop.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
+                        ooop.ConfigureJsonSerializerSettings = settings =>
+                        {
+                            settings.NullValueHandling = NullValueHandling.Include;
+                            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+                            settings.DefaultValueHandling = DefaultValueHandling.Populate;
+                        };
+                    });
+
                 });
 
                 silo.AddMongoDBGrainStorage("RedisStore", op =>
                 {
-                    op.DatabaseName = OrleansConfig.MongoDB.DatabaseName;
+                    op.DatabaseName = OrleansConfig.MongoDB.DatabaseName + "_grain";
                     op.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
                     op.ConfigureJsonSerializerSettings = settings =>
                     {
@@ -145,34 +164,20 @@ namespace Kaneko.Hosts.Extensions
 
         private static void SetStream(ISiloBuilder silo)
         {
-            if (OrleansConfig.RabbitMQ.Enable)
-            {
-                /*silo.AddRabbitMqStream(EventBusGlobals.StreamProviderNameDefault, configurator =>
-                {
-                    configurator.ConfigureRabbitMq(
-                        hosts: OrleansConfig.RabbitMQ.Hosts,
-                        port: OrleansConfig.RabbitMQ.Port,
-                        virtualHost: OrleansConfig.RabbitMQ.VirtualHost,
-                        user: OrleansConfig.RabbitMQ.UserName,
-                        password: OrleansConfig.RabbitMQ.Password,
-                        queueName: OrleansConfig.RabbitMQ.QueueName
-                    );
-                });*/
-            }
         }
 
         private static void SetSiloSource(ISiloBuilder silo)
         {
             if (OrleansConfig.Consul.Enable)
             {
-                silo.UseConsulClustering(options => { options.Address = new Uri(OrleansConfig.Consul.ConnectionString); });
+                silo.UseConsulClustering(options => { options.Address = new Uri($"http://{OrleansConfig.Consul.HostName}:{OrleansConfig.Consul.Port}"); });
             }
             else
             {
                 silo.UseLocalhostClustering();
             }
 
-            silo.ConfigureEndpoints(siloPort: OrleansConfig.SiloNetworkingPort, gatewayPort: OrleansConfig.SiloGatewayPort)
+            silo.ConfigureEndpoints(siloPort: OrleansConfig.Orleans.SiloNetworkingPort, gatewayPort: OrleansConfig.Orleans.SiloGatewayPort)
             .Configure<ClusterOptions>(options =>
             {
                 options.ClusterId = OrleansConfig.ClusterId;
@@ -184,11 +189,11 @@ namespace Kaneko.Hosts.Extensions
         {
             silo.Configure<GrainCollectionOptions>(options =>
             {
-                options.CollectionAge = TimeSpan.FromMinutes(OrleansConfig.DefaultGrainAgeLimitInMins);
+                options.CollectionAge = TimeSpan.FromMinutes(OrleansConfig.Orleans.DefaultGrainAgeLimitInMins);
                 var assemblyList = GetStateGrainTypesFromAssembly(assembly);
                 if (assemblyList != null)
                 {
-                    double grainAgeLimitInMins = OrleansConfig.DefaultReminderGrainAgeLimitInMins;
+                    double grainAgeLimitInMins = OrleansConfig.Orleans.DefaultReminderGrainAgeLimitInMins;
                     foreach (var grainAgeLimitConfig in assemblyList)
                     {
                         try
@@ -214,20 +219,21 @@ namespace Kaneko.Hosts.Extensions
                 //cap
                 if (OrleansConfig.Cap.Enable)
                 {
-                    services.AddSingleton<IMongoClient>(new MongoClient(OrleansConfig.Cap.MongoDB.DatabaseConnection));
+                    services.AddSingleton<IMongoClient>(new MongoClient(OrleansConfig.MongoDB.ConnectionString));
                     services.AddCap(x =>
                     {
                         x.UseMongoDB(configure =>
                         {
-                            configure.DatabaseConnection = OrleansConfig.Cap.MongoDB.DatabaseConnection;
+                            configure.DatabaseConnection = OrleansConfig.MongoDB.ConnectionString;
+                            configure.DatabaseName = OrleansConfig.MongoDB.DatabaseName + "_cap";
                         });
                         x.UseRabbitMQ(configure =>
                         {
-                            configure.HostName = OrleansConfig.Cap.RabbitMQ.HostName;
-                            configure.UserName = OrleansConfig.Cap.RabbitMQ.UserName;
-                            configure.Password = OrleansConfig.Cap.RabbitMQ.Password;
-                            configure.Port = OrleansConfig.Cap.RabbitMQ.Port;
-                            configure.VirtualHost = OrleansConfig.Cap.RabbitMQ.VirtualHost;
+                            configure.HostName = OrleansConfig.RabbitMQ.HostName;
+                            configure.UserName = OrleansConfig.RabbitMQ.UserName;
+                            configure.Password = OrleansConfig.RabbitMQ.Password;
+                            configure.Port = OrleansConfig.RabbitMQ.Port;
+                            configure.VirtualHost = OrleansConfig.RabbitMQ.VirtualHost;
                         });
 
                         x.UseDashboard();
@@ -236,13 +242,13 @@ namespace Kaneko.Hosts.Extensions
                         {
                             x.UseDiscovery(d =>
                             {
-                                d.DiscoveryServerHostName = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.DiscoveryServerHostName;
-                                d.DiscoveryServerPort = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.DiscoveryServerPort;
-                                d.CurrentNodeHostName = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.CurrentNodeHostName;
-                                d.CurrentNodePort = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.CurrentNodePort;
-                                d.NodeId = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.NodeId;
-                                d.NodeName = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.NodeName;
-                                d.MatchPath = OrleansConfig.Cap.ServiceDiscovery.DiscoveryOptions.MatchPath;
+                                d.DiscoveryServerHostName = OrleansConfig.Consul.HostName;
+                                d.DiscoveryServerPort = OrleansConfig.Consul.Port;
+                                d.CurrentNodeHostName = OrleansConfig.CurrentNodeHostName;
+                                d.CurrentNodePort = OrleansConfig.CurrentNodePort;
+                                d.NodeId = $"cap_{OrleansConfig.ServiceName}_{OrleansConfig.CurrentNodeHostName}:{OrleansConfig.CurrentNodePort}";
+                                d.NodeName = "cap_" + OrleansConfig.ClusterId;
+                                d.MatchPath = OrleansConfig.Cap.ServiceDiscovery.HealthPath;
                             });
                         }
                     });
@@ -252,7 +258,10 @@ namespace Kaneko.Hosts.Extensions
                 services.AddSingleton<Core.AutoMapper.IObjectMapper, AutoMapperObjectMapper>();
 
                 //自动注入接口
-                services.Scan(scan => scan.FromAssemblies(grainAssembly).AddClasses().UsingAttributes());
+                services.Scan(scan =>
+                {
+                    scan.FromAssemblies(grainAssembly).AddClasses().UsingAttributes();
+                });
 
                 //AutoMapper 注入
                 services.AddAutoMapper(autoMapperAssembly);
@@ -260,6 +269,7 @@ namespace Kaneko.Hosts.Extensions
                 services.AddTransient<IDDLExecutor, DDLExecutor>();
                 Startup.Register(async serviceProvider =>
                 {
+                    //var ddd = serviceProvider.GetService<IClusterClient>();
                     var exec = serviceProvider.GetService<IDDLExecutor>();
                     await exec.AutoAlterDbSchema(grainAssembly);
                 });

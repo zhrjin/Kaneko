@@ -51,7 +51,7 @@ namespace Kaneko.OcelotGateway
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var apis = new List<string> { "demo", "UsersApi" };
+            var apis = new List<string> { "MSDemo", "UsersApi" };
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>

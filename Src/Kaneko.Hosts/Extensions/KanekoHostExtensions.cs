@@ -1,5 +1,7 @@
 ﻿using Kaneko.Core.Consul;
+using Kaneko.Core.Orleans.Grains.HealthCheck;
 using Kaneko.Hosts.Controller;
+using Kaneko.Hosts.HealthCheck;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +23,17 @@ namespace Kaneko.Hosts.Extensions
         /// <param name="configuration"></param>
         /// <param name="setupAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddKaneko(this IServiceCollection services, string serviceName, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> setupAction = null)
+        public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> setupAction = null)
         {
             services.AddConsul(configuration);
+
+            services
+                 .AddHostedService<HealthCheckHostedService>()
+                 .Configure<HealthCheckHostedServiceOptions>(options =>
+                 {
+                     options.Port = int.Parse(configuration["Orleans:HealthCheckPort"]);
+                     options.PathString = "/health";
+                 });
 
             services.AddControllers()
                     .AddApplicationPart(controllerAssembly)
@@ -32,7 +42,7 @@ namespace Kaneko.Hosts.Extensions
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = serviceName, Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = configuration["ServiceName"], Version = "v1" });
             });
 
             if (setupAction != null)
@@ -49,8 +59,9 @@ namespace Kaneko.Hosts.Extensions
         /// <param name="app"></param>
         /// <param name="serviceName"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseKaneko(this IApplicationBuilder app, string serviceName)
+        public static IApplicationBuilder UseKaneko(this IApplicationBuilder app, IConfiguration configuration)
         {
+            string serviceName = configuration["ServiceName"];
             app.UseConsul();
             app.UseCors(serviceName);
             app.UseSwagger(c =>

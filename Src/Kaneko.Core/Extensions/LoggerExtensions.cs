@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Kaneko.Core.Extensions
 {
-    static partial class LoggerExtensions
+    public static partial class LoggerExtensions
     {
         /// <summary>
         /// 错误日志

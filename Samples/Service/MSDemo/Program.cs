@@ -32,13 +32,7 @@ namespace MSDemo
                       })
                       .ConfigureLogging((hostingContext, logging) =>
                       {
-                          //logging.AddFilter("Orleans", LogLevel.Trace);
-                          //logging.AddFilter("Orleans", LogLevel.Warning);
-                          //logging.AddFilter("Orleans", LogLevel.Debug);
-                          //logging.AddConsole();
-                          //logging.AddDebug();
-                          //logging.AddEventSourceLogger();
-                          logging.SetMinimumLevel(LogLevel.Information);
+                          logging.SetMinimumLevel(LogLevel.Warning);
                           logging.AddConsole(options => options.IncludeScopes = true);
                       })
                       .ConfigureServices(services =>
@@ -48,6 +42,6 @@ namespace MSDemo
                               options.SuppressStatusMessages = true;
                           });
                       })
-                      .AddOrleans(nameof(MSDemo), typeof(TestGrain).Assembly, typeof(ITestGrain).Assembly);
+                      .AddOrleans(typeof(TestGrain).Assembly, typeof(ITestGrain).Assembly);
     }
 }
