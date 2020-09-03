@@ -1,6 +1,4 @@
-﻿using DotNetCore.CAP;
-using RabbitMQ.Client;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -73,7 +71,7 @@ namespace Kaneko.Core.Configuration
         public bool Enable { get; set; } = true;
         public string HostName { get; set; }
         public int Port { get; set; }
-        public string HealthCheckRelativeUri { get; set; } = "api/HealthCheck";
+        public string HealthCheckRelativeUri { get; set; } = "api/Consul/health";
     }
 
     public class GrainAgeLimitConfig
@@ -140,5 +138,45 @@ namespace Kaneko.Core.Configuration
         public double DefaultReminderGrainAgeLimitInMins { get; set; } = 10080;//7天
 
         public IDictionary<string, GrainAgeLimitConfig> GrainAgeLimits { get; set; } = new ConcurrentDictionary<string, GrainAgeLimitConfig>();
+    }
+
+    public class RabbitMQOptions
+    {
+        public string HostName
+        {
+            get;
+            set;
+        }
+
+        public string Password
+        {
+            get;
+            set;
+        }
+
+        public string UserName
+        {
+            get;
+            set;
+        }
+
+        public string VirtualHost
+        {
+            get;
+            set;
+        }
+
+        public string ExchangeName
+        {
+            get;
+            set;
+        }
+
+        public int Port
+        {
+            get;
+            set;
+        }
+
     }
 }

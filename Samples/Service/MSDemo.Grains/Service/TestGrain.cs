@@ -1,6 +1,6 @@
 ﻿using DotNetCore.CAP;
 using Kaneko.Core.ApiResult;
-using Kaneko.Core.Orleans.Grains;
+using Kaneko.Server.Orleans.Grains;
 using MSDemo.Grains.Repository;
 using MSDemo.IGrains.Entity;
 using MSDemo.IGrains.Service;

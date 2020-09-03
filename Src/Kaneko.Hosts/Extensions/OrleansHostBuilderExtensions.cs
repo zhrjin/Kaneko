@@ -15,14 +15,14 @@ using Orleans.Providers;
 using AutoMapper;
 using Kaneko.Core.Extensions;
 using Kaneko.Core.Utils;
-using Kaneko.Core.AutoMapper;
+using Kaneko.Server.AutoMapper;
 using Kaneko.Dapper;
 using Kaneko.Core.DependencyInjection;
 using MongoDB.Driver;
 using DotNetCore.CAP.Dashboard.NodeDiscovery;
-using Kaneko.Core.Orleans.Services;
+using Kaneko.Server.Orleans.Services;
 using Kaneko.Core.Configuration;
-using Kaneko.Core.Orleans.HostServices;
+using Kaneko.Server.Orleans.HostServices;
 using Microsoft.Extensions.Logging;
 
 namespace Kaneko.Hosts.Extensions
@@ -255,7 +255,7 @@ namespace Kaneko.Hosts.Extensions
                 }
 
                 //对象转换注入
-                services.AddSingleton<Core.AutoMapper.IObjectMapper, AutoMapperObjectMapper>();
+                services.AddSingleton<Server.AutoMapper.IObjectMapper, AutoMapperObjectMapper>();
 
                 //自动注入接口
                 services.Scan(scan =>

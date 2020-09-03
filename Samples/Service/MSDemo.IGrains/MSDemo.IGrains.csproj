@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Src\Kaneko.Core\Kaneko.Core.csproj" />
+    <ProjectReference Include="..\..\..\Src\Kaneko.Server\Kaneko.Server.csproj" />
   </ItemGroup>
 
 </Project>

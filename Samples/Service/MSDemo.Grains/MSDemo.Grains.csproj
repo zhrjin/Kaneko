@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Src\Kaneko.Core\Kaneko.Core.csproj" />
     <ProjectReference Include="..\..\..\Src\Kaneko.Dapper\Kaneko.Dapper.csproj" />
+    <ProjectReference Include="..\..\..\Src\Kaneko.Server\Kaneko.Server.csproj" />
     <ProjectReference Include="..\MSDemo.IGrains\MSDemo.IGrains.csproj" />
   </ItemGroup>
 

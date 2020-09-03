@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -17,8 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kaneko.Core\Kaneko.Core.csproj" />
+    <ProjectReference Include="..\Kaneko.Consul\Kaneko.Consul.csproj" />
     <ProjectReference Include="..\Kaneko.Dapper\Kaneko.Dapper.csproj" />
+    <ProjectReference Include="..\Kaneko.Server\Kaneko.Server.csproj" />
   </ItemGroup>
 
 </Project>

@@ -42,5 +42,13 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\Kaneko.Consul\Kaneko.Consul.csproj" />
+  </ItemGroup>
+
 
 </Project>

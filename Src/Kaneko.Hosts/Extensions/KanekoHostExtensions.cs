@@ -1,6 +1,5 @@
-﻿using Kaneko.Core.Consul;
-using Kaneko.Core.Orleans.Grains.HealthCheck;
-using Kaneko.Hosts.Controller;
+﻿using Kaneko.Consul;
+using Kaneko.Server.Orleans.Grains.HealthCheck;
 using Kaneko.Hosts.HealthCheck;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -9,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
+using Kaneko.Consul.Controller;
+using Kaneko.Hosts.Controller;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -37,7 +38,8 @@ namespace Kaneko.Hosts.Extensions
 
             services.AddControllers()
                     .AddApplicationPart(controllerAssembly)
-                    .AddApplicationPart(typeof(HealthCheckController).Assembly)
+                    .AddApplicationPart(typeof(KaneKoController).Assembly)
+                    .AddApplicationPart(typeof(ConsulController).Assembly)
                     ;
 
             services.AddSwaggerGen(options =>

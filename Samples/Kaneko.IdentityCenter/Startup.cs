@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
@@ -12,11 +11,11 @@ using Kaneko.IdentityCenter.Configurations;
 using Kaneko.IdentityCenter.Data;
 using Kaneko.IdentityCenter.Entities;
 using Kaneko.IdentityCenter.Service;
+using Kaneko.IdentityCenter.Validator;
+using Kaneko.Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,8 +36,10 @@ namespace Kaneko.IdentityCenter
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<AspNetAccountDbContext>(u => u.UseSqlServer(Configuration.GetConnectionString("DefaultAspNetAccountConnection")));
+            services.AddConsul(Configuration);
+
+            string connectionString = Configuration.GetConnectionString("DefaultAspNetAccountConnection");
+            services.AddDbContext<AspNetAccountDbContext>(u => u.UseSqlServer(connectionString));
             services.AddIdentity<ApplicationUser, IdentityRole>(o =>
             {
                 o.User.RequireUniqueEmail = true;
@@ -51,18 +52,17 @@ namespace Kaneko.IdentityCenter
             })
                 .AddEntityFrameworkStores<AspNetAccountDbContext>()
                 .AddDefaultTokenProviders();
+
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory<ApplicationUser>>();
             services.AddScoped<IProfileService, KanekoProfileService>();
             services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-
-                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
-                options.EmitStaticAudienceClaim = true;
-            })
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                    options.EmitStaticAudienceClaim = true;
+                })
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
@@ -80,11 +80,12 @@ namespace Kaneko.IdentityCenter
                 .AddConfigurationStoreCache()
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddProfileService<KanekoProfileService>()
-                //.AddDeveloperSigningCredential()
+                .AddResourceOwnerValidator<KanekoResourceOwnerPasswordValidator<ApplicationUser>>()
                 .AddSigningCredential(new X509Certificate2(Path.Combine(Env.ContentRootPath,
                     Configuration["Certificates:CerPath"]),
                     Configuration["Certificates:Password"]))
                 ;
+
             services.AddControllers();
         }
 
@@ -103,6 +104,8 @@ namespace Kaneko.IdentityCenter
             {
                 endpoints.MapControllers();
             });
+
+            app.UseConsul();
 
             //Task.Run(() => InitDatabase(app));
         }
@@ -149,10 +152,10 @@ namespace Kaneko.IdentityCenter
         private void InitDatabase(IApplicationBuilder app)
         {
             using var scope = app.ApplicationServices.CreateScope();
-            using var ctx = scope.ServiceProvider.GetService<ApplicationDbContext>();
+            using var ctx = scope.ServiceProvider.GetService<AspNetAccountDbContext>();
             ctx.Database.EnsureCreated();
 
-            using var userManager = scope.ServiceProvider.GetService<UserManager<SysUser>>();
+            using var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
             if (!userManager.Users.Any())
             {
                 foreach (var user in DatabaseIniter.GetUsers())
@@ -167,11 +170,11 @@ namespace Kaneko.IdentityCenter
 
     public static class DatabaseIniter
     {
-        public static List<SysUser> GetUsers()
+        public static List<ApplicationUser> GetUsers()
         {
-            var result = new List<SysUser>
+            var result = new List<ApplicationUser>
             {
-                new SysUser
+                new ApplicationUser
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "zhrjin",
@@ -187,133 +190,6 @@ namespace Kaneko.IdentityCenter
                 }
             };
             return result;
-        }
-    }
-
-    public class StartupBak
-    {
-        public StartupBak(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContext<AspNetAccountDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultAspNetAccountConnection"));
-            });
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<AspNetAccountDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-            });
-
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-
-            var builder = services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-
-                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
-                options.EmitStaticAudienceClaim = true;
-            })
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                    {
-                        builder.UseSqlServer(connectionString);
-                    };
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                    {
-                        builder.UseSqlServer(connectionString);
-                    };
-                })
-                .AddAspNetIdentity<ApplicationUser>();
-
-            builder.AddDeveloperSigningCredential();
-
-            //services.AddScoped<ConsentService>();
-
-            services.AddControllers();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            InitializeDatabase(app);
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseIdentityServer();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-
-        private void InitializeDatabase(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                context.Database.Migrate();
-                if (!context.Clients.Any())
-                {
-                    //foreach (var client in Config.Clients)
-                    //{
-                    //    context.Clients.Add(client.ToEntity());
-                    //}
-                    context.SaveChanges();
-                }
-
-                if (!context.IdentityResources.Any())
-                {
-                    //foreach (var resource in Config.IdentityResources)
-                    //{
-                    //    context.IdentityResources.Add(resource.ToEntity());
-                    //}
-                    context.SaveChanges();
-                }
-
-                if (!context.ApiScopes.Any())
-                {
-                    //foreach (var resource in Config.ApiScopes)
-                    //{
-                    //    context.ApiScopes.Add(resource.ToEntity());
-                    //}
-                    context.SaveChanges();
-                }
-            }
         }
     }
 }
