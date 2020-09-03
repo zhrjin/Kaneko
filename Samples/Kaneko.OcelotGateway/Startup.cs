@@ -7,8 +7,9 @@ using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
 using Ocelot.Provider.Polly;
 using Ocelot.Cache.CacheManager;
-using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
+using IdentityServer4.AccessTokenValidation;
+using System;
 
 namespace Kaneko.OcelotGateway
 {
@@ -24,26 +25,53 @@ namespace Kaneko.OcelotGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOcelot().AddConsul().AddPolly().AddCacheManager(x => x.WithDictionaryHandle());
+            var ocelotOptions = new OcelotOptions();
+            Configuration.Bind(ocelotOptions);
 
-            //注册ID4校验
-            services.AddAuthentication("Bearer")
-                    .AddIdentityServerAuthentication("ApoOneServiceKey", option =>      //这里GoodsServiceKey与Ocelot配置文件中的AuthenticationProviderKey对应,从而进行绑定验证
-                    {
-                        option.Authority = "http://192.168.0.103:12345";  //这里配置是127.0.0.1，那么通过ID4服务器获取token的时候，就必须写127.0.0.1，不能写localhost.   
-                        option.ApiName = "ApoOneService";             //必须对应ID4服务器中GetApiResources配置的apiName,此处不能随便写！！
-                        option.RequireHttpsMetadata = false;
-                    })
-                    .AddIdentityServerAuthentication("ApoTwoServiceKey", option =>
-                    {
-                        option.Authority = "http://192.168.0.103:12345";
-                        option.ApiName = "ApoTwoService";
-                        option.RequireHttpsMetadata = false;
-                    });
+            //注册ID4校验方式1
+            //services.AddAuthentication("Bearer")
+            //        .AddJwtBearer(authenticationProviderKey, options =>
+            //        {
+            //            options.Authority = "http://192.168.0.106:12345";
+            //            options.RequireHttpsMetadata = false;
+            //            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+            //            {
+            //                ValidateAudience = false
+            //            };
+            //        });
+
+            foreach (var route in ocelotOptions.Routes)
+            {
+                if (route.AuthenticationOptions == null || string.IsNullOrEmpty(route.AuthenticationOptions.AuthenticationProviderKey)) { continue; }
+
+                //注册ID4校验方式2
+                services.AddAuthentication()
+                        .AddIdentityServerAuthentication(route.AuthenticationOptions.AuthenticationProviderKey, option =>
+                        {
+                            option.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
+                            option.RequireHttpsMetadata = false;
+                            option.SupportedTokens = SupportedTokens.Both;
+                            option.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
+                            option.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
+                        })
+                       ;
+            }
+
+            services.AddOcelot().AddConsul().AddPolly().AddCacheManager(x => x.WithDictionaryHandle());
 
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("ApiGateway", new OpenApiInfo { Title = "Kaneko.ApiGateway", Version = "v1" });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Description = "在下框中输入请求头中需要添加Jwt授权Token：Bearer Token",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
             });
 
             services.AddControllers();
@@ -51,19 +79,26 @@ namespace Kaneko.OcelotGateway
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var apis = new List<string> { "MSDemo", "UsersApi" };
+            var ocelotOptions = new OcelotOptions();
+            Configuration.Bind(ocelotOptions);
 
             app.UseSwagger();
+
             app.UseSwaggerUI(options =>
             {
-                apis.ForEach(m =>
+                foreach (var route in ocelotOptions.Routes)
                 {
-                    options.SwaggerEndpoint($"{m}/swagger/v1/swagger.json", m);
+                    if (string.IsNullOrEmpty(route.ServiceName) || string.IsNullOrWhiteSpace(route.DownstreamPathTemplate)
+                    || route.DownstreamPathTemplate.ToLower().IndexOf("swagger") == -1)
+                    { continue; }
+
+                    options.SwaggerEndpoint($"{route.ServiceName}/swagger/v1/swagger.json", route.ServiceName);
                     options.RoutePrefix = string.Empty;
-                });
+                }
             });
 
             app.UseOcelot().Wait();
+
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

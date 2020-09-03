@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Kaneko.Server.AutoMapper;
 using Orleans.Concurrency;
+using Orleans.Runtime;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -60,6 +61,8 @@ namespace Kaneko.Server.Orleans.Grains
 
         public Task Invoke(IIncomingGrainCallContext context)
         {
+         
+
             return context.Invoke();
         }
 

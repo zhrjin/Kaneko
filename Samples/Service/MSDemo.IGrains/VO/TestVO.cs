@@ -8,5 +8,6 @@ namespace MSDemo.IGrains.VO
     public class TestVO : BaseVO
     {
         public string UserId { set; get; }
+        public string UserName { set; get; }
     }
 }

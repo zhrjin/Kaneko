@@ -115,13 +115,13 @@ namespace Kaneko.Core.Configuration
     {
         public bool Enable { get; set; } = true;
 
-        public ServiceDiscoveryConfig ServiceDiscovery { get; set; }
+        public ServiceDiscoveryConfig ServiceDiscovery { get; set; } = new ServiceDiscoveryConfig();
     }
 
     public class ServiceDiscoveryConfig
     {
         public bool Enable { get; set; } = true;
-        public string HealthPath { get; set; }
+        public string HealthPath { get; set; } = "/api/Cap";
     }
 
     public class OrleansConfig

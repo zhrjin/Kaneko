@@ -12,54 +12,7 @@
       "UpstreamHttpMethod": [ "GET", "POST", "DELETE", "PUT" ],
       "DangerousAcceptAnyServerCertificateValidator": true //f you want to ignore SSL warnings / errors set the following in your Route config.
     },
-    {
-      "DownstreamPathTemplate": "/{url}",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/one/{url}",
-      "UpstreamHttpMethod": [
-        "Get",
-        "Post"
-      ],
-      // 下游API服务需要授权后才能访问
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "ApoOneServiceKey",
-        "AllowedScopes": []
-      },
-      "ServiceName": "ApiOne",
 
-      // LoadBalancer将决定负载均衡的算法，三种取值
-      // RoundRobin：轮流发送
-      // LeastConnection：将请求发往最空闲的那个服务器
-      // NoLoadBalance：总是发往第一个请求或者是服务发现
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin" //轮询算法：依次调用在consul中注册的服务器
-      },
-
-      //限流
-      "RateLimitOptions": {
-        "ClientWhitelist": [], //白名单
-        "EnableRateLimiting": true, //是否启用限流
-        "Period": "2s", //统计时间段
-        "Limit": 300, //在统计时间段内允许的最大请求数量。即：2秒内只允许3次请求
-        "PeriodTimespan": 5 //多少秒之后客户端可以重试
-      },
-
-      //服务质量与熔断
-      "QoSOptions": {
-        "ExceptionsAllowedBeforeBreaking": 3, //允许多少个异常请求
-        "DurationOfBreak": 5, //熔断的时间，单位为秒
-        "TimeoutValue": 5000 //如果下游请求的处理时间超过多少则自动将请求设置为超时
-      },
-
-      //缓存
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "ApiOne"
-      },
-
-      // 启用服务发现
-      "UseServiceDiscovery": true
-    },
     {
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
@@ -69,6 +22,11 @@
         "Post"
       ],
       "ServiceName": "MSDemo",
+
+      // LoadBalancer将决定负载均衡的算法，三种取值
+      // RoundRobin：轮流发送
+      // LeastConnection：将请求发往最空闲的那个服务器
+      // NoLoadBalance：总是发往第一个请求或者是服务发现
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       },
@@ -82,11 +40,18 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3, //允许多少个异常请求
         "DurationOfBreak": 5, //熔断的时间，单位为秒
-        "TimeoutValue": 5000 //如果下游请求的处理时间超过多少则自动将请求设置为超时
+        "TimeoutValue": 30000 //如果下游请求的处理时间超过多少则自动将请求设置为超时
       },
+
+      //缓存
       "FileCacheOptions": {
-        "TtlSeconds": 15,
+        "TtlSeconds": 3,
         "Region": "MSDemo"
+      },
+      // 下游API服务需要授权后才能访问
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MSDemoKey",
+        "AllowedScopes": []
       },
       "UseServiceDiscovery": true
     },
@@ -100,7 +65,7 @@
         "Get",
         "Post"
       ],
-      "ServiceName": "AuthCenter",
+      "ServiceName": "KanekoIdentityCenter",
       "LoadBalancerOptions": {
         "Type": "RoundRobin" //轮询算法：依次调用在consul中注册的服务器
       },
@@ -118,9 +83,16 @@
 
     // 使用Consul服务治理
     "ServiceDiscoveryProvider": {
-      "Host": "192.168.45.130",
+      "Host": "192.168.45.132",
       "Port": 8500
     }
   },
-  "Urls": "http://192.168.0.106:6001"
+
+  "Urls": "http://192.168.0.106:6001",
+
+  "KanekoIdentityCenter": {
+    "Authority": "http://192.168.0.106:12345",
+    "EnableCaching": true,
+    "CacheDurationMinutes": 30
+  }
 }

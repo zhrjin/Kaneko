@@ -5,6 +5,7 @@ using MSDemo.Grains.Repository;
 using MSDemo.IGrains.Entity;
 using MSDemo.IGrains.Service;
 using MSDemo.IGrains.VO;
+using Orleans.Runtime;
 using System;
 using System.Threading.Tasks;
 
@@ -23,9 +24,9 @@ namespace MSDemo.Grains.Service
 
         public Task<DataResultVO<TestVO>> GetResult(TestDTO dto)
         {
-            var ddd = this.GrainReference;
+            var dd = RequestContext.Get("ddd").ToString();
 
-            TestDO demoDO = new TestDO { UserId = "234" };
+            TestDO demoDO = new TestDO { UserId = dd, UserName = dto.UserId };
             TestVO demoVO = this.ObjectMapper.Map<TestVO>(demoDO);
             var result = ApiResultUtil.IsSuccess(demoVO);
             return Task.FromResult(result);
