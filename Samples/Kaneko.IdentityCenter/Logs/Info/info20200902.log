@@ -1,0 +1,246 @@
+2020-09-02 21:03:47,495 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:03:47,516 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:03:47,522 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:04:21,707 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:04:21,725 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:04:21,731 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:04:25,392 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:04:25,393 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:04:25,397 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:04:25,398 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:04:25,399 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:05:56,384 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:05:56,403 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:05:56,408 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:05:59,450 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:05:59,456 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:05:59,458 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:05:59,459 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:05:59,460 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:09:02,677 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:09:02,696 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:09:02,701 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:09:06,679 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:09:06,688 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:09:06,689 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:09:06,691 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:09:06,692 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:13:32,316 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:13:32,337 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:13:32,342 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:13:35,377 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:13:35,379 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:13:35,381 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:13:35,382 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:13:35,383 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:14:31,462 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:14:31,480 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:14:31,487 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:14:33,826 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:14:33,827 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:14:33,828 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:14:33,830 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:14:33,831 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:15:58,129 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:15:58,148 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:15:58,153 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:16:01,928 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:16:01,933 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:16:01,935 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:16:01,936 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:16:01,937 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:25:32,239 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:25:32,289 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:25:32,305 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:25:32,511 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:25:32,519 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:25:32,520 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:25:32,523 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:25:32,528 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:26:16,955 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:26:16,982 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:26:16,988 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:26:17,290 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:26:17,295 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:26:17,297 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:26:17,299 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:26:17,301 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:35:58,163 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:36:31,169 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:36:37,363 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:36:37,713 INFO  IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator - Credentials validated for username: zhrjin
+2020-09-02 21:36:37,728 INFO  IdentityServer4.Validation.TokenRequestValidator - Token request validation success, {
+  "ClientId": "web",
+  "GrantType": "password",
+  "Scopes": "mes openid profile system",
+  "UserName": "zhrjin",
+  "Raw": {
+    "client_id": "web",
+    "client_secret": "***REDACTED***",
+    "grant_type": "password",
+    "username": "zhrjin",
+    "password": "***REDACTED***"
+  }
+}
+2020-09-02 21:38:54,969 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:38:55,016 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:38:55,031 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:38:55,311 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:38:55,313 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:38:55,314 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:38:55,316 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:38:55,317 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:39:00,551 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:39:00,881 INFO  IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator - Credentials validated for username: zhrjin
+2020-09-02 21:39:00,895 INFO  IdentityServer4.Validation.TokenRequestValidator - Token request validation success, {
+  "ClientId": "web",
+  "GrantType": "password",
+  "Scopes": "mes openid profile system",
+  "UserName": "zhrjin",
+  "Raw": {
+    "client_id": "web",
+    "client_secret": "***REDACTED***",
+    "grant_type": "password",
+    "username": "zhrjin",
+    "password": "***REDACTED***"
+  }
+}
+2020-09-02 21:39:46,036 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 21:39:46,072 INFO  IdentityServer4.Startup - You are using the in-memory version of the persisted grant store. This will store consent decisions, authorization codes, refresh and reference tokens in memory only. If you are using any of those features in production, you want to switch to a different store implementation.
+2020-09-02 21:39:46,079 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 21:39:46,334 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 21:39:46,341 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 21:39:46,342 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 21:39:46,343 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 21:39:46,344 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 21:39:50,427 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:39:50,761 INFO  IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator - Credentials validated for username: zhrjin
+2020-09-02 21:39:50,774 INFO  IdentityServer4.Validation.TokenRequestValidator - Token request validation success, {
+  "ClientId": "web",
+  "GrantType": "password",
+  "Scopes": "mes openid profile system",
+  "UserName": "zhrjin",
+  "Raw": {
+    "client_id": "web",
+    "client_secret": "***REDACTED***",
+    "grant_type": "password",
+    "username": "zhrjin",
+    "password": "***REDACTED***"
+  }
+}
+2020-09-02 21:44:21,282 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:44:21,348 INFO  IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator - Credentials validated for username: zhrjin
+2020-09-02 21:44:21,351 INFO  IdentityServer4.Validation.TokenRequestValidator - Token request validation success, {
+  "ClientId": "web",
+  "GrantType": "password",
+  "Scopes": "mes openid profile system",
+  "UserName": "zhrjin",
+  "Raw": {
+    "client_id": "web",
+    "client_secret": "***REDACTED***",
+    "grant_type": "password",
+    "username": "zhrjin",
+    "password": "***REDACTED***"
+  }
+}
+2020-09-02 21:44:36,540 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 21:44:36,560 INFO  IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator - Credentials validated for username: zhrjin
+2020-09-02 21:44:36,562 INFO  IdentityServer4.Validation.TokenRequestValidator - Token request validation success, {
+  "ClientId": "web",
+  "GrantType": "password",
+  "Scopes": "mes openid profile system",
+  "UserName": "zhrjin",
+  "Raw": {
+    "client_id": "web",
+    "client_secret": "***REDACTED***",
+    "grant_type": "password",
+    "username": "zhrjin",
+    "password": "***REDACTED***"
+  }
+}
+2020-09-02 22:03:32,842 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:03:33,015 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:03:33,256 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:03:33,260 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:03:33,264 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:03:33,265 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:03:33,266 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:03:38,104 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 22:04:59,471 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:04:59,618 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:04:59,878 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:04:59,896 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:04:59,906 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:04:59,919 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:04:59,920 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:08:41,448 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:08:41,616 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:08:45,437 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:08:45,438 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:08:45,440 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:08:45,441 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:08:45,442 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:10:23,652 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:10:23,850 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:10:26,606 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:10:26,607 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:10:26,609 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:10:26,610 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:10:26,611 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:20:53,125 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:20:53,286 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:21:04,947 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:21:04,950 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:21:04,952 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:21:04,974 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:21:04,975 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:21:26,034 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:21:26,219 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:21:29,232 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:21:29,237 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:21:29,239 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:21:29,240 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:21:29,241 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:24:53,063 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:24:53,221 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:24:55,063 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:24:55,066 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:24:55,068 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:24:55,069 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:24:55,070 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:25:51,266 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:25:51,428 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:25:53,185 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:25:53,188 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:25:53,190 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:25:53,191 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:25:53,192 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:26:45,923 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:26:46,090 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:26:47,583 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:26:47,584 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:26:47,586 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:26:47,587 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:26:47,588 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:27:40,369 INFO  IdentityServer4.Startup - Starting IdentityServer4 version 4.0.4+1b36d1b414f4e0f965af97ab2a7e9dd1b5167bca
+2020-09-02 22:27:40,567 INFO  IdentityServer4.Startup - Using the default authentication scheme Identity.Application for IdentityServer
+2020-09-02 22:27:40,764 INFO  Microsoft.Hosting.Lifetime - Now listening on: https://localhost:5001
+2020-09-02 22:27:40,767 INFO  Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5000
+2020-09-02 22:27:40,768 INFO  Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2020-09-02 22:27:40,769 INFO  Microsoft.Hosting.Lifetime - Hosting environment: Development
+2020-09-02 22:27:40,771 INFO  Microsoft.Hosting.Lifetime - Content root path: D:\Source\Git\Soa\KanekoMicoService\Samples\Kaneko.IdentityCenter
+2020-09-02 22:29:55,467 INFO  IdentityServer4.Hosting.IdentityServerMiddleware - Invoking IdentityServer endpoint: IdentityServer4.Endpoints.TokenEndpoint for /connect/token
+2020-09-02 22:29:55,958 INFO  IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator - Credentials validated for username: zhrjin
+2020-09-02 22:29:55,972 INFO  IdentityServer4.Validation.TokenRequestValidator - Token request validation success, {
+  "ClientId": "web",
+  "GrantType": "password",
+  "Scopes": "mes openid profile system",
+  "UserName": "zhrjin",
+  "Raw": {
+    "client_id": "web",
+    "client_secret": "***REDACTED***",
+    "grant_type": "password",
+    "username": "zhrjin",
+    "password": "***REDACTED***"
+  }
+}

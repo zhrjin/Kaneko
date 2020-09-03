@@ -1,0 +1,3 @@
+2020-09-02 21:14:42,682 [4] WARN  Microsoft.AspNetCore.Identity.UserManager - User zhrjin validation failed: InvalidUserName.
+2020-09-02 21:35:58,174 [4] WARN  IdentityServer4.Endpoints.TokenEndpoint - Invalid HTTP request for token endpoint
+2020-09-02 21:36:31,172 [42] WARN  IdentityServer4.Endpoints.TokenEndpoint - Invalid HTTP request for token endpoint

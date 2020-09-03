@@ -1,0 +1,36 @@
+{
+  //客户端
+  "Clients": [
+    {
+      "ClientId": "wpf",
+      "ClientSecrets": [
+        { "Value": "wpf_secret" }
+      ],
+      "AllowedGrantTypes": [ "client_credentials" ],
+      "Enabled": "true",
+      "AllowedScopes": [ "system", "mes" ]
+    },
+    {
+      "ClientId": "web",
+      "ClientSecrets": [
+        { "Value": "web_secret" }
+      ],
+      "AllowedGrantTypes": [ "password" ],
+      "Enabled": "true",
+      "AllowedScopes": [ "openid", "profile", "system", "mes" ]
+    }
+  ],
+  //api接口配置
+  "ApiScopes": [
+    {
+      "Name": "system",
+      "DisplayName": "系统管理服务",
+      "Enabled": true
+    },
+    {
+      "Name": "mes",
+      "DisplayName": "mes系统服务",
+      "Enabled": true
+    }
+  ]
+}
