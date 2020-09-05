@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MSDemo.Application;
+using MSDemo.Controller;
 using Kaneko.Hosts.Extensions;
 
 namespace MSDemo

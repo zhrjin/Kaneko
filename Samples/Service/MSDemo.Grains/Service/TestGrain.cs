@@ -7,6 +7,7 @@ using MSDemo.IGrains.Service;
 using MSDemo.IGrains.VO;
 using Orleans.Runtime;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MSDemo.Grains.Service
@@ -22,9 +23,9 @@ namespace MSDemo.Grains.Service
             capBus = capPublisher;
         }
 
-        public Task<DataResultVO<TestVO>> GetResult(TestDTO dto)
+        public Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto)
         {
-            var dd = RequestContext.Get("ddd").ToString();
+            var dd = "";
 
             TestDO demoDO = new TestDO { UserId = dd, UserName = dto.UserId };
             TestVO demoVO = this.ObjectMapper.Map<TestVO>(demoDO);
@@ -32,11 +33,20 @@ namespace MSDemo.Grains.Service
             return Task.FromResult(result);
         }
 
+        public Task<ApiResultPage<TestVO>> GetResultTest2(TestDTO dto)
+        {
+            var dd = RequestContext.Get("ddd").ToString();
+            List<TestDO> demoDO = new List<TestDO>() { new TestDO { UserId = dd, UserName = dto.UserId } };
+            List<TestVO> demoVO = this.ObjectMapper.Map<List<TestVO>>(demoDO);
+            var result = ApiResultUtil.IsSuccess(demoVO, 2);
+            return Task.FromResult(result);
+        }
+
         /// <summary>
         /// 发布
         /// </summary>
         /// <returns></returns>
-        public Task<ResultVO> CapBusTest()
+        public Task<ApiResult> CapBusTest()
         {
             //发送消息给客户端，第一个参值数"kjframe.test"为消息队列的topic
             capBus.PublishAsync("kanoko.test", DateTime.Now);

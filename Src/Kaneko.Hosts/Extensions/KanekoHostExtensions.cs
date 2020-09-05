@@ -10,6 +10,7 @@ using System;
 using System.Reflection;
 using Kaneko.Consul.Controller;
 using Kaneko.Hosts.Controller;
+using Kaneko.Hosts.Attributes;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -26,15 +27,23 @@ namespace Kaneko.Hosts.Extensions
         /// <returns></returns>
         public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> setupAction = null)
         {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "192.168.45.132:6379";
+                options.InstanceName = "Kaneko";
+            });
+
+            services.AddTransient<KanekoActionFilterAttribute>();
+
             services.AddConsul(configuration);
 
-            services
-                 .AddHostedService<HealthCheckHostedService>()
-                 .Configure<HealthCheckHostedServiceOptions>(options =>
-                 {
-                     options.Port = int.Parse(configuration["Orleans:HealthCheckPort"]);
-                     options.PathString = "/health";
-                 });
+            //services
+            //     .AddHostedService<HealthCheckHostedService>()
+            //     .Configure<HealthCheckHostedServiceOptions>(options =>
+            //     {
+            //         options.Port = int.Parse(configuration["Orleans:HealthCheckPort"]);
+            //         options.PathString = "/health";
+            //     });
 
             services.AddControllers()
                     .AddApplicationPart(controllerAssembly)

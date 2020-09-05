@@ -2,8 +2,9 @@
 
 namespace Kaneko.Hosts.Controller
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class CapController : KaneKoController
+    public class CapController : ControllerBase
     {
         [HttpGet("health")]
         [HttpHead("health")]

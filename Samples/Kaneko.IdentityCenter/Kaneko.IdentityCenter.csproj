@@ -43,11 +43,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\..\Src\Kaneko.Consul\Kaneko.Consul.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\Kaneko.Consul\Kaneko.Consul.csproj" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 

@@ -3,12 +3,12 @@
     /// <summary>
     /// 无数据，只结果标识
     /// </summary>
-    public class ResultVO
+    public class ApiResult
     {
         /// <summary>
         ///
         /// </summary>
-        public ResultCode Code { set; get; }
+        public ApiResultCode Code { set; get; }
 
         /// <summary>
         ///
@@ -18,6 +18,6 @@
         /// <summary>
         /// 成功标志
         /// </summary>
-        public bool Success => Code == ResultCode.Succeed;
+        public bool Success => Code == ApiResultCode.Succeed;
     }
 }

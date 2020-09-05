@@ -13,7 +13,7 @@ namespace MSDemo.Grains.Service
 {
     public class StateTestGrain : StateGrain<TestState>, IStateTestGrain
     {
-        public Task<DataResultVO<TestVO>> GetResult(TestDTO dto)
+        public Task<ApiResult<TestVO>> GetResult(TestDTO dto)
         {
             var ddd = this.State;
             this.State.UID = System.DateTime.Now.ToString();

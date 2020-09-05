@@ -15,7 +15,6 @@ namespace Kaneko.Server.Orleans.Grains
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
     [StorageProvider(ProviderName = "RedisStore")]
-    [Reentrant]
     public abstract class StateGrain<TState> : Grain<TState>, IIncomingGrainCallFilter where TState : new()
     {
         /// <summary>

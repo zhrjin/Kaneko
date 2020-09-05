@@ -15,135 +15,12 @@ namespace Kaneko.Core.ApiResult
         /// <param name="message"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static ResultVO IsSuccess(string message = "")
+        public static ApiResult IsSuccess(string message = "")
         {
-            return new ResultVO()
+            return new ApiResult()
             {
                 Message = message,
-                Code = ResultCode.Succeed
-            };
-        }
-
-        /// <summary>
-        /// 响应失败
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static ResultVO IsFailed(string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = message,
-                Code = ResultCode.UnknownFail
-            };
-        }
-
-        /// <summary>
-        /// 响应失败
-        /// </summary>
-        /// <param name="resultCode"></param>
-        /// <param name="message"></param>
-        public static ResultVO IsFailed(ResultCode resultCode, string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = message,
-                Code = resultCode
-            };
-        }
-
-        /// <summary>
-        /// 响应失败
-        /// </summary>
-        /// <param name="exexception></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static ResultVO IsFailed(Exception exception)
-        {
-            return new ResultVO()
-            {
-                Message = exception.InnerException?.StackTrace,
-                Code = ResultCode.Error
-            };
-        }
-
-        /// <summary>
-        /// 响应失败
-        /// </summary>
-        /// <param name="resultCode"></param>
-        /// <param name="exception"></param>
-        public static ResultVO IsFailed(ResultCode resultCode, Exception exception)
-        {
-            return new ResultVO()
-            {
-                Message = exception.InnerException?.StackTrace,
-                Code = resultCode
-            };
-        }
-
-        /// <summary>
-        /// 无数据
-        /// </summary>
-        /// <param name="message"></param>
-        public static ResultVO IsNotFound(string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = string.IsNullOrEmpty(message) ? "无数据" : message,
-                Code = ResultCode.NotFound
-            };
-        }
-
-        /// <summary>
-        /// 无权限
-        /// </summary>
-        /// <param name="message"></param>
-        public static ResultVO IsUnauthorized(string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = string.IsNullOrEmpty(message) ? "无权限" : message,
-                Code = ResultCode.Unauthorized
-            };
-        }
-
-        /// <summary>
-        /// 访问被禁止
-        /// </summary>
-        /// <param name="message"></param>
-        public static ResultVO IsForbidden(string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = string.IsNullOrEmpty(message) ? "访问被禁止" : message,
-                Code = ResultCode.Forbidden
-            };
-        }
-
-        /// <summary>
-        /// 参数校验错误
-        /// </summary>
-        /// <param name="message"></param>
-        public static ResultVO IsArgumentError(string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = string.IsNullOrEmpty(message) ? "访问被禁止" : message,
-                Code = ResultCode.ArgumentError
-            };
-        }
-
-        /// <summary>
-        /// 请求的格式不对
-        /// </summary>
-        /// <param name="message"></param>
-        public static ResultVO IsNotAcceptable(string message = "")
-        {
-            return new ResultVO()
-            {
-                Message = string.IsNullOrEmpty(message) ? "访问被禁止" : message,
-                Code = ResultCode.NotAcceptable
+                Code = ApiResultCode.Succeed
             };
         }
 
@@ -152,12 +29,12 @@ namespace Kaneko.Core.ApiResult
         /// </summary>
         /// <param name="data"></param>
         /// <param name="message"></param>
-        public static DataResultVO<TVO> IsSuccess<TVO>(TVO data, string message = "") where TVO : IViewObject
+        public static ApiResult<TVO> IsSuccess<TVO>(TVO data, string message = "") where TVO : IViewObject
         {
-            return new DataResultVO<TVO>()
+            return new ApiResult<TVO>()
             {
                 Message = message,
-                Code = ResultCode.Succeed,
+                Code = ApiResultCode.Succeed,
                 Data = data ?? default
             };
         }
@@ -165,15 +42,17 @@ namespace Kaneko.Core.ApiResult
         /// <summary>
         /// 响应成功
         /// </summary>
+        /// <typeparam name="TVO"></typeparam>
         /// <param name="data"></param>
         /// <param name="message"></param>
-        public static ListResultVO<TVO> IsSuccess<TVO>(IList<TVO> data, string message = "") where TVO : IViewObject
+        /// <returns></returns>
+        public static ApiResultList<TVO> IsSuccess<TVO>(IList<TVO> data, string message = "") where TVO : IViewObject
         {
-            return new ListResultVO<TVO>()
+            return new ApiResultPage<TVO>()
             {
                 Message = message,
-                Code = ResultCode.Succeed,
-                Data = data ?? default
+                Code = ApiResultCode.Succeed,
+                Data = data ?? default,
             };
         }
 
@@ -185,14 +64,80 @@ namespace Kaneko.Core.ApiResult
         /// <param name="count"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static PageResultVO<TVO> IsSuccess<TVO>(IList<TVO> data, int count, string message = "") where TVO : IViewObject
+        public static ApiResultPage<TVO> IsSuccess<TVO>(IList<TVO> data, int count, string message = "") where TVO : IViewObject
         {
-            return new PageResultVO<TVO>()
+            return new ApiResultPage<TVO>()
             {
                 Message = message,
-                Code = ResultCode.Succeed,
+                Code = ApiResultCode.Succeed,
                 Data = data ?? default,
                 Count = count
+            };
+        }
+
+        /// <summary>
+        /// 响应失败
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        public static ApiResult IsFailed(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail)
+        {
+            return new ApiResult()
+            {
+                Message = message,
+                Code = resultCode
+            };
+        }
+
+        /// <summary>
+        /// 响应失败
+        /// </summary>
+        /// <typeparam name="TVO"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        public static ApiResult<TVO> IsFailed<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail) where TVO : IViewObject
+        {
+            return new ApiResult<TVO>()
+            {
+                Message = message,
+                Code = resultCode,
+                Data = default
+            };
+        }
+
+        /// <summary>
+        /// 响应失败
+        /// </summary>
+        /// <typeparam name="TVO"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        public static ApiResultList<TVO> IsFailedList<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail) where TVO : IViewObject
+        {
+            return new ApiResultList<TVO>()
+            {
+                Message = message,
+                Code = resultCode,
+                Data = default
+            };
+        }
+
+        /// <summary>
+        /// 响应失败
+        /// </summary>
+        /// <typeparam name="TVO"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        public static ApiResultPage<TVO> IsFailedPage<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail) where TVO : IViewObject
+        {
+            return new ApiResultPage<TVO>()
+            {
+                Message = message,
+                Code = resultCode,
+                Data = default
             };
         }
     }

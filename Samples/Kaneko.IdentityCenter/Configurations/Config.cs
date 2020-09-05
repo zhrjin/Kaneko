@@ -35,12 +35,25 @@ namespace Kaneko.IdentityCenter.Configurations
             var scopes = _configuration.GetSection("ApiScopes").Get<List<ApiScope>>();
             return scopes;
         }
+
+        internal static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new[]
+            {
+                new ApiResource("kanekoApi", "gateway api client")
+                {
+                    ApiSecrets = { new Secret("Kaneko@123!".Sha256()) },
+                    Scopes=new[] { "kanekoApiScopes"}
+                }
+            };
+        }
+
         internal static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                new IdentityResources.Profile()
             };
         }
 

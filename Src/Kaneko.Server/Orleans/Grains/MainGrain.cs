@@ -3,15 +3,14 @@ using Orleans;
 using System;
 using System.Threading.Tasks;
 using Kaneko.Server.AutoMapper;
-using Orleans.Concurrency;
 using Orleans.Runtime;
+using Kaneko.Core.Users;
 
 namespace Kaneko.Server.Orleans.Grains
 {
     /// <summary>
     /// 常用Grain
     /// </summary>
-    [Reentrant]
     public abstract class MainGrain : Grain, IIncomingGrainCallFilter, IOutgoingGrainCallFilter
     {
         /// <summary>
@@ -61,7 +60,7 @@ namespace Kaneko.Server.Orleans.Grains
 
         public Task Invoke(IIncomingGrainCallContext context)
         {
-         
+            string sss = RequestContext.Get(UserConsts.ClaimTypes.UserData) as string;
 
             return context.Invoke();
         }

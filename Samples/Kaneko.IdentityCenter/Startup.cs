@@ -21,6 +21,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using IdentityServer4.EntityFramework.Stores;
+using Kaneko.Core.Users;
 
 namespace Kaneko.IdentityCenter
 {
@@ -76,7 +78,10 @@ namespace Kaneko.IdentityCenter
                     {
                         builder.UseSqlServer(connectionString);
                     };
+
+                    options.EnableTokenCleanup = true;//允许对Token的清理
                 })
+                .AddPersistedGrantStore<PersistedGrantStore>()
                 .AddConfigurationStoreCache()
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddProfileService<KanekoProfileService>()
@@ -108,6 +113,8 @@ namespace Kaneko.IdentityCenter
             app.UseConsul();
 
             //Task.Run(() => InitDatabase(app));
+
+            //InitializeDatabase(app);
         }
 
         private void InitializeDatabase(IApplicationBuilder app)
@@ -118,9 +125,24 @@ namespace Kaneko.IdentityCenter
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
 
-                //context.Database.EnsureCreated();
+                context.Database.EnsureCreated();
+
                 var sql = context.Database.GenerateCreateScript();
-                if (!context.Clients.Any())
+
+                context.ApiResources.RemoveRange(context.ApiResources);
+
+                //if (!context.ApiResources.Any())
+                {
+                    foreach (var resource in Config.GetApiResources())
+                    {
+                        context.ApiResources.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
+
+                context.Clients.RemoveRange(context.Clients);
+              
+                //if (!context.Clients.Any())
                 {
                     foreach (var client in Config.GetClients())
                     {
@@ -129,7 +151,9 @@ namespace Kaneko.IdentityCenter
                     context.SaveChanges();
                 }
 
-                if (!context.IdentityResources.Any())
+                context.IdentityResources.RemoveRange(context.IdentityResources);
+
+                //if (!context.IdentityResources.Any())
                 {
                     foreach (var resource in Config.GetIdentityResources())
                     {
@@ -138,7 +162,9 @@ namespace Kaneko.IdentityCenter
                     context.SaveChanges();
                 }
 
-                if (!context.ApiScopes.Any())
+                context.ApiScopes.RemoveRange(context.ApiScopes);
+
+                //if (!context.ApiScopes.Any())
                 {
                     foreach (var resource in Config.GetApiScopes())
                     {
@@ -146,6 +172,9 @@ namespace Kaneko.IdentityCenter
                     }
                     context.SaveChanges();
                 }
+
+               
+
             }
         }
 
@@ -160,7 +189,7 @@ namespace Kaneko.IdentityCenter
             {
                 foreach (var user in DatabaseIniter.GetUsers())
                 {
-                    _ = userManager.CreateAsync(user, Consts.DefaultUserPassword).Result;
+                    _ = userManager.CreateAsync(user, UserConsts.DefaultUserPassword).Result;
                 }
             }
 

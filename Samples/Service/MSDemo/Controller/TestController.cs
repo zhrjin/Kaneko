@@ -8,7 +8,7 @@ using Orleans;
 using Orleans.Runtime;
 using System.Threading.Tasks;
 
-namespace MSDemo.Application
+namespace MSDemo.Controller
 {
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -22,22 +22,16 @@ namespace MSDemo.Application
         }
 
         [HttpPost]
-        public Task<DataResultVO<TestVO>> GetResult(TestDTO dto)
+        public Task<ApiResult<TestVO>> GetResult(TestDTO dto)
         {
-            var strings = this.HttpContext.Request.Headers["Authorization"].ToString();
-
             string ddd = System.Guid.NewGuid().ToString();
             dto.UserId = ddd;
 
-            RequestContext.Set("ddd", ddd);
-
-            //Task.Delay(5000).Wait();
-
-            return factory.GetGrain<ITestGrain>(ddd).GetResult(dto);
+            return factory.GetGrain<ITestGrain>(ddd).GetResultTest1(dto);
         }
 
         [HttpPost("CapBusTest")]
-        public Task<ResultVO> CapBusTest()
+        public Task<ApiResult> CapBusTest()
         {
             return factory.GetGrain<ITestGrain>("111").CapBusTest();
         }

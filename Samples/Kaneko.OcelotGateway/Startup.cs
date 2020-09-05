@@ -10,6 +10,8 @@ using Ocelot.Cache.CacheManager;
 using Microsoft.OpenApi.Models;
 using IdentityServer4.AccessTokenValidation;
 using System;
+using System.Net.Http;
+using IdentityModel.Client;
 
 namespace Kaneko.OcelotGateway
 {
@@ -28,9 +30,15 @@ namespace Kaneko.OcelotGateway
             var ocelotOptions = new OcelotOptions();
             Configuration.Bind(ocelotOptions);
 
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "192.168.45.132:6379";
+                options.InstanceName = "KanekoOcelot";
+            });
+
             //注册ID4校验方式1
             //services.AddAuthentication("Bearer")
-            //        .AddJwtBearer(authenticationProviderKey, options =>
+            //        .AddJwtBearer("", options =>
             //        {
             //            options.Authority = "http://192.168.0.106:12345";
             //            options.RequireHttpsMetadata = false;
@@ -46,14 +54,40 @@ namespace Kaneko.OcelotGateway
 
                 //注册ID4校验方式2
                 services.AddAuthentication()
-                        .AddIdentityServerAuthentication(route.AuthenticationOptions.AuthenticationProviderKey, option =>
-                        {
-                            option.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
-                            option.RequireHttpsMetadata = false;
-                            option.SupportedTokens = SupportedTokens.Both;
-                            option.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
-                            option.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
-                        })
+                        //.AddIdentityServerAuthentication(route.AuthenticationOptions.AuthenticationProviderKey, option =>
+                        //{
+                        //    option.ApiName = "kanekoApi";
+                        //    option.ApiSecret = "Kaneko@123!";
+
+                        //    option.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
+                        //    option.RequireHttpsMetadata = false;
+                        //    option.SupportedTokens = SupportedTokens.Both;
+                        //    option.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
+                        //    option.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
+                        //})
+
+                        .AddIdentityServerAuthentication(route.AuthenticationOptions.AuthenticationProviderKey,
+                            jwtBearerOptions =>
+                            {
+                                jwtBearerOptions.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
+                                jwtBearerOptions.RequireHttpsMetadata = false;
+                                jwtBearerOptions.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                                {
+                                    ValidateAudience = false
+                                };
+                            },
+                            OAuth2IntrospectionOptions =>
+                            {
+
+                                OAuth2IntrospectionOptions.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
+                                OAuth2IntrospectionOptions.ClientId = "kanekoApi";
+                                OAuth2IntrospectionOptions.ClientSecret = "Kaneko@123!";
+                                //OAuth2IntrospectionOptions.RequireHttpsMetadata = false;
+                                OAuth2IntrospectionOptions.DiscoveryPolicy.RequireHttps = false;
+                                OAuth2IntrospectionOptions.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
+                                OAuth2IntrospectionOptions.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
+                            }
+                        )
                        ;
             }
 
@@ -104,6 +138,8 @@ namespace Kaneko.OcelotGateway
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

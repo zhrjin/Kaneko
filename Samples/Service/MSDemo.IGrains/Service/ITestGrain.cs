@@ -8,8 +8,9 @@ namespace MSDemo.IGrains.Service
 {
     public interface ITestGrain : IMainGrain
     {
-        Task<DataResultVO<TestVO>> GetResult(TestDTO dto);
+        Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto);
+        Task<ApiResultPage<TestVO>> GetResultTest2(TestDTO dto);
 
-        Task<ResultVO> CapBusTest();
+        Task<ApiResult> CapBusTest();
     }
 }

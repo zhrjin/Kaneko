@@ -1,12 +1,8 @@
-﻿using System.Security.Claims;
-
-namespace Kaneko.Core.Users
+﻿namespace Kaneko.Core.Users
 {
     public interface ICurrentUser
     {
-        bool IsAuthenticated { get; }
-
-        string Id { get; }
+        string UserId { get; }
 
         string UserName { get; }
 
@@ -14,14 +10,31 @@ namespace Kaneko.Core.Users
 
         string Email { get; }
 
+        string ClientId { get; }
+
         string[] Roles { get; }
 
-        Claim FindClaim(string claimType);
-
-        Claim[] FindClaims(string claimType);
-
-        Claim[] GetAllClaims();
-
         bool IsInRole(string roleName);
+    }
+
+    public class CurrentUser : ICurrentUser
+    {
+
+        public string UserId { get; set; }
+
+        public string UserName { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string Email { get; set; }
+
+        public string ClientId { get; set; }
+
+        public string[] Roles { get; set; }
+
+        public bool IsInRole(string roleName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

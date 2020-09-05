@@ -1,14 +1,14 @@
 ﻿using System.IO;
 
-namespace Kaneko.IdentityCenter.Service
+namespace Kaneko.Core.Users
 {
-    internal class Consts
+    public class UserConsts
     {
         public static ClaimTypes ClaimTypes { get; internal set; } = new ClaimTypes();
         public static string DefaultUserPassword { get; internal set; } = "123456";
     }
 
-    internal class ClaimTypes
+    public class ClaimTypes
     {
         public string ClientId  = "ClientId";
 

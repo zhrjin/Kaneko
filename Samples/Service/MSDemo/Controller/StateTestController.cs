@@ -7,7 +7,7 @@ using MSDemo.IGrains.VO;
 using Orleans;
 using System.Threading.Tasks;
 
-namespace MSDemo.Application
+namespace MSDemo.Controller
 {
     [ApiVersion("1")]
     [Route("api/[controller]")]
@@ -21,13 +21,13 @@ namespace MSDemo.Application
         }
 
         [HttpPost]
-        public Task<DataResultVO<TestVO>> GetResult(TestDTO dto)
+        public Task<ApiResult<TestVO>> GetResult(TestDTO dto)
         {
-            var ddd= factory.GetGrain<IStateTestGrain>("111").GetResult(dto);
+            var ddd = factory.GetGrain<IStateTestGrain>("111").GetResult(dto);
 
-         var dd=    ddd.Result;
+            var dd = ddd.Result;
 
             return ddd;
-        } 
+        }
     }
 }

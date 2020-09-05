@@ -3,7 +3,7 @@
     /// <summary>
     /// 异常码
     /// </summary>
-    public enum ResultCode
+    public enum ApiResultCode
     {
         /// <summary>
         /// 成功

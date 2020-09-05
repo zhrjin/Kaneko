@@ -1,35 +1,39 @@
 {
-  //¿Í»§¶Ë
+  //å®¢æˆ·ç«¯
   "Clients": [
     {
-      "ClientId": "wpf",
+      "ClientId": "client_auth2",
       "ClientSecrets": [
-        { "Value": "wpf_secret" }
+        { "Value": "Kaneko@123!" }
       ],
-      "AllowedGrantTypes": [ "client_credentials" ],
+      "AllowedGrantTypes": [ "client_credentials", "password" ],
+      "AccessTokenType": "Reference",
+      "AccessTokenLifetime": 43200,
+      "AllowOfflineAccess": true,
       "Enabled": "true",
-      "AllowedScopes": [ "system", "mes" ]
+      "AllowedScopes": [ "profile", "openid", "system", "kanekoApiScopes" ]
     },
     {
-      "ClientId": "web",
+      "ClientId": "client_jwt",
       "ClientSecrets": [
-        { "Value": "web_secret" }
+        { "Value": "Kaneko@123!" }
       ],
-      "AllowedGrantTypes": [ "password" ],
+      "AccessTokenType": "Jwt",
+      "AllowedGrantTypes": [ "client_credentials", "password" ],
       "Enabled": "true",
-      "AllowedScopes": [ "openid", "profile", "system", "mes" ]
+      "AllowedScopes": [ "profile", "openid", "system" ]
     }
   ],
-  //api½Ó¿ÚÅäÖÃ
+  //apiæ¥å£é…ç½®
   "ApiScopes": [
     {
       "Name": "system",
-      "DisplayName": "ÏµÍ³¹ÜÀí·şÎñ",
+      "DisplayName": "ç³»ç»Ÿç®¡ç†æœåŠ¡",
       "Enabled": true
     },
     {
-      "Name": "mes",
-      "DisplayName": "mesÏµÍ³·şÎñ",
+      "Name": "kanekoApiScopes",
+      "DisplayName": "ç½‘å…³éªŒè¯æœåŠ¡",
       "Enabled": true
     }
   ]

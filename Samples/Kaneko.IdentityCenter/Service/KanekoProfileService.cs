@@ -1,9 +1,9 @@
 ﻿using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using Kaneko.Core.Users;
 using Kaneko.IdentityCenter.Data;
 using Kaneko.IdentityCenter.Entities;
-using Kaneko.IdentityCenter.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -31,8 +31,8 @@ namespace Kaneko.IdentityCenter.Service
             List<Claim> claims = new List<Claim>();
             var principal = await _userClaimsPrincipalFactory.CreateAsync(currentUser);
             claims.AddRange(principal.Claims);
-        
-            UserData userData = new UserData
+
+            CurrentUser userData = new CurrentUser
             {
                 UserId = currentUser.Id,
                 UserName = currentUser.UserName,
@@ -40,7 +40,7 @@ namespace Kaneko.IdentityCenter.Service
                 ClientId = context.Client.ClientId
             };
 
-            claims.Add(new Claim(Consts.ClaimTypes.UserData, Newtonsoft.Json.JsonConvert.SerializeObject(userData)));
+            claims.Add(new Claim(UserConsts.ClaimTypes.UserData, Newtonsoft.Json.JsonConvert.SerializeObject(userData)));
             context.IssuedClaims.AddRange(claims);
         }
 

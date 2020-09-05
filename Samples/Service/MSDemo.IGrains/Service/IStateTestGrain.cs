@@ -8,6 +8,6 @@ namespace MSDemo.IGrains.Service
 {
     public interface IStateTestGrain : IStateGrain
     {
-        Task<DataResultVO<TestVO>> GetResult(TestDTO dto);
+        Task<ApiResult<TestVO>> GetResult(TestDTO dto);
     }
 }

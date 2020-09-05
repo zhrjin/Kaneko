@@ -1,15 +1,17 @@
 ﻿using Kaneko.Core.Contract;
+using System.Collections.Generic;
+
 namespace Kaneko.Core.ApiResult
 {
     /// <summary>
-    /// 单笔数据结果
+    /// 列表数据结果集
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DataResultVO<TVO> : ResultVO where TVO : IViewObject
+    public class ApiResultList<TVO> : ApiResult where TVO : IViewObject
     {
         /// <summary>
         /// 数据
         /// </summary>
-        public TVO Data { set; get; }
+        public IList<TVO> Data { set; get; }
     }
 }
