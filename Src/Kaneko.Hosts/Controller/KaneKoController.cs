@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kaneko.Hosts.Controller
 {
     [ApiController]
-    [ServiceFilter(typeof(KanekoActionFilterAttribute))]
+    [KanekoActionFilter]
     public class KaneKoController : ControllerBase
     {
     }

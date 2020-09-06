@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Concurrency;
 using Orleans.Providers;
+using Kaneko.Core.IdentityServer;
+using Orleans.Runtime;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -17,6 +19,8 @@ namespace Kaneko.Server.Orleans.Grains
     [StorageProvider(ProviderName = "RedisStore")]
     public abstract class StateGrain<TState> : Grain<TState>, IIncomingGrainCallFilter where TState : new()
     {
+        protected ICurrentUser CurrentUser { get; private set; }
+
         /// <summary>
         /// Log
         /// </summary>
@@ -83,6 +87,9 @@ namespace Kaneko.Server.Orleans.Grains
         {
             try
             {
+                string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+                if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
+
                 await context.Invoke();
 
                 await Task.Run(() =>

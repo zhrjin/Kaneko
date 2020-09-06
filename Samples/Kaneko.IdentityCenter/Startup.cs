@@ -22,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.EntityFramework.Stores;
-using Kaneko.Core.Users;
+using Kaneko.Core.IdentityServer;
 
 namespace Kaneko.IdentityCenter
 {
@@ -141,7 +141,7 @@ namespace Kaneko.IdentityCenter
                 }
 
                 context.Clients.RemoveRange(context.Clients);
-              
+
                 //if (!context.Clients.Any())
                 {
                     foreach (var client in Config.GetClients())
@@ -173,7 +173,7 @@ namespace Kaneko.IdentityCenter
                     context.SaveChanges();
                 }
 
-               
+
 
             }
         }
@@ -189,7 +189,7 @@ namespace Kaneko.IdentityCenter
             {
                 foreach (var user in DatabaseIniter.GetUsers())
                 {
-                    _ = userManager.CreateAsync(user, UserConsts.DefaultUserPassword).Result;
+                    _ = userManager.CreateAsync(user, IdentityServerConsts.DefaultUserPassword).Result;
                 }
             }
 

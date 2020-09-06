@@ -1,11 +1,13 @@
 ﻿using System.IO;
 
-namespace Kaneko.Core.Users
+namespace Kaneko.Core.IdentityServer
 {
-    public class UserConsts
+    public class IdentityServerConsts
     {
         public static ClaimTypes ClaimTypes { get; internal set; } = new ClaimTypes();
         public static string DefaultUserPassword { get; internal set; } = "123456";
+
+        public static string HttpClientName { get; internal set; } = "GetIdentityServerUserInfo";
     }
 
     public class ClaimTypes
@@ -15,6 +17,6 @@ namespace Kaneko.Core.Users
         public string RoleAccess  = "RoleAccess";
 
         public string UserAccess  = "UserAccess";
-        public string UserData  = "UserData";
+        public string UserData  = "KanekoUserData";
     }
 }

@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Kaneko.Server.AutoMapper;
 using Orleans.Runtime;
-using Kaneko.Core.Users;
+using Kaneko.Core.IdentityServer;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -13,6 +13,8 @@ namespace Kaneko.Server.Orleans.Grains
     /// </summary>
     public abstract class MainGrain : Grain, IIncomingGrainCallFilter, IOutgoingGrainCallFilter
     {
+        protected ICurrentUser CurrentUser { get; private set; }
+
         /// <summary>
         /// Log
         /// </summary>
@@ -60,8 +62,8 @@ namespace Kaneko.Server.Orleans.Grains
 
         public Task Invoke(IIncomingGrainCallContext context)
         {
-            string sss = RequestContext.Get(UserConsts.ClaimTypes.UserData) as string;
-
+            string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+            if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
             return context.Invoke();
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Kaneko.Core.Users
+﻿namespace Kaneko.Core.IdentityServer
 {
     public interface ICurrentUser
     {

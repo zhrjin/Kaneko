@@ -27,16 +27,9 @@ namespace Kaneko.Hosts.Extensions
         /// <returns></returns>
         public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> setupAction = null)
         {
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = "192.168.45.132:6379";
-                options.InstanceName = "Kaneko";
-            });
-
-            services.AddTransient<KanekoActionFilterAttribute>();
-
             services.AddConsul(configuration);
 
+            //orleans健康检查
             //services
             //     .AddHostedService<HealthCheckHostedService>()
             //     .Configure<HealthCheckHostedServiceOptions>(options =>

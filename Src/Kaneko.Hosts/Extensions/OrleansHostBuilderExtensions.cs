@@ -24,6 +24,7 @@ using Kaneko.Server.Orleans.Services;
 using Kaneko.Core.Configuration;
 using Kaneko.Server.Orleans.HostServices;
 using Microsoft.Extensions.Logging;
+using Kaneko.Core.IdentityServer;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -216,6 +217,24 @@ namespace Kaneko.Hosts.Extensions
         {
             silo.ConfigureServices((context, services) =>
             {
+                if (OrleansConfig.Redis.Enabled)
+                {
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        options.Configuration = $"{OrleansConfig.Redis.HostName}:{OrleansConfig.Redis.Port}";
+                        options.InstanceName = OrleansConfig.Redis.InstanceName;
+                        if (!string.IsNullOrEmpty(OrleansConfig.Redis.Password))
+                        {
+                            options.ConfigurationOptions.Password = OrleansConfig.Redis.Password;
+                        }
+                    });
+                }
+
+                services.AddHttpClient(IdentityServerConsts.HttpClientName, c =>
+                {
+                    c.BaseAddress = new Uri(OrleansConfig.KanekoIdentityCenter.Authority);
+                });
+
                 //cap
                 if (OrleansConfig.Cap.Enable)
                 {

@@ -37,18 +37,6 @@ namespace Kaneko.Core.Configuration
             }
         }
 
-        public string Urls { get; set; }
-
-        public OrleansConfig Orleans { get; set; } = new OrleansConfig();
-
-        public ConsulConfig Consul { get; set; } = new ConsulConfig();
-
-        public MongoDBConfig MongoDB { get; set; } = new MongoDBConfig();
-
-        public RabbitMQOptions RabbitMQ { get; set; } = new RabbitMQOptions();
-
-        public CapConfig Cap { get; set; } = new CapConfig();
-
         public string ServiceId
         {
             get
@@ -64,6 +52,22 @@ namespace Kaneko.Core.Configuration
                 return ServiceName;
             }
         }
+
+        public string Urls { get; set; }
+
+        public OrleansConfig Orleans { get; set; } = new OrleansConfig();
+
+        public ConsulConfig Consul { get; set; } = new ConsulConfig();
+
+        public MongoDBConfig MongoDB { get; set; } = new MongoDBConfig();
+
+        public RabbitMQOptions RabbitMQ { get; set; } = new RabbitMQOptions();
+
+        public CapConfig Cap { get; set; } = new CapConfig();
+
+        public Redis Redis { get; set; } = new Redis();
+
+        public KanekoIdentityCenter KanekoIdentityCenter { get; set; } = new KanekoIdentityCenter();
     }
 
     public class ConsulConfig
@@ -178,5 +182,24 @@ namespace Kaneko.Core.Configuration
             set;
         }
 
+    }
+
+    public class Redis
+    {
+        public bool Enabled { get; set; } = false;
+        public string HostName { get; set; }
+        public int Port { get; set; }
+        public string InstanceName { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class KanekoIdentityCenter
+    {
+        public string Authority { set; get; }
+        public string UserInfoUrl { set; get; }
+
+        public double CacheDurationMinutes { set; get; } = 10;
+
+        public bool EnableCaching { set; get; } = true;
     }
 }

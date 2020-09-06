@@ -53,7 +53,10 @@
         "AuthenticationProviderKey": "MSDemoKey",
         "AllowedScopes": []
       },
-      "UseServiceDiscovery": true
+      "UseServiceDiscovery": true,
+      "AddHeadersToRequest": {
+        "KanekoUserData": "Claims[KanekoUserData] > value"
+      }
     },
 
     //把ID4_Server认证授权服务器也配置进来,但它不再Ocelot层次上加密,单纯的进行转发
@@ -83,7 +86,7 @@
 
     // 使用Consul服务治理
     "ServiceDiscoveryProvider": {
-      "Host": "192.168.45.132",
+      "Host": "192.168.45.133",
       "Port": 8500
     }
   },
@@ -93,6 +96,17 @@
   "KanekoIdentityCenter": {
     "Authority": "http://192.168.0.106:12345",
     "EnableCaching": true,
-    "CacheDurationMinutes": 30
+    "CacheDurationMinutes": 30,
+    "ClientId": "kanekoApi",
+    "ClientSecret": "Kaneko@123!"
+  },
+
+  "Redis": {
+    "Enabled": true,
+    "HostName": "192.168.45.133",
+    "Port": "6379",
+    "InstanceName": "kaneko",
+    "UserName": "",
+    "Password": ""
   }
 }

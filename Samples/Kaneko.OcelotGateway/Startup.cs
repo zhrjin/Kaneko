@@ -8,10 +8,10 @@ using Ocelot.Provider.Consul;
 using Ocelot.Provider.Polly;
 using Ocelot.Cache.CacheManager;
 using Microsoft.OpenApi.Models;
-using IdentityServer4.AccessTokenValidation;
 using System;
-using System.Net.Http;
-using IdentityModel.Client;
+using Kaneko.OcelotGateway.Filter;
+using System.Runtime.Intrinsics;
+using System.Threading.Tasks;
 
 namespace Kaneko.OcelotGateway
 {
@@ -30,42 +30,25 @@ namespace Kaneko.OcelotGateway
             var ocelotOptions = new OcelotOptions();
             Configuration.Bind(ocelotOptions);
 
-            services.AddStackExchangeRedisCache(options =>
+            if (ocelotOptions.Redis.Enabled)
             {
-                options.Configuration = "192.168.45.132:6379";
-                options.InstanceName = "KanekoOcelot";
-            });
-
-            //注册ID4校验方式1
-            //services.AddAuthentication("Bearer")
-            //        .AddJwtBearer("", options =>
-            //        {
-            //            options.Authority = "http://192.168.0.106:12345";
-            //            options.RequireHttpsMetadata = false;
-            //            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-            //            {
-            //                ValidateAudience = false
-            //            };
-            //        });
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = $"{ocelotOptions.Redis.HostName}:{ocelotOptions.Redis.Port}";
+                    options.InstanceName = ocelotOptions.Redis.InstanceName;
+                    if (!string.IsNullOrEmpty(ocelotOptions.Redis.Password))
+                    {
+                        options.ConfigurationOptions.Password = ocelotOptions.Redis.Password;
+                    }
+                });
+            }
 
             foreach (var route in ocelotOptions.Routes)
             {
                 if (route.AuthenticationOptions == null || string.IsNullOrEmpty(route.AuthenticationOptions.AuthenticationProviderKey)) { continue; }
 
-                //注册ID4校验方式2
+                //注册ID4校验
                 services.AddAuthentication()
-                        //.AddIdentityServerAuthentication(route.AuthenticationOptions.AuthenticationProviderKey, option =>
-                        //{
-                        //    option.ApiName = "kanekoApi";
-                        //    option.ApiSecret = "Kaneko@123!";
-
-                        //    option.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
-                        //    option.RequireHttpsMetadata = false;
-                        //    option.SupportedTokens = SupportedTokens.Both;
-                        //    option.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
-                        //    option.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
-                        //})
-
                         .AddIdentityServerAuthentication(route.AuthenticationOptions.AuthenticationProviderKey,
                             jwtBearerOptions =>
                             {
@@ -78,11 +61,9 @@ namespace Kaneko.OcelotGateway
                             },
                             OAuth2IntrospectionOptions =>
                             {
-
                                 OAuth2IntrospectionOptions.Authority = ocelotOptions.KanekoIdentityCenter.Authority;
-                                OAuth2IntrospectionOptions.ClientId = "kanekoApi";
-                                OAuth2IntrospectionOptions.ClientSecret = "Kaneko@123!";
-                                //OAuth2IntrospectionOptions.RequireHttpsMetadata = false;
+                                OAuth2IntrospectionOptions.ClientId = ocelotOptions.KanekoIdentityCenter.ClientId;
+                                OAuth2IntrospectionOptions.ClientSecret = ocelotOptions.KanekoIdentityCenter.ClientSecret;
                                 OAuth2IntrospectionOptions.DiscoveryPolicy.RequireHttps = false;
                                 OAuth2IntrospectionOptions.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
                                 OAuth2IntrospectionOptions.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
@@ -108,7 +89,10 @@ namespace Kaneko.OcelotGateway
                 });
             });
 
-            services.AddControllers();
+            services.AddControllers(mvcOption =>
+            {
+                mvcOption.Filters.Add(new AsyncAuthorizationFilter());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -138,7 +122,6 @@ namespace Kaneko.OcelotGateway
             {
                 endpoints.MapControllers();
             });
-
 
         }
     }

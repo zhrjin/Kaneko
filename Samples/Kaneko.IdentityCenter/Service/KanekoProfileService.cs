@@ -1,7 +1,7 @@
 ﻿using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using Kaneko.Core.Users;
+using Kaneko.Core.IdentityServer;
 using Kaneko.IdentityCenter.Data;
 using Kaneko.IdentityCenter.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +40,7 @@ namespace Kaneko.IdentityCenter.Service
                 ClientId = context.Client.ClientId
             };
 
-            claims.Add(new Claim(UserConsts.ClaimTypes.UserData, Newtonsoft.Json.JsonConvert.SerializeObject(userData)));
+            claims.Add(new Claim(IdentityServerConsts.ClaimTypes.UserData, Newtonsoft.Json.JsonConvert.SerializeObject(userData)));
             context.IssuedClaims.AddRange(claims);
         }
 
