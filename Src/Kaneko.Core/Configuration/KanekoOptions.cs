@@ -66,8 +66,6 @@ namespace Kaneko.Core.Configuration
         public CapConfig Cap { get; set; } = new CapConfig();
 
         public Redis Redis { get; set; } = new Redis();
-
-        public KanekoIdentityCenter KanekoIdentityCenter { get; set; } = new KanekoIdentityCenter();
     }
 
     public class ConsulConfig
@@ -191,15 +189,5 @@ namespace Kaneko.Core.Configuration
         public int Port { get; set; }
         public string InstanceName { get; set; }
         public string Password { get; set; }
-    }
-
-    public class KanekoIdentityCenter
-    {
-        public string Authority { set; get; }
-        public string UserInfoUrl { set; get; }
-
-        public double CacheDurationMinutes { set; get; } = 10;
-
-        public bool EnableCaching { set; get; } = true;
     }
 }

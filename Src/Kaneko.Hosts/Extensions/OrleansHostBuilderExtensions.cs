@@ -230,11 +230,6 @@ namespace Kaneko.Hosts.Extensions
                     });
                 }
 
-                services.AddHttpClient(IdentityServerConsts.HttpClientName, c =>
-                {
-                    c.BaseAddress = new Uri(OrleansConfig.KanekoIdentityCenter.Authority);
-                });
-
                 //cap
                 if (OrleansConfig.Cap.Enable)
                 {
