@@ -19,8 +19,8 @@ namespace Kaneko.Core.ApiResult
         {
             return new ApiResult()
             {
-                Message = message,
-                Code = ApiResultCode.Succeed
+                Info = message,
+                Code = ApiResultCode.Success
             };
         }
 
@@ -33,8 +33,8 @@ namespace Kaneko.Core.ApiResult
         {
             return new ApiResult<TVO>()
             {
-                Message = message,
-                Code = ApiResultCode.Succeed,
+                Info = message,
+                Code = ApiResultCode.Success,
                 Data = data ?? default
             };
         }
@@ -50,8 +50,8 @@ namespace Kaneko.Core.ApiResult
         {
             return new ApiResultPage<TVO>()
             {
-                Message = message,
-                Code = ApiResultCode.Succeed,
+                Info = message,
+                Code = ApiResultCode.Success,
                 Data = data ?? default,
             };
         }
@@ -68,8 +68,8 @@ namespace Kaneko.Core.ApiResult
         {
             return new ApiResultPage<TVO>()
             {
-                Message = message,
-                Code = ApiResultCode.Succeed,
+                Info = message,
+                Code = ApiResultCode.Success,
                 Data = data ?? default,
                 Count = count
             };
@@ -81,11 +81,11 @@ namespace Kaneko.Core.ApiResult
         /// <param name="message"></param>
         /// <param name="resultCode"></param>
         /// <returns></returns>
-        public static ApiResult IsFailed(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail)
+        public static ApiResult IsFailed(string message = "", ApiResultCode resultCode = ApiResultCode.Fail)
         {
             return new ApiResult()
             {
-                Message = message,
+                Info = message,
                 Code = resultCode
             };
         }
@@ -97,11 +97,11 @@ namespace Kaneko.Core.ApiResult
         /// <param name="message"></param>
         /// <param name="resultCode"></param>
         /// <returns></returns>
-        public static ApiResult<TVO> IsFailed<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail) where TVO : IViewObject
+        public static ApiResult<TVO> IsFailed<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.Fail) where TVO : IViewObject
         {
             return new ApiResult<TVO>()
             {
-                Message = message,
+                Info = message,
                 Code = resultCode,
                 Data = default
             };
@@ -114,11 +114,11 @@ namespace Kaneko.Core.ApiResult
         /// <param name="message"></param>
         /// <param name="resultCode"></param>
         /// <returns></returns>
-        public static ApiResultList<TVO> IsFailedList<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail) where TVO : IViewObject
+        public static ApiResultList<TVO> IsFailedList<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.Fail) where TVO : IViewObject
         {
             return new ApiResultList<TVO>()
             {
-                Message = message,
+                Info = message,
                 Code = resultCode,
                 Data = default
             };
@@ -131,11 +131,11 @@ namespace Kaneko.Core.ApiResult
         /// <param name="message"></param>
         /// <param name="resultCode"></param>
         /// <returns></returns>
-        public static ApiResultPage<TVO> IsFailedPage<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.UnknownFail) where TVO : IViewObject
+        public static ApiResultPage<TVO> IsFailedPage<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.Fail) where TVO : IViewObject
         {
             return new ApiResultPage<TVO>()
             {
-                Message = message,
+                Info = message,
                 Code = resultCode,
                 Data = default
             };

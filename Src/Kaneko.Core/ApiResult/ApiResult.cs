@@ -13,11 +13,11 @@
         /// <summary>
         ///
         /// </summary>
-        public string Message { set; get; }
+        public string Info { set; get; }
 
         /// <summary>
         /// 成功标志
         /// </summary>
-        public bool Success => Code == ApiResultCode.Succeed;
+        public bool Success => Code == ApiResultCode.Success;
     }
 }

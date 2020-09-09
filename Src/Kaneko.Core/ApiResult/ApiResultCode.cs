@@ -8,17 +8,30 @@
         /// <summary>
         /// 成功
         /// </summary>
-        Succeed = 200,
+        Success = 200,
+
+        /// <summary>
+        /// 失败
+        /// </summary>
+        Fail = 400,
+        /// <summary>
+        /// 异常
+        /// </summary>
+        Exception = 500,
+        /// <summary>
+        /// 没有登录信息
+        /// </summary>
+        Nologin = 410,
+
+        /// <summary>
+        /// 初始化密码
+        /// </summary>
+        Initpassword = 600,
 
         /// <summary>
         /// 未知错误
         /// </summary>
         UnknownFail = 500,
-
-        /// <summary>
-        /// 程序异常
-        /// </summary>
-        Error = 501,
 
         /// <summary>
         /// 未发现
