@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Kaneko.OcelotGateway
 {
@@ -18,6 +19,11 @@ namespace Kaneko.OcelotGateway
                     configBuilder.SetBasePath(hostContext.HostingEnvironment.ContentRootPath)
                     .AddJsonFile("Ocelot.json", optional: true, reloadOnChange: true);
                 })
+                 .ConfigureLogging((hostingContext, logging) =>
+                 {
+                     logging.SetMinimumLevel(LogLevel.Information);
+                     logging.AddConsole(options => options.IncludeScopes = true);
+                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

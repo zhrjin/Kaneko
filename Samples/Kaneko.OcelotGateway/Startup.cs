@@ -9,9 +9,6 @@ using Ocelot.Provider.Polly;
 using Ocelot.Cache.CacheManager;
 using Microsoft.OpenApi.Models;
 using System;
-using Kaneko.OcelotGateway.Filter;
-using System.Runtime.Intrinsics;
-using System.Threading.Tasks;
 
 namespace Kaneko.OcelotGateway
 {
@@ -32,6 +29,7 @@ namespace Kaneko.OcelotGateway
 
             if (ocelotOptions.Redis.Enabled)
             {
+                //认证服务缓存
                 services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = $"{ocelotOptions.Redis.HostName}:{ocelotOptions.Redis.Port}";
@@ -65,14 +63,34 @@ namespace Kaneko.OcelotGateway
                                 OAuth2IntrospectionOptions.ClientId = ocelotOptions.KanekoIdentityCenter.ClientId;
                                 OAuth2IntrospectionOptions.ClientSecret = ocelotOptions.KanekoIdentityCenter.ClientSecret;
                                 OAuth2IntrospectionOptions.DiscoveryPolicy.RequireHttps = false;
-                                OAuth2IntrospectionOptions.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;
+                                OAuth2IntrospectionOptions.EnableCaching = ocelotOptions.KanekoIdentityCenter.EnableCaching;//需要实现IDistributedCache
                                 OAuth2IntrospectionOptions.CacheDuration = TimeSpan.FromMinutes(ocelotOptions.KanekoIdentityCenter.CacheDurationMinutes);
                             }
                         )
                        ;
             }
 
+            //需要放在最上面
+            services.AddCors(options =>
+            {
+                string[] origins = ocelotOptions.AllowedOrigins.Split(new char[1] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins(origins)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                );
+            });
+
             services.AddOcelot().AddConsul().AddPolly().AddCacheManager(x => x.WithDictionaryHandle());
+
+            //services.AddButterfly(option =>
+            //{
+            //    //this is the url that the butterfly collector server is running on...
+            //    option.CollectorUrl = ocelotOptions.TracingUrls;
+            //    option.Service = "KanekoOcelot";
+            //});
 
             services.AddSwaggerGen(options =>
             {
@@ -89,16 +107,16 @@ namespace Kaneko.OcelotGateway
                 });
             });
 
-            services.AddControllers(mvcOption =>
-            {
-                mvcOption.Filters.Add(new AsyncAuthorizationFilter());
-            });
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var ocelotOptions = new OcelotOptions();
             Configuration.Bind(ocelotOptions);
+
+            //需要放在最上面
+            app.UseCors("CorsPolicy");
 
             app.UseSwagger();
 
@@ -118,11 +136,11 @@ namespace Kaneko.OcelotGateway
             app.UseOcelot().Wait();
 
             app.UseRouting();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
         }
     }
 }

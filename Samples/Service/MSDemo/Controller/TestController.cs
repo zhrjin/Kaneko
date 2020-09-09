@@ -20,12 +20,10 @@ namespace MSDemo.Controller
             this.factory = factory;
         }
 
-        [HttpPost]
-        public Task<ApiResult<TestVO>> GetResult(TestDTO dto)
+        [HttpPost("result")]
+        public Task<ApiResult<TestVO>> GetResult([FromForm] TestDTO dto)
         {
             string ddd = System.Guid.NewGuid().ToString();
-            dto.UserId = ddd;
-
             return factory.GetGrain<ITestGrain>(ddd).GetResultTest1(dto);
         }
 

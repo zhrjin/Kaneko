@@ -28,7 +28,7 @@ namespace MSDemo.Grains.Service
 
         public Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto)
         {
-            TestDO demoDO = new TestDO { UserId = this.CurrentUser.UserId, UserName = this.CurrentUser.UserName };
+            TestDO demoDO = new TestDO { UserId = dto.UserId, UserName = this.CurrentUser?.UserName };
             TestVO demoVO = this.ObjectMapper.Map<TestVO>(demoDO);
             var result = ApiResultUtil.IsSuccess(demoVO);
             return Task.FromResult(result);

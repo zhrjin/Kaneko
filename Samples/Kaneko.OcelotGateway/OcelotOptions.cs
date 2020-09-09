@@ -9,7 +9,11 @@ namespace Kaneko.OcelotGateway
         public Redis Redis { set; get; }
 
         public List<Route> Routes { set; get; } = new List<Route>();
-    }
+
+        public string TracingUrls { set; get; }
+
+        public string AllowedOrigins { set; get; } = "*";
+}
 
     public class KanekoIdentityCenter
     {

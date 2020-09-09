@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/xianhenyuan/article/details/92669817" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="https://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+            //请求参数
+            var list = {};
+            //
+
+        });
+
+        function btnExec() {
+            $.ajax({
+                //请求方式
+                type: "POST",
+                dataType: "json",
+                //请求地址
+                url: "http://192.168.101.155:6011/msdemo/api/Test/result",
+                data: {
+                    "UserId": "123",
+                    "PageIndex": 1,
+                    "PageSize": 10
+                },
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div id="txtResult">测试</div>
+    </div>
+    <button onclick="btnExec()">测试</button>
+
+</body>
+</html>
