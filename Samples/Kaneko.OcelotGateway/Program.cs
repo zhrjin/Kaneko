@@ -24,6 +24,12 @@ namespace Kaneko.OcelotGateway
                      logging.SetMinimumLevel(LogLevel.Information);
                      logging.AddConsole(options => options.IncludeScopes = true);
                  })
+                .ConfigureLogging((context, logger) =>
+                {
+                    logger.AddFilter("System", LogLevel.Warning);
+                    logger.AddFilter("Microsoft", LogLevel.Warning);
+                    logger.AddLog4Net();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
