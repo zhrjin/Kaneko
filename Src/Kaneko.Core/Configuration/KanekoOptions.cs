@@ -66,6 +66,8 @@ namespace Kaneko.Core.Configuration
         public CapConfig Cap { get; set; } = new CapConfig();
 
         public Redis Redis { get; set; } = new Redis();
+
+        public Orm Orm { get; set; } = new Orm();
     }
 
     public class ConsulConfig
@@ -193,5 +195,10 @@ namespace Kaneko.Core.Configuration
         public bool UseJson { get; set; } = false;
 
         public int DatabaseNumber { get; set; } = 1;
+    }
+
+    public class Orm
+    {
+        public bool DDLAutoUpdate { set; get; } = true;
     }
 }

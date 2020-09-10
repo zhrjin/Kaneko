@@ -103,7 +103,6 @@ namespace Kaneko.Hosts.Extensions
 
                 SetReminder(siloBuilder);
                 SetStorage(siloBuilder);
-                SetStream(siloBuilder);
                 SetSiloSource(siloBuilder);
                 SetConfigureServices(siloBuilder, grainAssembly, autoMapperAssembly);
 
@@ -163,10 +162,6 @@ namespace Kaneko.Hosts.Extensions
                 silo.AddMemoryGrainStorage("RedisStore");
             }
 
-        }
-
-        private static void SetStream(ISiloBuilder silo)
-        {
         }
 
         private static void SetSiloSource(ISiloBuilder silo)
@@ -282,14 +277,16 @@ namespace Kaneko.Hosts.Extensions
                 //AutoMapper 注入
                 services.AddAutoMapper(autoMapperAssembly);
 
-                services.AddTransient<IDDLExecutor, DDLExecutor>();
-                Startup.Register(async serviceProvider =>
+                //自动更新表结构
+                if (OrleansConfig.Orm.DDLAutoUpdate)
                 {
-                    //var ddd = serviceProvider.GetService<IClusterClient>();
-                    var exec = serviceProvider.GetService<IDDLExecutor>();
-                    await exec.AutoAlterDbSchema(grainAssembly);
-                });
-
+                    services.AddTransient<IDDLExecutor, DDLExecutor>();
+                    Startup.Register(async serviceProvider =>
+                    {
+                        var exec = serviceProvider.GetService<IDDLExecutor>();
+                        await exec.AutoAlterDbSchema(grainAssembly);
+                    });
+                }
             }).AddStartupTask<SiloStartupTask>();
         }
 

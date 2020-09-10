@@ -36,7 +36,7 @@ namespace MSDemo.Grains.Service
             var updateResult1 = await _testRepository.SetAsync(() => new { user_id = "eeeee" }, oo => oo.UserId == "4444");
 
             TestDO demoDO = new TestDO { UserId = dto.UserId, UserName = this.CurrentUser?.UserName };
-          
+
             var updateResult3 = await _testRepository.SetAsync(demoDO);
 
             TestVO demoVO = this.ObjectMapper.Map<TestVO>(demoDO);
@@ -64,6 +64,14 @@ namespace MSDemo.Grains.Service
             var result = ApiResultUtil.IsSuccess();
             return Task.FromResult(result);
         }
+
+        /// <summary>
+        /// 异常处理
+        /// </summary>
+        protected override Func<Exception, Task<ApiResult>> FuncExceptionHandler => (exception) =>
+        {
+            return Task.FromResult(ApiResultUtil.IsFailed(exception.Message));
+        };
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Kaneko.Dapper.Enums;
+﻿using Kaneko.Core.Attributes;
+using Kaneko.Dapper.Enums;
 using Kaneko.Dapper.Extensions;
 using System;
 using System.Collections.Generic;
@@ -55,9 +56,18 @@ namespace Kaneko.Dapper.Expressions
         public SqlExpressionCore<T> Select(Expression<Func<T, object>> expression = null, string orderBy = "")
         {
             var sql = $"select {{0}}{Environment.NewLine}from {sqlGenerate.TableName}";
-            string fields;
+            string fields = "";
             if (expression == null)
-                fields = "*";
+            {
+                var dbType = sqlGenerate.DatabaseType;
+                var pis = typeof(T).GetProperties();
+                foreach (var pi in pis)
+                {
+                    fields += pi.GetFieldName().ParamSql(dbType) + ",";
+                }
+
+                fields = fields.TrimEnd(',');
+            }
             else
             {
                 SqlExpressionProvider.Select(expression, sqlGenerate);
@@ -92,10 +102,10 @@ namespace Kaneko.Dapper.Expressions
         {
             if (string.IsNullOrEmpty(orderBy))
             {
-                var property = typeof(T).GetProperty<KeyAttribute>();
+                var property = typeof(T).GetProperty<KanekoIdAttribute>();
                 if (property == null)
                     property = typeof(T).GetProperties()[0];
-                orderBy = $"order by {property.Name} desc";
+                orderBy = $"order by {property.GetFieldName()} desc";
             }
 
             if (!orderBy.StartsWith("order by"))

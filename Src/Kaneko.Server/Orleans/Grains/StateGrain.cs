@@ -10,6 +10,7 @@ using Orleans.Runtime;
 using DotNetCore.CAP;
 using Kaneko.Core.Contract;
 using System.Diagnostics;
+using Kaneko.Core.ApiResult;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -26,7 +27,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// Log
         /// </summary>
-        public ILogger Logger { get; private set; }
+        protected ILogger Logger { get; private set; }
 
         /// <summary>
         /// The real Type of the current Grain
@@ -42,12 +43,12 @@ namespace Kaneko.Server.Orleans.Grains
         /// Primary key of actor
         /// Because there are multiple types, dynamic assignment in OnActivateAsync
         /// </summary>
-        public string GrainId { get; private set; }
+        protected string GrainId { get; private set; }
 
         /// <summary>
         /// Reference to the object to object mapper.
         /// </summary>
-        public IObjectMapper ObjectMapper { get; set; }
+        protected IObjectMapper ObjectMapper { get; set; }
 
         public StateGrain()
         {
@@ -163,8 +164,17 @@ namespace Kaneko.Server.Orleans.Grains
 
                 Logger.LogError("记录日志报错2", exception);
 
-                throw;
+                if (FuncExceptionHandler != null) { await FuncExceptionHandler(exception); }
+                throw exception;
             }
         }
+
+        /// <summary>
+        /// 异常处理
+        /// </summary>
+        protected virtual Func<Exception, Task<ApiResult>> FuncExceptionHandler => (exception) =>
+        {
+            return Task.FromResult(ApiResultUtil.IsFailed(exception.Message));
+        };
     }
 }
