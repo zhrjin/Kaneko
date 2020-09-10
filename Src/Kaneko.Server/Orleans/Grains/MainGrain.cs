@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Kaneko.Server.AutoMapper;
 using Orleans.Runtime;
 using Kaneko.Core.IdentityServer;
+using System.Diagnostics;
+using Kaneko.Core.Extensions;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -60,11 +62,72 @@ namespace Kaneko.Server.Orleans.Grains
             return Task.CompletedTask;
         }
 
-        public Task Invoke(IIncomingGrainCallContext context)
+        /// <summary>
+        /// 拦截器记录日志
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public async Task Invoke(IIncomingGrainCallContext context)
         {
-            string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
-            if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
-            return context.Invoke();
+            try
+            {
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+                string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+                if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
+
+                await context.Invoke();
+
+                stopWatch.Stop();
+
+                long lElapsedMilliseconds = stopWatch.ElapsedMilliseconds;
+
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        string sResult = "";
+                        string sMessage = string.Format(
+                              "NormalGrain-{0}.{1}({2}) returned value {3},耗时:{4}ms",
+                              context.Grain.GetType().FullName,
+                              context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
+                              (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
+                              sResult,
+                              lElapsedMilliseconds);
+                        Logger.LogInfo(sMessage);
+
+                        if (lElapsedMilliseconds > 3 * 1000)
+                        {
+                            //超3秒发出警告
+                            //Logger.LogWarning(sMessage);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        string sMessage = string.Format(
+                             "{0}.{1}({2})",
+                             context.Grain.GetType().FullName,
+                             context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
+                             (context.Arguments == null ? "" : string.Join(", ", context.Arguments)));
+
+                        Logger.LogError("记录日志报错：" + sMessage, ex);
+                    }
+                });
+            }
+            catch (Exception exception)
+            {
+                string sMessage = string.Format(
+                       "{0}.{1}({2}) threw an exception：{3}",
+                       context.Grain.GetType().FullName,
+                       context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
+                       (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
+                       exception);
+
+                Logger.LogError("记录日志报错2", exception);
+
+                throw;
+            }
         }
 
         public Task Invoke(IOutgoingGrainCallContext context)

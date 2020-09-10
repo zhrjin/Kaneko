@@ -1,5 +1,4 @@
 ﻿using Kaneko.Core.Contract;
-using System;
 using System.Collections.Generic;
 
 namespace Kaneko.Core.ApiResult

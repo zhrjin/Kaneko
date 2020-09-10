@@ -1,6 +1,4 @@
 ﻿using Kaneko.Core.Data;
-using System;
-using System.Linq.Expressions;
 
 namespace Kaneko.Core.Contract
 {
@@ -20,13 +18,14 @@ namespace Kaneko.Core.Contract
         public int PageSize { get; set; }
 
         /// <summary>
-        /// 查询表达式
+        /// 用户ID
         /// </summary>
-        /// <returns></returns>
-        public virtual Expression<Func<IDomainObject, bool>> GetExpression()
-        {
-            return null;
-        }
+        public string UserId { get; set; }
+
+        /// <summary>
+        /// 用户名称
+        /// </summary>
+        public string UserName{ get; set; }
 
         /// <summary>
         /// 排序字段
@@ -52,12 +51,6 @@ namespace Kaneko.Core.Contract
         /// 每页笔数
         /// </summary>
         int PageSize { get; set; }
-
-        /// <summary>
-        /// 查询表达式
-        /// </summary>
-        /// <returns></returns>
-        Expression<Func<IDomainObject, bool>> GetExpression();
 
         /// <summary>
         /// 排序字段

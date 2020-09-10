@@ -9,7 +9,7 @@ namespace Kaneko.Dapper.Expressions
             for (int i = 0; i < expression.Members.Count; i++)
             {
                 var m = expression.Members[i];
-                sqlGenerate += $"{m.Name.ParamSql(sqlGenerate)} = ";
+                sqlGenerate += $"{m.GetFieldName().ParamSql(sqlGenerate)} = ";
 
                 var val = SqlExpressionCompiler.Evaluate(expression.Arguments[i]);
                 sqlGenerate.AddDbParameter(val);

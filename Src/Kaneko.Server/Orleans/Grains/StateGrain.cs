@@ -4,10 +4,12 @@ using Kaneko.Server.AutoMapper;
 using Kaneko.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Orleans;
-using Orleans.Concurrency;
 using Orleans.Providers;
 using Kaneko.Core.IdentityServer;
 using Orleans.Runtime;
+using DotNetCore.CAP;
+using Kaneko.Core.Contract;
+using System.Diagnostics;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -24,12 +26,17 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// Log
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILogger Logger { get; private set; }
 
         /// <summary>
         /// The real Type of the current Grain
         /// </summary>
         protected Type GrainType { get; }
+
+        /// <summary>
+        /// 事件转发器
+        /// </summary>
+        protected ICapPublisher CapPublisher { get; private set; }
 
         /// <summary>
         /// Primary key of actor
@@ -53,11 +60,14 @@ namespace Kaneko.Server.Orleans.Grains
             DependencyInjection();
 
             var onReadDbTask = OnReadFromDbAsync();
-            var result = onReadDbTask.Result;
-            if (result != null)
+            if (onReadDbTask != null)
             {
-                State = result;
-                WriteStateAsync();
+                var result = onReadDbTask.Result;
+                if (result != null)
+                {
+                    State = result;
+                    WriteStateAsync();
+                }
             }
 
             base.OnActivateAsync();
@@ -73,10 +83,21 @@ namespace Kaneko.Server.Orleans.Grains
         {
             this.ObjectMapper = (IObjectMapper)this.ServiceProvider.GetService(typeof(IObjectMapper));
             this.Logger = (ILogger)this.ServiceProvider.GetService(typeof(ILogger<>).MakeGenericType(this.GrainType));
+            this.CapPublisher = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
+
             return Task.CompletedTask;
         }
 
-        protected virtual ValueTask<TState> OnReadFromDbAsync() => new ValueTask<TState>();
+
+        protected virtual Task RaiseEvent<TEventData>(TState currentState, IEvent<TEventData> eventData)
+        {
+            this.State = currentState;
+            this.WriteStateAsync();
+            CapPublisher.PublishAsync(eventData.EventCode, eventData.Data);
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task<TState> OnReadFromDbAsync() => null;
 
         /// <summary>
         /// 拦截器记录日志
@@ -87,25 +108,37 @@ namespace Kaneko.Server.Orleans.Grains
         {
             try
             {
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
+
                 string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
                 if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
 
                 await context.Invoke();
 
+                stopWatch.Stop();
+
+                long lElapsedMilliseconds = stopWatch.ElapsedMilliseconds;
+
                 await Task.Run(() =>
                 {
                     try
                     {
-                        //var ShortLogs = context.InterfaceMethod == null ? null : context.InterfaceMethod.GetCustomAttribute<ShortLogsAttribute>();
-                        string sResult = "";// ShortLogs == null ? JsonConvert.SerializeObject(context.Result) : "结果不记录";
-
+                        string sResult = "";
                         string sMessage = string.Format(
-                              "{0}.{1}({2}) returned value {3}",
+                              "NormalGrain-{0}.{1}({2}) returned value {3},耗时:{4}ms",
                               context.Grain.GetType().FullName,
                               context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
                               (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
-                              sResult);
+                              sResult,
+                              lElapsedMilliseconds);
                         Logger.LogInfo(sMessage);
+
+                        if (lElapsedMilliseconds > 3 * 1000)
+                        {
+                            //超3秒发出警告
+                            //Logger.LogWarning(sMessage);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -115,7 +148,7 @@ namespace Kaneko.Server.Orleans.Grains
                              context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
                              (context.Arguments == null ? "" : string.Join(", ", context.Arguments)));
 
-                        Logger.LogError("记录日志报错", ex);
+                        Logger.LogError("记录日志报错：" + sMessage, ex);
                     }
                 });
             }

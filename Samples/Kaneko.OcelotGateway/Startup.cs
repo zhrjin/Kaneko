@@ -27,7 +27,7 @@ namespace Kaneko.OcelotGateway
             var ocelotOptions = new OcelotOptions();
             Configuration.Bind(ocelotOptions);
 
-            if (ocelotOptions.Redis.Enabled)
+            if (ocelotOptions.Redis.Enable)
             {
                 //认证服务缓存
                 services.AddStackExchangeRedisCache(options =>

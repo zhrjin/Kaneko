@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Kaneko.Dapper.Extensions
+namespace Kaneko.Core.Extensions
 {
     /// <summary>
     /// expression 扩展

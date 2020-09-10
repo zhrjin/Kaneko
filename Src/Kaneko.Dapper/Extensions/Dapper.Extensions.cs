@@ -91,6 +91,21 @@ namespace Kaneko.Dapper.Extensions
         }
 
         /// <summary>
+        /// 是否自增字段
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static bool IsAutoIdentity(this PropertyInfo property)
+        {
+            var attribute = property.GetAttribute<KanekoIdAttribute>();
+            if (attribute != null && attribute.AutoIdEntity)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// 是否存在表
         /// </summary>
         /// <param name="connection"></param>
@@ -162,7 +177,7 @@ namespace Kaneko.Dapper.Extensions
             var identityPropertyInfo = typeof(TEntity).GetIdentityField();
             foreach (var pi in pis)
             {
-                if (identityPropertyInfo?.Name == pi.Name)
+                if (identityPropertyInfo?.Name == pi.Name && identityPropertyInfo.IsAutoIdentity())
                     continue;
 
                 addFields.Add($"{pi.GetFieldName().ParamSql(dbType)}");
@@ -581,6 +596,23 @@ namespace Kaneko.Dapper.Extensions
             }
 
             return propertyInfo.Name;
+        }
+
+        
+        /// <summary>
+        /// 获取列名
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static string GetFieldName(this MemberInfo memberInfo)
+        {
+            var attribute = memberInfo.GetCustomAttribute<KanekoColumnAttribute>();
+            if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
+            {
+                return attribute.Name;
+            }
+
+            return memberInfo.Name;
         }
 
         /// <summary>

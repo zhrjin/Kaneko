@@ -148,19 +148,21 @@ namespace Kaneko.Hosts.Extensions
                     });
 
                 });
-
-                silo.AddMongoDBGrainStorage("RedisStore", op =>
-                {
-                    op.DatabaseName = OrleansConfig.MongoDB.DatabaseName + "_grain";
-                    op.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
-                    op.ConfigureJsonSerializerSettings = settings =>
-                    {
-                        settings.NullValueHandling = NullValueHandling.Include;
-                        settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-                        settings.DefaultValueHandling = DefaultValueHandling.Populate;
-                    };
-                });
             }
+            if (OrleansConfig.Redis.Enable)
+            {
+                silo.AddRedisGrainStorage("RedisStore", optionsBuilder => optionsBuilder.Configure(options =>
+                {
+                    options.DataConnectionString = $"{OrleansConfig.Redis.HostName}:{OrleansConfig.Redis.Port}";
+                    options.UseJson = OrleansConfig.Redis.UseJson;
+                    options.DatabaseNumber = OrleansConfig.Redis.DatabaseNumber;
+                }));
+            }
+            else
+            {
+                silo.AddMemoryGrainStorage("RedisStore");
+            }
+
         }
 
         private static void SetStream(ISiloBuilder silo)
@@ -217,7 +219,7 @@ namespace Kaneko.Hosts.Extensions
         {
             silo.ConfigureServices((context, services) =>
             {
-                if (OrleansConfig.Redis.Enabled)
+                if (OrleansConfig.Redis.Enable)
                 {
                     services.AddStackExchangeRedisCache(options =>
                     {

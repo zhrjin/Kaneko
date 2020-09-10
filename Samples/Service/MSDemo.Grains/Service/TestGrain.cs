@@ -26,12 +26,22 @@ namespace MSDemo.Grains.Service
             this._cache = cache;
         }
 
-        public Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto)
+        public async Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto)
         {
+            var expression = dto.GetExpression();
+            var orders = dto.GetOrder();
+
+            var count = await _testRepository.CountAsync(expression);
+
+            var updateResult1 = await _testRepository.SetAsync(() => new { user_id = "eeeee" }, oo => oo.UserId == "4444");
+
             TestDO demoDO = new TestDO { UserId = dto.UserId, UserName = this.CurrentUser?.UserName };
+          
+            var updateResult3 = await _testRepository.SetAsync(demoDO);
+
             TestVO demoVO = this.ObjectMapper.Map<TestVO>(demoDO);
             var result = ApiResultUtil.IsSuccess(demoVO);
-            return Task.FromResult(result);
+            return await Task.FromResult(result);
         }
 
         public Task<ApiResultPage<TestVO>> GetResultTest2(TestDTO dto)

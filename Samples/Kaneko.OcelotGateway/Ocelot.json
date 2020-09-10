@@ -113,11 +113,10 @@
   },
 
   "Redis": {
-    "Enabled": true,
+    "Enable": true,
     "HostName": "192.168.45.133",
     "Port": "6379",
     "InstanceName": "kaneko",
-    "UserName": "",
     "Password": ""
   }
 }

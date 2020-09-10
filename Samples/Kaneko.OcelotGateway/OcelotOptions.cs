@@ -45,7 +45,7 @@ namespace Kaneko.OcelotGateway
 
     public class Redis
     {
-        public bool Enabled { get; set; } = false;
+        public bool Enable { get; set; } = false;
         public string HostName { get; set; }
         public int Port { get; set; }
         public string InstanceName { get; set; }
