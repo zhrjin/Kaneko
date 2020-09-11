@@ -61,7 +61,7 @@ namespace Kaneko.Dapper.Repository
                     }
                     catch (Exception ex)
                     {
-                        logger.LogError("执行SQL：" + excSqlScript, ex);
+                        logger.LogError("DDL执行器：" + excSqlScript, ex);
                         return false;
                     }
                 }
@@ -89,32 +89,55 @@ namespace Kaneko.Dapper.Repository
 
                             if (columnDefinition.ToUpper().IndexOf("PRIMARY") > -1 && columnDefinition.ToUpper().IndexOf("KEY") > -1)
                             {
+
                                 columnDefinition = columnDefinition.ToUpper().Replace("PRIMARY", "").Replace("KEY", "");
 
-                                if (string.IsNullOrWhiteSpace(tInfo.PrimaryKey))
+
+                                if (columnDefinition.Replace(" ", "").ToUpper() != columnDefs.ToUpper())
                                 {
-                                    try  //之前不是主键
+                                    //之前不是主键
+                                    if (string.IsNullOrWhiteSpace(tInfo.PrimaryKey))
                                     {
-                                        excSqlScript = dbType.CreatePrimaryKeyScript(tableName, fieldName);
+                                        try
+                                        {
+                                            excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
+                                            var task = await connection.ExecuteAsync(excSqlScript);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            logger.LogError("DDL执行器：" + excSqlScript, ex);
+                                        }
+
+                                        try
+                                        {
+                                            excSqlScript = dbType.CreatePrimaryKeyScript(tableName, fieldName);
+                                            var task = await connection.ExecuteAsync(excSqlScript);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            logger.LogError("DDL执行器：" + excSqlScript, ex);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
+                                        logger.LogWarning($"DDL执行器：{excSqlScript.Trim()}，主键列不自动更新");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (columnDefinition.Replace(" ", "").ToUpper() != columnDefs.ToUpper())
+                                {
+                                    try
+                                    {
+                                        excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
                                         var task = await connection.ExecuteAsync(excSqlScript);
                                     }
                                     catch (Exception ex)
                                     {
                                         logger.LogError("执行SQL：" + excSqlScript, ex);
                                     }
-                                }
-                            }
-
-                            if (columnDefinition.Replace(" ", "").ToUpper() != columnDefs.ToUpper())
-                            {
-                                try
-                                {
-                                    excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
-                                    var task = await connection.ExecuteAsync(excSqlScript);
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.LogError("执行SQL：" + excSqlScript, ex);
                                 }
                             }
                         }
@@ -126,7 +149,7 @@ namespace Kaneko.Dapper.Repository
                                 excSqlScript = dbType.AddColumnsSql(tableName, columnDefinition);
                                 var task = await connection.ExecuteAsync(excSqlScript);
                             }
-                            catch (Exception ex) { logger.LogError("执行SQL：" + excSqlScript, ex); }
+                            catch (Exception ex) { logger.LogError("DDL执行器：" + excSqlScript, ex); }
                         }
                     }
                 }

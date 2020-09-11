@@ -127,44 +127,31 @@ namespace Kaneko.Server.Orleans.Grains
                     {
                         string sResult = "";
                         string sMessage = string.Format(
-                              "NormalGrain-{0}.{1}({2}) returned value {3},耗时:{4}ms",
+                              "{0}.{1}({2}),耗时:{4}ms",
                               context.Grain.GetType().FullName,
                               context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
                               (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
                               sResult,
                               lElapsedMilliseconds);
+
                         Logger.LogInfo(sMessage);
 
                         if (lElapsedMilliseconds > 3 * 1000)
                         {
                             //超3秒发出警告
-                            //Logger.LogWarning(sMessage);
+                            Logger.LogWarn("超时警告：" + sMessage);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        string sMessage = string.Format(
-                             "{0}.{1}({2})",
-                             context.Grain.GetType().FullName,
-                             context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
-                             (context.Arguments == null ? "" : string.Join(", ", context.Arguments)));
-
-                        Logger.LogError("记录日志报错：" + sMessage, ex);
-                    }
+                    catch { }
                 });
             }
             catch (Exception exception)
             {
-                string sMessage = string.Format(
-                       "{0}.{1}({2}) threw an exception：{3}",
-                       context.Grain.GetType().FullName,
-                       context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
-                       (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
-                       exception);
-
-                Logger.LogError("记录日志报错2", exception);
-
-                if (FuncExceptionHandler != null) { await FuncExceptionHandler(exception); }
+                Logger.LogError("Grain执行异常：", exception);
+                if (FuncExceptionHandler != null)
+                {
+                    await FuncExceptionHandler(exception);
+                }
                 throw exception;
             }
         }

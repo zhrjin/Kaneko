@@ -10,10 +10,10 @@ namespace MSDemo.IGrains.Entity
     public class TestDO : BaseDO
     {
         [KanekoId]
-        [KanekoColumn(Name = "user_id", ColumnDefinition = "varchar(20) not null primary key")]
+        [KanekoColumn(Name = "user_id", ColumnDefinition = "varchar(50) not null primary key")]
         public string UserId { set; get; }
 
-        [KanekoColumn(Name = "user_name", ColumnDefinition = "varchar(255) null")]
+        [KanekoColumn(Name = "user_name", ColumnDefinition = "varchar(25) null")]
         public string UserName { set; get; }
     }
 }

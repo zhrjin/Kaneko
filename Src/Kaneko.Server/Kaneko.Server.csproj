@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Kaneko.Server</AssemblyName>
     <RootNamespace>Kaneko.Server</RootNamespace>
-    <Version>1.20.912.9</Version>
-    <AssemblyVersion>1.20.912.9</AssemblyVersion>
-    <FileVersion>1.20.912.9</FileVersion>
+    <Version>1.20.912.10</Version>
+    <AssemblyVersion>1.20.912.10</AssemblyVersion>
+    <FileVersion>1.20.912.10</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

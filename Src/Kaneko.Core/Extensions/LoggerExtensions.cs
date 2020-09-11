@@ -24,7 +24,7 @@ namespace Kaneko.Core.Extensions
         /// 警告日志
         /// </summary>
         /// <param name="message"></param>
-        public static void LogWarning(this ILogger logger, string message)
+        public static void LogWarn(this ILogger logger, string message)
         {
             if (logger.IsEnabled(LogLevel.Warning))
             {

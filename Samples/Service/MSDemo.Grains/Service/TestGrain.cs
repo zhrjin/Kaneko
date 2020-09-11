@@ -19,11 +19,11 @@ namespace MSDemo.Grains.Service
         private readonly ICapPublisher _capBus;
         private readonly IDistributedCache _cache;
 
-        public TestGrain(ITestRepository testRepository, ICapPublisher capBus, IDistributedCache cache)
+        public TestGrain(ITestRepository testRepository/*, ICapPublisher capBus, IDistributedCache cache*/)
         {
-            this._testRepository = testRepository;
-            this._capBus = capBus;
-            this._cache = cache;
+            //this._testRepository = testRepository;
+            //this._capBus = capBus;
+            //this._cache = cache;
         }
 
         public async Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto)
@@ -31,13 +31,13 @@ namespace MSDemo.Grains.Service
             var expression = dto.GetExpression();
             var orders = dto.GetOrder();
 
-            var count = await _testRepository.CountAsync(expression);
+            //var count = await _testRepository.CountAsync(expression);
 
-            var updateResult1 = await _testRepository.SetAsync(() => new { user_id = "eeeee" }, oo => oo.UserId == "4444");
+            //var updateResult1 = await _testRepository.SetAsync(() => new { user_id = "eeeee" }, oo => oo.UserId == "4444");
 
-            TestDO demoDO = new TestDO { UserId = dto.UserId, UserName = this.CurrentUser?.UserName };
+            TestDO demoDO = new TestDO { UserId = dto?.UserId, UserName = this.CurrentUser?.UserName };
 
-            var updateResult3 = await _testRepository.SetAsync(demoDO);
+            //var updateResult3 = await _testRepository.SetAsync(demoDO);
 
             TestVO demoVO = this.ObjectMapper.Map<TestVO>(demoDO);
             var result = ApiResultUtil.IsSuccess(demoVO);
