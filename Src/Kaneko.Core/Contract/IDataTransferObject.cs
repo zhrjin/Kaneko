@@ -1,4 +1,6 @@
 ﻿using Kaneko.Core.Data;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kaneko.Core.Contract
 {
@@ -35,12 +37,17 @@ namespace Kaneko.Core.Contract
         {
             return null;
         }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return null;
+        }
     }
 
     /// <summary>
     /// 数据传输对象DTO
     /// </summary>
-    public interface IDataTransferObject
+    public interface IDataTransferObject : IValidatableObject
     {
         /// <summary>
         /// 页标
