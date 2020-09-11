@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
 namespace Kaneko.Dapper.Extensions
 {
     /// <summary>
@@ -49,7 +48,7 @@ namespace Kaneko.Dapper.Extensions
         /// <returns></returns>
         internal static PropertyInfo GetProperty<TAttribute>(this Type entity) where TAttribute : Attribute
         {
-            var propertyInfos = _cacheSubmeter.GetOrAdd($"{entity.Name}_{typeof(TAttribute).Name}",
+            var propertyInfos = _cacheSubmeter.GetOrAdd($"{entity.FullName}_{typeof(TAttribute).Name}",
                 key => entity.GetPropertyByAttribute<TAttribute>());
             return propertyInfos.FirstOrDefault();
         }
@@ -62,7 +61,7 @@ namespace Kaneko.Dapper.Extensions
         /// <returns></returns>
         internal static List<PropertyInfo> GetProperties<TAttribute>(this Type entity) where TAttribute : Attribute
         {
-            var propertyInfos = _cacheSubmeter.GetOrAdd($"{entity.Name}_{typeof(TAttribute).Name}",
+            var propertyInfos = _cacheSubmeter.GetOrAdd($"{entity.FullName}_{typeof(TAttribute).Name}",
                 key => entity.GetPropertyByAttribute<TAttribute>());
             return propertyInfos;
         }

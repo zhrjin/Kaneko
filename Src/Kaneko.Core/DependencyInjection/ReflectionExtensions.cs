@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Kaneko.Core.DependencyInjection
 {
-    internal static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
         public static bool IsNonAbstractClass(this Type type, bool publicOnly)
         {
@@ -219,10 +219,10 @@ namespace Kaneko.Core.DependencyInjection
         /// var attribute = info.GetAttribute&lt;DescriptionAttribute&gt;();
         /// </code>
         /// </example>
-        public static TAttribute GetAttribute<TAttribute>(this MemberInfo info)
+        public static TAttribute GetKanekoAttribute<TAttribute>(this MemberInfo info)
             where TAttribute : Attribute
         {
-            return info.GetAttributes<TAttribute>().FirstOrDefault();
+            return info.GetKanekoAttributes<TAttribute>().FirstOrDefault();
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Kaneko.Core.DependencyInjection
         /// var attributes = info.GetAttributes&lt;Attribute&gt;();
         /// </code>
         /// </example>
-        public static IEnumerable<TAttribute> GetAttributes<TAttribute>(this MemberInfo info)
+        public static IEnumerable<TAttribute> GetKanekoAttributes<TAttribute>(this MemberInfo info)
             where TAttribute : Attribute
         {
             return info.FastGetCustomAttributes(typeof(TAttribute)).OfType<TAttribute>();
@@ -258,10 +258,15 @@ namespace Kaneko.Core.DependencyInjection
         /// var attributes = info.GetAttributes&lt;Attribute&gt;(true);
         /// </code>
         /// </example>
-        public static IEnumerable<TAttribute> GetAttributes<TAttribute>(this MemberInfo info, bool inherit)
+        public static IEnumerable<TAttribute> GetKanekoAttributes<TAttribute>(this MemberInfo info, bool inherit)
             where TAttribute : Attribute
         {
             return info.FastGetCustomAttributes(typeof(TAttribute), inherit).OfType<TAttribute>();
+        }
+
+        public static PropertyInfo[] FastGetProperties(this Type type)
+        {
+            return type.FastGetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
         }
     }
 }

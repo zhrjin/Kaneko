@@ -1,4 +1,10 @@
-﻿namespace Kaneko.Core.Data
+﻿using Kaneko.Core.Attributes;
+using Kaneko.Core.DependencyInjection;
+using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+namespace Kaneko.Core.Data
 {
     /// <summary>
     /// 排序字段对象
@@ -30,11 +36,34 @@
         /// <param name="field"></param>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public static OrderByField Create(string field, FieldSortType orderBy = FieldSortType.Asc)
+        public static OrderByField Create<TEntity>(string field, FieldSortType orderBy = FieldSortType.Asc)
         {
-            return new OrderByField(field, orderBy);
+            string fieldNew = field;
+            Type t = typeof(TEntity);
+            foreach (PropertyInfo p in t.GetProperties())
+            {
+                if (p.Name == field)
+                {
+                    fieldNew = GetFieldName(p);
+                    break;
+                }
+            }
+
+            return new OrderByField(fieldNew, orderBy);
+        }
+
+        public static string GetFieldName(PropertyInfo property)
+        {
+            var attribute = property.GetKanekoAttribute<KanekoColumnAttribute>();
+            if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
+            {
+                return attribute.Name;
+            }
+
+            return property.Name;
         }
     }
+
 
     /// <summary>
     /// 扩展类
