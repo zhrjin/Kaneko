@@ -63,7 +63,7 @@ namespace Kaneko.Dapper.Expressions
                 var pis = typeof(T).GetProperties();
                 foreach (var pi in pis)
                 {
-                    fields += pi.GetFieldName().ParamSql(dbType) + ",";
+                    fields += $"{pi.GetFieldName().ParamSql(dbType)} as {pi.Name.ParamSql(dbType)},";
                 }
 
                 fields = fields.TrimEnd(',');

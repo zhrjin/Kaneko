@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -55,6 +56,6 @@ namespace Kaneko.Dapper.Contract
         /// 自动生存表结构
         /// </summary>
         /// <returns></returns>
-        Task<bool> DDLExecutor();
+        Task<bool> DDLExecutor(ILogger logger);
     }
 }

@@ -325,15 +325,6 @@ namespace Kaneko.Dapper.Extensions
                     if ((fields?.Count() ?? 0) <= 0 || fields.Contains(fieldName))
                         setFields.Add($"{fieldName.ParamSql(dbType)} = @{pi.Name}");
                 }
-                ///更换为pi.GetAttribute<KanekoIdAttribute>();
-                //var obs = pi.GetCustomAttributes(typeof(KanekoIdAttribute), false);
-                //if (obs?.Count() > 0)
-                //    whereFields.Add($"{fieldName.ParamSql(dbType)} = @{fieldName}");
-                //else
-                //{
-                //    if ((fields?.Count() ?? 0) <= 0 || fields.Contains(fieldName))
-                //        setFields.Add($"{fieldName.ParamSql(dbType)} = @{fieldName}");
-                //}
             }
             if (whereFields.Count <= 0)
                 throw new Exception($"实体[{nameof(TEntity)}]未设置主键Key属性");

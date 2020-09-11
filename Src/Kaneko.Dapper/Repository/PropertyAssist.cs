@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Kaneko.Dapper.Contract;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Kaneko.Dapper.Repository
 {
@@ -54,7 +55,7 @@ namespace Kaneko.Dapper.Repository
             IDbConnection connection;
 
             if (ignoreTransaction || !InTransaction)
-                connection = new  DataContext.DataContext(_configuration, isMaster, DbStoreKey, ConnectionFunc).DbConnection;
+                connection = new DataContext.DataContext(_configuration, isMaster, DbStoreKey, ConnectionFunc).DbConnection;
             else
                 connection = Transaction.Connection;
 
@@ -66,8 +67,8 @@ namespace Kaneko.Dapper.Repository
                 connection.Open();
 
             return connection;
-        } 
-       
+        }
+
         /// <summary>
         /// 数据库连接方法
         /// </summary>
@@ -92,6 +93,6 @@ namespace Kaneko.Dapper.Repository
         /// 自动生存表结构
         /// </summary>
         /// <returns></returns>
-        public abstract Task<bool> DDLExecutor();
+        public abstract Task<bool> DDLExecutor(ILogger logger);
     }
 }

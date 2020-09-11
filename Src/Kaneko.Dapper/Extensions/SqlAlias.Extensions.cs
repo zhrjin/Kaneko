@@ -140,7 +140,7 @@ namespace Kaneko.Dapper.Extensions
         /// <param name="columnName"></param>
         /// <param name="dbType"></param>
         /// <returns></returns>
-        public static string AddColumnsSql(this DatabaseType dbType,string tableName, string columnDefinitione )
+        public static string AddColumnsSql(this DatabaseType dbType, string tableName, string columnDefinitione)
         {
             switch (dbType)
             {
@@ -159,8 +159,9 @@ namespace Kaneko.Dapper.Extensions
         /// <summary>
         /// 修改字段语句
         /// </summary>
-        /// <param name="columnName"></param>
         /// <param name="dbType"></param>
+        /// <param name="tableName"></param>
+        /// <param name="columnDefinitione"></param>
         /// <returns></returns>
         public static string AlterColumnsSql(this DatabaseType dbType, string tableName, string columnDefinitione)
         {
@@ -175,6 +176,68 @@ namespace Kaneko.Dapper.Extensions
                     return $"alter table {tableName.ParamSql(dbType)} alter column {columnDefinitione}";
                 default:
                     return $"alter table {tableName.ParamSql(dbType)} alter column {columnDefinitione}";
+            }
+        }
+
+        /// <summary>
+        /// 查询表结构脚本
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <param name="dbType"></param>
+        /// <returns></returns>
+        public static string GetSchemaColumnsQueryScript(this DatabaseType dbType, string tableName)
+        {
+            switch (dbType)
+            {
+                case DatabaseType.SqlServer:
+                case DatabaseType.GteSqlServer2012:
+                    return $@"
+                        SELECT
+                            upper(c.COLUMN_NAME) as Name, 
+	                        case c.IS_NULLABLE
+                                when 'YES' then 'null'
+                                else 'not null'
+                            end as Nullable, 
+	                        upper(c.DATA_TYPE) as DataType, 
+	                        cast(ISNULL(c.CHARACTER_OCTET_LENGTH, 0) as numeric) as Size, 
+	                        upper(c.TABLE_NAME) as TableName,
+	                        case OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + '.' + QUOTENAME(CONSTRAINT_NAME)), 'IsPrimaryKey')
+                            when 1 then 'primary key' else '' end as PrimaryKey
+                        FROM information_schema.columns c
+                        left join INFORMATION_SCHEMA.KEY_COLUMN_USAGE p
+                        on c.TABLE_NAME = p.TABLE_NAME
+                        and c.COLUMN_NAME = p.COLUMN_NAME
+                        where upper(c.TABLE_NAME) = '{tableName.ToUpper()}'
+                        order by c.TABLE_NAME,c.ordinal_position";
+                case DatabaseType.MySql:
+                    return "";
+                case DatabaseType.SQLite:
+                    return "";
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        /// 创建主键脚本
+        /// </summary>
+        /// <param name="dbType"></param>
+        /// <param name="tableName"></param>
+        /// <param name="primaryKeyFieldName"></param>
+        /// <returns></returns>
+        public static string CreatePrimaryKeyScript(this DatabaseType dbType, string tableName, string primaryKeyFieldName)
+        {
+            switch (dbType)
+            {
+                case DatabaseType.SqlServer:
+                case DatabaseType.GteSqlServer2012:
+                    return $@"ALTER TABLE {tableName} ADD CONSTRAINT PK_{tableName.ToUpper()}_{primaryKeyFieldName} PRIMARY KEY({primaryKeyFieldName})";
+                case DatabaseType.MySql:
+                    return "";
+                case DatabaseType.SQLite:
+                    return "";
+                default:
+                    return "";
             }
         }
     }

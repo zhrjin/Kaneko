@@ -68,9 +68,9 @@ namespace MSDemo.Grains.Service
         /// <summary>
         /// 异常处理
         /// </summary>
-        protected override Func<Exception, Task<ApiResult>> FuncExceptionHandler => (exception) =>
+        protected override Func<Exception, Task> FuncExceptionHandler => (exception) =>
         {
-            return Task.FromResult(ApiResultUtil.IsFailed(exception.Message));
+            return Task.CompletedTask;
         };
 
     }

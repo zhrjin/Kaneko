@@ -129,7 +129,7 @@ namespace Kaneko.Server.Orleans.Grains
 
                 if (FuncExceptionHandler != null)
                 {
-                    var result = await FuncExceptionHandler(exception);
+                    await FuncExceptionHandler(exception);
                 }
                 throw exception;
             }
@@ -143,9 +143,9 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 异常处理
         /// </summary>
-        protected virtual Func<Exception, Task<ApiResult>> FuncExceptionHandler => (exception) =>
+        protected virtual Func<Exception, Task> FuncExceptionHandler => (exception) =>
         {
-            return Task.FromResult(ApiResultUtil.IsFailed(exception.Message));
+            return Task.CompletedTask;
         };
     }
 }

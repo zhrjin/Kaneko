@@ -11,6 +11,8 @@ using Kaneko.Dapper.Contract;
 using Kaneko.Dapper.Extensions;
 using Kaneko.Core.Contract;
 using Kaneko.Core.Data;
+using Kaneko.Core.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Kaneko.Dapper.Repository
 {
@@ -33,55 +35,100 @@ namespace Kaneko.Dapper.Repository
         /// 自动生存表结构
         /// </summary>
         /// <returns></returns>
-        public override async Task<bool> DDLExecutor()
+        public override Task<bool> DDLExecutor(ILogger logger)
         {
-            return await Execute(async (connection) =>
+            return Execute(async (connection) =>
             {
                 string tableName = GetTableName();
                 var dbType = connection.GetDbType();
-                var pis = typeof(TEntity).GetProperties();
-                var identityPropertyInfo = typeof(TEntity).GetIdentityField();
-                string idColumn = "";
-                var addFields = new List<string>();
-                var fields = new List<string>();
-                foreach (var pi in pis)
-                {
-                    if (identityPropertyInfo?.Name == pi.Name)
-                    {
-                        idColumn = pi.GetColumnDefinition(dbType) + ",";
-                        continue;
-                    }
-                    fields.Add(pi.GetFieldName());
-                    addFields.Add($"{pi.GetColumnDefinition(dbType)}");
-                }
+                string excSqlScript = "";
 
-                bool exist = await connection.IsExistTableAsync(tableName);
-                if (!exist)
+                excSqlScript = dbType.GetSchemaColumnsQueryScript(tableName);
+                var tableInfos = await connection.QueryAsync<DBTableInfo>(excSqlScript);
+
+                if (tableInfos == null || tableInfos.Count() == 0)
                 {
                     try
                     {
-                        string sql = $"create table {tableName}({idColumn} {string.Join(", ", addFields)});";
-                        var task = await connection.ExecuteAsync(sql);
+                        var pis = typeof(TEntity).FastGetProperties();
+                        string columnScript = "";
+                        foreach (var pi in pis) { columnScript += pi.GetColumnDefinition(dbType) + ","; }
+
+                        columnScript.TrimEnd(',');
+                        excSqlScript = $"create table {tableName}({columnScript});";
+                        var task = await connection.ExecuteAsync(excSqlScript);
                         return task > 0;
                     }
-                    catch { return false; }
-                }
-
-                //更新
-                for (int i = 0, len = fields.Count; i < len; i++)
-                {
-                    try
+                    catch (Exception ex)
                     {
-                        if (await this.IsExistFieldAsync(tableName, fields[i]))
+                        logger.LogError("执行SQL：" + excSqlScript, ex);
+                        return false;
+                    }
+                }
+                else
+                {
+                    var pis = typeof(TEntity).FastGetProperties();
+                    var identityPropertyInfo = typeof(TEntity).GetIdentityField();
+                    var addFields = new List<string>();
+                    var fields = new List<string>();
+                    foreach (var pi in pis)
+                    {
+                        string fieldName = pi.GetFieldName().ToUpper();
+                        string columnDefinition = pi.GetColumnDefinition(dbType);
+                        if (tableInfos.Any(m => m.Name.ToUpper() == fieldName))
                         {
-                            var task = await connection.ExecuteAsync(dbType.AlterColumnsSql(tableName, addFields[i]));
+                            //更新列
+                            var tInfo = tableInfos.Where(m => m.Name.ToUpper() == fieldName).FirstOrDefault();
+                            string columnDefs = "", size = "";
+                            if (tInfo.DataType.ToUpper().IndexOf("CHAR") > -1)
+                            {
+                                size = tInfo.Size == -1 ? "(MAX)" : "(" + tInfo.Size.ToString() + ")";
+                            }
+
+                            columnDefs = $"{tInfo.Name.ParamSql(dbType)}{tInfo.DataType}{size}{tInfo.Nullable}";
+
+                            if (columnDefinition.ToUpper().IndexOf("PRIMARY") > -1 && columnDefinition.ToUpper().IndexOf("KEY") > -1)
+                            {
+                                columnDefinition = columnDefinition.ToUpper().Replace("PRIMARY", "").Replace("KEY", "");
+
+                                if (string.IsNullOrWhiteSpace(tInfo.PrimaryKey))
+                                {
+                                    try  //之前不是主键
+                                    {
+                                        excSqlScript = dbType.CreatePrimaryKeyScript(tableName, fieldName);
+                                        var task = await connection.ExecuteAsync(excSqlScript);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        logger.LogError("执行SQL：" + excSqlScript, ex);
+                                    }
+                                }
+                            }
+
+                            if (columnDefinition.Replace(" ", "").ToUpper() != columnDefs.ToUpper())
+                            {
+                                try
+                                {
+                                    excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
+                                    var task = await connection.ExecuteAsync(excSqlScript);
+                                }
+                                catch (Exception ex)
+                                {
+                                    logger.LogError("执行SQL：" + excSqlScript, ex);
+                                }
+                            }
                         }
                         else
                         {
-                            var task = await connection.ExecuteAsync(dbType.AddColumnsSql(tableName, addFields[i]));
+                            //添加列
+                            try
+                            {
+                                excSqlScript = dbType.AddColumnsSql(tableName, columnDefinition);
+                                var task = await connection.ExecuteAsync(excSqlScript);
+                            }
+                            catch (Exception ex) { logger.LogError("执行SQL：" + excSqlScript, ex); }
                         }
                     }
-                    catch { }
                 }
                 return true;
             }, true);

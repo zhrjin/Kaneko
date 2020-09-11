@@ -1,4 +1,5 @@
 ﻿using Kaneko.Dapper.Repository;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -9,9 +10,12 @@ namespace Kaneko.Dapper
     public class DDLExecutor : IDDLExecutor
     {
         readonly IServiceProvider ServiceProvider;
-        public DDLExecutor(IServiceProvider serviceProvider)
+        readonly ILogger Logger;
+
+        public DDLExecutor(IServiceProvider serviceProvider, ILogger<DDLExecutor> logger)
         {
             this.ServiceProvider = serviceProvider;
+            this.Logger = logger;
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace Kaneko.Dapper
                     if (type.Name != "PropertyAssist")
                     {
                         var exec = (PropertyAssist)ServiceProvider.GetService(type);
-                        exec.DDLExecutor();
+                        exec.DDLExecutor(Logger);
                     }
                 }
                 catch { }

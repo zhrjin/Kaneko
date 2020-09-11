@@ -27,7 +27,15 @@ namespace Kaneko.Hosts.Extensions
         /// <returns></returns>
         public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> setupAction = null)
         {
-            services.AddConsul(configuration);
+            if (bool.Parse(configuration["Consul:Enable"]))
+            {
+                services.AddConsul(configuration);
+            }
+
+            if (setupAction != null)
+            {
+                services.AddCors(setupAction);
+            }
 
             //orleans健康检查
             //services
@@ -59,11 +67,6 @@ namespace Kaneko.Hosts.Extensions
                 });
             });
 
-            if (setupAction != null)
-            {
-                services.AddCors(setupAction);
-            }
-
             return services;
         }
 
@@ -76,12 +79,19 @@ namespace Kaneko.Hosts.Extensions
         public static IApplicationBuilder UseKaneko(this IApplicationBuilder app, IConfiguration configuration)
         {
             string serviceName = configuration["ServiceName"];
-            app.UseConsul();
+            if (bool.Parse(configuration["Consul:Enable"]))
+            {
+                app.UseConsul();
+            }
             app.UseCors(serviceName);
             app.UseSwagger(c =>
             {
                 //加上服务名，支持直接在ocelot进行api测试
-                string basepath = $"/{serviceName}";
+                string basepath = "";
+                if (!string.IsNullOrEmpty(serviceName))
+                {
+                    basepath = $"/{serviceName}";
+                }
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
                     OpenApiPaths paths = new OpenApiPaths();
