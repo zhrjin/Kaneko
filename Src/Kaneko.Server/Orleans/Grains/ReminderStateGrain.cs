@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Kaneko.Core.Contract;
 using Orleans.Runtime;
 
 namespace Kaneko.Server.Orleans.Grains
@@ -9,7 +10,7 @@ namespace Kaneko.Server.Orleans.Grains
     /// </summary>
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
-    public abstract class ReminderStateGrain<TState> : StateGrain<TState>, IReminderGrain where TState : new()
+    public abstract class ReminderStateGrain<TState> : StateGrain<TState>, IReminderGrain where TState : IState
     {
         /// <summary>
         /// 异步获取提醒名称

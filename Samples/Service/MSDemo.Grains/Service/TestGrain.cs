@@ -1,5 +1,6 @@
 ﻿using DotNetCore.CAP;
 using Kaneko.Core.ApiResult;
+using Kaneko.Dapper.Expressions;
 using Kaneko.Server.Orleans.Grains;
 using Microsoft.Extensions.Caching.Distributed;
 using MSDemo.Grains.Repository;
@@ -28,6 +29,9 @@ namespace MSDemo.Grains.Service
 
         public async Task<ApiResult<TestVO>> GetResultTest1(TestDTO dto)
         {
+            //参数校验
+            if (!dto.IsValid(out Exception ex)) { throw ex; }
+
             var expression = dto.GetExpression();
             var orders = dto.GetOrder();
 

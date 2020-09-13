@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Kaneko.Core.DependencyInjection;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 
 namespace Kaneko.Dapper.Expressions
 {
@@ -23,7 +22,7 @@ namespace Kaneko.Dapper.Expressions
             if (result == null)
                 return true;
 
-            exception = new Exception(result.ErrorMessage);
+            exception = new Exception("【" + result.MemberNames.FirstOrDefault() + "】" + result.ErrorMessage);
             return false;
         }
 
@@ -33,16 +32,16 @@ namespace Kaneko.Dapper.Expressions
 
             if (context.ObjectInstance is IValidatableObject valid)
             {
-                var validationResults = valid.Validate(context);
-                if (validationResults != null && validationResults.Count() > 0)
+                var validationResults = valid.Validate(context).FirstOrDefault();
+                if (validationResults != null)
                 {
-                    return valid.Validate(context).FirstOrDefault();
+                    return validationResults;
                 }
             }
 
             foreach (var property in properties)
             {
-                var validationAttributes = property.GetCustomAttributes(false).OfType<ValidationAttribute>();
+                var validationAttributes = property.GetKanekoAttributes<ValidationAttribute>();
                 foreach (var attribute in validationAttributes)
                 {
                     bool isValid = attribute.IsValid(property.GetValue(context.ObjectInstance));

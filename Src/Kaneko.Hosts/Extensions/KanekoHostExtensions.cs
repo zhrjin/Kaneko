@@ -11,6 +11,9 @@ using System.Reflection;
 using Kaneko.Consul.Controller;
 using Kaneko.Hosts.Controller;
 using Kaneko.Hosts.Attributes;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc;
+using Kaneko.Hosts.Validator;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -25,16 +28,16 @@ namespace Kaneko.Hosts.Extensions
         /// <param name="configuration"></param>
         /// <param name="setupAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> setupAction = null)
+        public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> corsConfig = null, Action<MvcOptions> mvcConfig = null)
         {
             if (bool.Parse(configuration["Consul:Enable"]))
             {
                 services.AddConsul(configuration);
             }
 
-            if (setupAction != null)
+            if (corsConfig != null)
             {
-                services.AddCors(setupAction);
+                services.AddCors(corsConfig);
             }
 
             //orleans健康检查
@@ -46,7 +49,13 @@ namespace Kaneko.Hosts.Extensions
             //         options.PathString = "/health";
             //     });
 
-            services.AddControllers()
+            services.AddSingleton<IObjectModelValidator, NullObjectModelValidator>();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.AddControllers(mvcConfig)
                     .AddApplicationPart(controllerAssembly)
                     .AddApplicationPart(typeof(KaneKoController).Assembly)
                     .AddApplicationPart(typeof(ConsulController).Assembly)

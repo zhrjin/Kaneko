@@ -20,8 +20,11 @@ namespace Kaneko.Server.Orleans.Grains
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
     [StorageProvider(ProviderName = "RedisStore")]
-    public abstract class StateGrain<TState> : Grain<TState>, IIncomingGrainCallFilter where TState : new()
+    public abstract class StateGrain<TState> : Grain<TState>, IIncomingGrainCallFilter where TState : IState
     {
+        /// <summary>
+        /// 上下文用户信息
+        /// </summary>
         protected ICurrentUser CurrentUser { get; private set; }
 
         /// <summary>
@@ -37,7 +40,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 事件转发器
         /// </summary>
-        protected ICapPublisher CapPublisher { get; private set; }
+        private ICapPublisher Observer { get; set; }
 
         /// <summary>
         /// Primary key of actor
@@ -55,47 +58,49 @@ namespace Kaneko.Server.Orleans.Grains
             this.GrainType = this.GetType();
         }
 
-        public override Task OnActivateAsync()
+        public override async Task OnActivateAsync()
         {
             GrainId = this.GetPrimaryKeyString();
             DependencyInjection();
 
             var onReadDbTask = OnReadFromDbAsync();
-            if (onReadDbTask != null)
+            if (!onReadDbTask.IsCompletedSuccessfully)
+                await onReadDbTask;
+            var result = onReadDbTask.Result;
+
+            if (result != null)
             {
-                var result = onReadDbTask.Result;
-                if (result != null)
-                {
-                    State = result;
-                    WriteStateAsync();
-                }
+                State = result;
+                await WriteStateAsync();
             }
 
-            base.OnActivateAsync();
-
-            return Task.CompletedTask;
+            await base.OnActivateAsync();
         }
 
         /// <summary>
         /// Unified method of dependency injection
         /// </summary>
         /// <returns></returns>
-        protected virtual Task DependencyInjection()
+        protected virtual void DependencyInjection()
         {
             this.ObjectMapper = (IObjectMapper)this.ServiceProvider.GetService(typeof(IObjectMapper));
             this.Logger = (ILogger)this.ServiceProvider.GetService(typeof(ILogger<>).MakeGenericType(this.GrainType));
-            this.CapPublisher = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
-
-            return Task.CompletedTask;
+            this.Observer = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
         }
 
-
-        protected virtual Task RaiseEvent<TEventData>(TState currentState, IEvent<TEventData> eventData)
+        protected async Task ProcessChange(Func<ICapPublisher, Task<IStatable<TState>>> commandFunc)
         {
-            this.State = currentState;
-            this.WriteStateAsync();
-            CapPublisher.PublishAsync(eventData.EventCode, eventData.Data);
-            return Task.CompletedTask;
+            var statable = await commandFunc.Invoke(this.Observer);
+            if (ProcessAction.Create == statable.GetAction() || ProcessAction.Update == statable.GetAction())
+            {
+                this.State = statable.GetState();
+                await WriteStateAsync();
+            }
+            else if (ProcessAction.Delete == statable.GetAction())
+            {
+                await this.ClearStateAsync();
+                this.DeactivateOnIdle();
+            }
         }
 
         protected virtual Task<TState> OnReadFromDbAsync() => null;

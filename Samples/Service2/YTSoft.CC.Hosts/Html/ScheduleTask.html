@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="https://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+
+
+        });
+
+        var _baseUrl = "http://127.0.0.1:8082";
+
+        function btnGetSync() {
+            $.ajax({
+                //请求方式
+                type: "GET",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask?id=2020091007164300002",
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+
+        function btnAddAsync() {
+            $.ajax({
+                //请求方式
+                type: "POST",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask/add",
+                data: {
+                    "id": "",
+                    "taskCode": "200910002",
+                    "taskName": "测试任务2",
+                    "lineCode": "10002",
+                    "userId": "admin",
+                    "userName": "admin"
+                },
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+
+        function btnUpdateAsync() {
+            $.ajax({
+                //请求方式
+                type: "POST",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask/update",
+                data: {
+                    "id": "2020091006035600002",
+                    "taskCode": "2009100022",
+                    "taskName": "测试任务22",
+                    "taskState": "1"
+                },
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+
+        function btnDeleteAsync() {
+            $.ajax({
+                //请求方式
+                type: "DELETE",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask?id=2020091006035600002",
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+
+        function btnGetPageSync() {
+            $.ajax({
+                //请求方式
+                type: "GET",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask/list",
+                data: {
+                    "taskCode": "200910002",
+                    "taskName": "测试任务2",
+                    "lineCode": "10002",
+                    "userId": "admin",
+                    "userName": "admin",
+                    "pageIndex": 1,
+                    "pageSize": 10
+                },
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div id="txtResult" style="border:1px solid red;height:60px;margin:5px;">测试</div>
+    </div>
+    <button onclick="btnGetSync()">GetSync</button>
+    <button onclick="btnAddAsync()">AddAsync</button>
+    <button onclick="btnUpdateAsync()">UpdateAsync</button>
+    <button onclick="btnDeleteAsync()">DeleteAsync</button>
+    <button onclick="btnGetPageSync()">GetPageSync</button>
+
+</body>
+</html>

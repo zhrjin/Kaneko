@@ -35,6 +35,12 @@ namespace Kaneko.Core.Contract
         public DateTime ModityDate { set; get; }
 
         /// <summary>
+        /// 版本号,乐观锁
+        /// </summary>
+        [KanekoColumn(Name = "version", ColumnDefinition = "int null")]
+        public int Version { set; get; }
+
+        /// <summary>
         /// 验证器
         /// </summary>
         /// <param name="validationContext"></param>

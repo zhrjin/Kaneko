@@ -16,6 +16,9 @@ namespace Kaneko.Server.Orleans.Grains
     /// </summary>
     public abstract class MainGrain : Grain, IIncomingGrainCallFilter, IOutgoingGrainCallFilter
     {
+        /// <summary>
+        /// 上下文用户信息
+        /// </summary>
         protected ICurrentUser CurrentUser { get; private set; }
 
         /// <summary>

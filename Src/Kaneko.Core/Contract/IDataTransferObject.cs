@@ -30,6 +30,11 @@ namespace Kaneko.Core.Contract
         public string UserName{ get; set; }
 
         /// <summary>
+        /// 版本号,乐观锁
+        /// </summary>
+        public int Version { set; get; }
+
+        /// <summary>
         /// 排序字段
         /// </summary>
         /// <returns></returns>
@@ -38,7 +43,7 @@ namespace Kaneko.Core.Contract
             return null;
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             return null;
         }
