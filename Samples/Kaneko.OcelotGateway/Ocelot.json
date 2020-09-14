@@ -100,7 +100,7 @@
     }
   },
 
-  "Urls": "http://192.168.101.155:6011",
+  "Urls": "http://127.0.0.1:6011",
   "TracingUrls": "http://192.168.101.155:6123",
   "AllowedOrigins": "http://192.168.101.155:8090,http://localhost:8090",
 
@@ -113,7 +113,7 @@
   },
 
   "Redis": {
-    "Enable": true,
+    "Enable": false,
     "HostName": "192.168.45.133",
     "Port": "6379",
     "InstanceName": "kaneko",

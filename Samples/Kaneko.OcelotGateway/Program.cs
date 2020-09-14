@@ -32,7 +32,8 @@ namespace Kaneko.OcelotGateway
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseIISIntegration();
                 });
     }
 }
