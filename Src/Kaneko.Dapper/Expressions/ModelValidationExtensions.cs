@@ -7,13 +7,13 @@ namespace Kaneko.Dapper.Expressions
 {
     public static class ModelValidationExtensions
     {
-        public static bool IsValid(this object obj, out Exception exception)
+        public static bool IsValid(this object obj, out string exception)
         {
             exception = null;
 
             if (obj == null)
             {
-                exception = new ArgumentNullException();
+                exception = "obj不能为空!";
                 return false;
             }
 
@@ -22,7 +22,7 @@ namespace Kaneko.Dapper.Expressions
             if (result == null)
                 return true;
 
-            exception = new Exception("【" + result.MemberNames.FirstOrDefault() + "】" + result.ErrorMessage);
+            exception = "【" + result.MemberNames.FirstOrDefault() + "】" + result.ErrorMessage;
             return false;
         }
 

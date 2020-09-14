@@ -52,7 +52,7 @@ namespace YTSoft.CC.IGrains.Entity
         /// <returns></returns>
         public Expression<Func<ScheduleTaskDO, bool>> GetExpression()
         {
-            Expression<Func<ScheduleTaskDO, bool>> expression = oo => true;
+            Expression<Func<ScheduleTaskDO, bool>> expression = oo => oo.IsDel == 0;
 
             if (!string.IsNullOrEmpty(TaskCode))
                 expression = expression.And(oo => oo.TaskCode.Contains(TaskCode));

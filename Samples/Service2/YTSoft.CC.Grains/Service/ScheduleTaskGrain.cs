@@ -25,9 +25,14 @@ namespace YTSoft.CC.Grains.Service
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var count = await _scheduleRepository.CountAsync(expression);
+            if (count == 0)
+            {
+                return ApiResultUtil.IsFailedPage<ScheduleTaskVO>("无数据！");
+            }
+
             var entities = await _scheduleRepository.GetListAsync(model.PageIndex, model.PageSize, expression, isMaster: false, orderByFields: orders);
             var scheduleTaskVOs = this.ObjectMapper.Map<List<ScheduleTaskVO>>(entities);
-            return await Task.FromResult(ApiResultUtil.IsSuccess<ScheduleTaskVO>(scheduleTaskVOs, count));
+            return ApiResultUtil.IsSuccess(scheduleTaskVOs, count);
         }
     }
 }

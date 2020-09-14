@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Src\Kaneko.Hosts\Kaneko.Hosts.csproj" />
+    <ProjectReference Include="..\..\Service\MSDemo.IGrains\MSDemo.IGrains.csproj" />
+    <ProjectReference Include="..\YTSoft.CC.IGrains\YTSoft.CC.IGrains.csproj" />
+  </ItemGroup>
+
+</Project>

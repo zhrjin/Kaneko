@@ -10,7 +10,7 @@ using Orleans.Runtime;
 using DotNetCore.CAP;
 using Kaneko.Core.Contract;
 using System.Diagnostics;
-using Kaneko.Core.ApiResult;
+using Kaneko.Core.Exceptions;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -40,7 +40,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 事件转发器
         /// </summary>
-        private ICapPublisher Observer { get; set; }
+        protected ICapPublisher Observer { get; set; }
 
         /// <summary>
         /// Primary key of actor
@@ -88,18 +88,45 @@ namespace Kaneko.Server.Orleans.Grains
             this.Observer = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
         }
 
-        protected async Task ProcessChange(Func<ICapPublisher, Task<IStatable<TState>>> commandFunc)
+        protected async Task Persist(ProcessAction action, TState state = default)
         {
-            var statable = await commandFunc.Invoke(this.Observer);
-            if (ProcessAction.Create == statable.GetAction() || ProcessAction.Update == statable.GetAction())
+            if (ProcessAction.Create == action || ProcessAction.Update == action)
             {
-                this.State = statable.GetState();
+                this.State = state;
                 await WriteStateAsync();
             }
-            else if (ProcessAction.Delete == statable.GetAction())
+            else if (ProcessAction.Delete == action)
             {
                 await this.ClearStateAsync();
                 this.DeactivateOnIdle();
+            }
+        }
+
+        [Obsolete]
+        private async Task ProcessChange(Func<ICapPublisher, Task<IStatable<TState>>> commandFunc, Action<Exception> errorFunc)
+        {
+            try
+            {
+                var statable = await commandFunc.Invoke(this.Observer);
+                if (ProcessAction.Create == statable.GetAction() || ProcessAction.Update == statable.GetAction())
+                {
+                    this.State = statable.GetState();
+                    await WriteStateAsync();
+                }
+                else if (ProcessAction.Delete == statable.GetAction())
+                {
+                    await this.ClearStateAsync();
+                    this.DeactivateOnIdle();
+                }
+            }
+            catch (KanekoException ex)
+            {
+                errorFunc(ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("", ex);
+                errorFunc(ex);
             }
         }
 
@@ -123,32 +150,25 @@ namespace Kaneko.Server.Orleans.Grains
                 await context.Invoke();
 
                 stopWatch.Stop();
-
                 long lElapsedMilliseconds = stopWatch.ElapsedMilliseconds;
-
-                await Task.Run(() =>
+                try
                 {
-                    try
+                    string sMessage = string.Format(
+                          "{0}.{1}({2}),耗时:{3}ms",
+                          context.Grain.GetType().FullName,
+                          context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
+                          (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
+                          lElapsedMilliseconds);
+
+                    Logger.LogInfo(sMessage);
+
+                    if (lElapsedMilliseconds > 3 * 1000)
                     {
-                        string sResult = "";
-                        string sMessage = string.Format(
-                              "{0}.{1}({2}),耗时:{4}ms",
-                              context.Grain.GetType().FullName,
-                              context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
-                              (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
-                              sResult,
-                              lElapsedMilliseconds);
-
-                        Logger.LogInfo(sMessage);
-
-                        if (lElapsedMilliseconds > 3 * 1000)
-                        {
-                            //超3秒发出警告
-                            Logger.LogWarn("超时警告：" + sMessage);
-                        }
+                        //超3秒发出警告
+                        Logger.LogWarn("超时警告：" + sMessage);
                     }
-                    catch { }
-                });
+                }
+                catch { }
             }
             catch (Exception exception)
             {

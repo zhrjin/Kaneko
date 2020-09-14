@@ -42,46 +42,37 @@ namespace YTSoft.CC.Grains.Service
 
         public async Task<ApiResult> AddAsync(ScheduleTaskDTO model)
         {
-            await ProcessChange(async (observer) =>
-            {
-                //参数校验
-                if (!model.IsValid(out Exception ex)) { throw ex; }
+            //参数校验
+            if (!model.IsValid(out string exMsg)) { return ApiResultUtil.IsFailed(exMsg); }
 
-                //转换为数据库实体
-                ScheduleTaskDO scheduleDO = this.ObjectMapper.Map<ScheduleTaskDO>(model);
+            //转换为数据库实体
+            ScheduleTaskDO scheduleDO = this.ObjectMapper.Map<ScheduleTaskDO>(model);
 
-                scheduleDO.CreateBy = model.UserId;
-                scheduleDO.CreateDate = System.DateTime.Now;
-                scheduleDO.ModityBy = model.UserId;
-                scheduleDO.ModityDate = System.DateTime.Now;
+            scheduleDO.CreateBy = model.UserId;
+            scheduleDO.CreateDate = System.DateTime.Now;
+            scheduleDO.ModityBy = model.UserId;
+            scheduleDO.ModityDate = System.DateTime.Now;
 
-                bool bRet = await _scheduleRepository.AddAsync(scheduleDO);
+            bool bRet = await _scheduleRepository.AddAsync(scheduleDO);
+            if (!bRet) { return ApiResultUtil.IsFailed("数据插入失败！"); }
 
-                if (!bRet) { throw new Exception("数据插入失败！"); }
-
-                //更新服务状态
-                ScheduleTaskState scheduleTaskState = this.ObjectMapper.Map<ScheduleTaskState>(scheduleDO);
-                return new Statable<ScheduleTaskState>(ProcessAction.Create, scheduleTaskState);
-
-            });
-
+            //更新服务状态
+            ScheduleTaskState scheduleTaskState = this.ObjectMapper.Map<ScheduleTaskState>(scheduleDO);
+            await this.Persist(ProcessAction.Create, scheduleTaskState);
             return ApiResultUtil.IsSuccess(model.Id);
         }
 
         public async Task<ApiResult> DeleteAsync()
         {
-            await ProcessChange(async (observer) =>
+            if (string.IsNullOrWhiteSpace(this.GrainId))
             {
-                if (string.IsNullOrWhiteSpace(this.GrainId))
-                {
-                    throw new Exception("主键ID不能为空！");
-                }
+                return ApiResultUtil.IsFailed("主键ID不能为空！");
+            }
 
-                bool bRet = await _scheduleRepository.DeleteAsync(oo => oo.Id == this.GrainId);
-                if (!bRet) { throw new Exception("数据删除失败！"); }
+            bool bRet = await _scheduleRepository.DeleteAsync(oo => oo.Id == this.GrainId);
+            if (!bRet) { return ApiResultUtil.IsFailed("数据删除失败！"); }
 
-                return new Statable<ScheduleTaskState>(ProcessAction.Delete);
-            });
+            await this.Persist(ProcessAction.Delete);
 
             return ApiResultUtil.IsSuccess();
         }
@@ -95,30 +86,34 @@ namespace YTSoft.CC.Grains.Service
 
         public async Task<ApiResult> UpdateAsync(ScheduleTaskDTO model)
         {
-            await ProcessChange(async (observer) =>
+            if (model.Version != this.State.Version) { return ApiResultUtil.IsFailed("数据已被修改，请重新再加载！"); }
+
+            bool bRet = await _scheduleRepository.SetAsync(() => new { task_name = model.TaskName, line_code = model.LineCode, version = (model.Version + 1) }, oo => oo.Id == this.GrainId);
+
+            if (!bRet) { return ApiResultUtil.IsFailed("数据更新失败！"); }
+
+            ScheduleTaskState scheduleTaskState = this.State;
+            scheduleTaskState.TaskName = model.TaskName;
+            scheduleTaskState.LineCode = model.LineCode;
+            scheduleTaskState.Version++;
+
+            ///任务完成 进行系统对接
+            if (model.TaskState == TaskState.Complete)
             {
-                if (model.Version != this.State.Version) { throw new Exception("数据已被修改，请重新再加载！"); }
-
-                bool bRet = await _scheduleRepository.SetAsync(() => new { task_name = model.TaskName, line_code = model.LineCode, version = (model.Version + 1) }, oo => oo.Id == this.GrainId);
-
-                if (!bRet) { throw new Exception("数据更新失败！"); }
-
-                ScheduleTaskState scheduleTaskState = this.State;
-                scheduleTaskState.TaskName = model.TaskName;
-                scheduleTaskState.LineCode = model.LineCode;
-                scheduleTaskState.Version++;
-
-                ///任务完成 进行系统对接
-                if (model.TaskState == TaskState.Complete)
-                {
-                    ScheduleTaskVO scheduleTaskVO = this.ObjectMapper.Map<ScheduleTaskVO>(this.State);
-                    await observer.PublishAsync(EventContract.TaskInterface, scheduleTaskVO);
-                }
-
-                return new Statable<ScheduleTaskState>(ProcessAction.Update, scheduleTaskState);
-            });
-
+                ScheduleTaskVO scheduleTaskVO = this.ObjectMapper.Map<ScheduleTaskVO>(this.State);
+                await Observer.PublishAsync(EventContract.TaskInterface, scheduleTaskVO);
+            }
+            await this.Persist(ProcessAction.Update, scheduleTaskState);
             return ApiResultUtil.IsSuccess();
+
         }
+
+        /// <summary>
+        /// 异常处理
+        /// </summary>
+        protected override Func<Exception, Task> FuncExceptionHandler => (exception) =>
+        {
+            return Task.CompletedTask;
+        };
     }
 }

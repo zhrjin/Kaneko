@@ -450,6 +450,47 @@ namespace Kaneko.Dapper.Extensions
         }
 
         /// <summary>
+        /// 获取所以数据
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="whereExpress">条件表达式</param>
+        /// <param name="fieldExpress">选择字段，默认为*</param>
+        /// <param name="orderByFields">排序字段集合</param>
+        /// <param name="transaction">事务</param>
+        /// <param name="outSqlAction">返回sql语句</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(this
+            IDbConnection connection,
+            string tableName,
+            Expression<Func<TEntity, bool>> whereExpress,
+            Expression<Func<TEntity, object>> fieldExpress = null,
+            List<OrderByField> orderByFields = null,
+            IDbTransaction transaction = null,
+            Action<string> outSqlAction = null)
+            where TEntity : IDomainObject
+        {
+            if (string.IsNullOrEmpty(tableName))
+                throw new ArgumentNullException(nameof(tableName));
+
+            var dbType = connection.GetDbType();
+            var sqlExpression = SqlExpression.Select(dbType, fieldExpress, tableName);
+            if (whereExpress != null)
+                sqlExpression.Where(whereExpress);
+
+            var orderBy = string.Empty;
+            if ((orderByFields?.Count ?? 0) > 0)
+                orderBy = $" {string.Join(", ", orderByFields.Select(oo => oo.Field.ParamSql(dbType) + " " + oo.OrderBy))}";
+            sqlExpression.OrderBy(orderBy);
+
+            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
+            // 返回sql
+            outSqlAction?.Invoke(sqlExpression.Script);
+            return task;
+        }
+
+        /// <summary>
         /// 获取分页数据 Offset
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
@@ -569,6 +610,19 @@ namespace Kaneko.Dapper.Extensions
         }
 
         /// <summary>
+        /// 获取主表是否自动更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        internal static bool IsAutoUpdate(this Type entity)
+        {
+            var attribute = entity.GetKanekoAttribute<KanekoTableAttribute>();
+            if (attribute != null)
+                return attribute.IsAutoUpdate;
+            return true;
+        }
+
+        /// <summary>
         /// 获取值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
@@ -602,7 +656,7 @@ namespace Kaneko.Dapper.Extensions
             return propertyInfo.Name;
         }
 
-        
+
         /// <summary>
         /// 获取列名
         /// </summary>

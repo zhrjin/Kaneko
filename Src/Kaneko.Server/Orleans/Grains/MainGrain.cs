@@ -7,7 +7,6 @@ using Orleans.Runtime;
 using Kaneko.Core.IdentityServer;
 using System.Diagnostics;
 using Kaneko.Core.Extensions;
-using Kaneko.Core.ApiResult;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -59,11 +58,10 @@ namespace Kaneko.Server.Orleans.Grains
         /// Unified method of dependency injection
         /// </summary>
         /// <returns></returns>
-        protected virtual Task DependencyInjection()
+        protected virtual void DependencyInjection()
         {
             this.ObjectMapper = (IObjectMapper)this.ServiceProvider.GetService(typeof(IObjectMapper));
             this.Logger = (ILogger)this.ServiceProvider.GetService(typeof(ILogger<>).MakeGenericType(this.GrainType));
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -82,34 +80,28 @@ namespace Kaneko.Server.Orleans.Grains
                 if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
 
                 await context.Invoke();
-
                 stopWatch.Stop();
 
                 long lElapsedMilliseconds = stopWatch.ElapsedMilliseconds;
 
-                await Task.Run(() =>
+                try
                 {
-                    try
+                    string sMessage = string.Format(
+                          "{0}.{1}({2}),耗时:{3}ms",
+                          context.Grain.GetType().FullName,
+                          context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
+                          (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
+                          lElapsedMilliseconds);
+
+                    Logger.LogInfo(sMessage);
+
+                    if (lElapsedMilliseconds > 3 * 1000)
                     {
-                        string sResult = "";
-                        string sMessage = string.Format(
-                              "{0}.{1}({2}),耗时:{4}ms",
-                              context.Grain.GetType().FullName,
-                              context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
-                              (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
-                              sResult,
-                              lElapsedMilliseconds);
-
-                        Logger.LogInfo(sMessage);
-
-                        if (lElapsedMilliseconds > 3 * 1000)
-                        {
-                            //超3秒发出警告
-                            Logger.LogWarn("超时警告：" + sMessage);
-                        }
+                        //超3秒发出警告
+                        Logger.LogWarn("超时警告：" + sMessage);
                     }
-                    catch { }
-                });
+                }
+                catch { }
             }
             catch (Exception exception)
             {

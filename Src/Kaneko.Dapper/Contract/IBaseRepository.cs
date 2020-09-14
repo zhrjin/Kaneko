@@ -233,5 +233,21 @@ namespace Kaneko.Dapper.Contract
         /// <param name="isMaster">是否主从</param>
         /// <returns></returns>
         Task<int> CountAsync(Expression<Func<TEntity, bool>> expression = null, bool isMaster = false);
+
+        /// <summary>
+        /// 异步获取列表
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="expression">条件表达式</param>
+        /// <param name="fieldExpressison">按字段返回</param>
+        /// <param name="isMaster">是否主从</param>
+        /// <param name="orderByFields">排序字段集合</param>
+        /// <returns></returns>
+        Task<IEnumerable<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>> expression = null,
+            Expression<Func<TEntity, object>> fieldExpressison = null,
+            bool isMaster = false,
+            params OrderByField[] orderByFields);
     }
 }

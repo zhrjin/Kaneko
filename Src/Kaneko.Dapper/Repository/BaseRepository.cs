@@ -39,6 +39,11 @@ namespace Kaneko.Dapper.Repository
         {
             return Execute(async (connection) =>
             {
+                if (!GetTableIsAutoUpdate())
+                {
+                    return true;
+                }
+
                 string tableName = GetTableName();
                 var dbType = connection.GetDbType();
                 string excSqlScript = "";
@@ -174,6 +179,16 @@ namespace Kaneko.Dapper.Repository
         {
             var tableName = TableNameFunc?.Invoke() ?? typeof(TEntity).GetMainTableName();
             return tableName;
+        }
+
+        /// <summary>
+        /// 是否自动更新表结构
+        /// </summary>
+        /// <returns></returns>
+        public bool GetTableIsAutoUpdate()
+        {
+            var isAutoUpdate = typeof(TEntity).IsAutoUpdate();
+            return isAutoUpdate;
         }
 
         /// <summary>
@@ -566,6 +581,32 @@ namespace Kaneko.Dapper.Repository
                 return task;
             }, isMaster);
         }
+
+
+        /// <summary>
+        /// 异步获取列表
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="expression">条件表达式</param>
+        /// <param name="fieldExpressison">按字段返回</param>
+        /// <param name="isMaster">是否主从</param>
+        /// <param name="orderByFields">排序字段集合</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>> expression = null,
+            Expression<Func<TEntity, object>> fieldExpressison = null,
+            bool isMaster = false,
+            params OrderByField[] orderByFields)
+        {
+            return await Execute(async (connection) =>
+            {
+                var tableName = expression.GetTableName(TableNameFunc);
+                var task = await connection.GetAllAsync(tableName, expression, fieldExpressison, orderByFields?.ToList(), Transaction, OutSqlAction);
+                return task;
+            }, isMaster);
+        }
+
 
         /// <summary>
         /// 异步获取数量

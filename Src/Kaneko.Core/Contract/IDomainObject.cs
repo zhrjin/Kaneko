@@ -1,8 +1,5 @@
 ﻿using Kaneko.Core.Attributes;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
 namespace Kaneko.Core.Contract
 {
     /// <summary>
@@ -41,20 +38,16 @@ namespace Kaneko.Core.Contract
         public int Version { set; get; }
 
         /// <summary>
-        /// 验证器
+        /// 是否删除 1-已删除
         /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            return null;
-        }
+        [KanekoColumn(Name = "is_del", ColumnDefinition = "int null")]
+        public int IsDel { set; get; }
     }
 
     /// <summary>
     /// 用作泛型约束，表示继承自该接口的为领域实体DO
     /// </summary>
-    public interface IDomainObject : IValidatableObject
+    public interface IDomainObject
     {
     }
 }

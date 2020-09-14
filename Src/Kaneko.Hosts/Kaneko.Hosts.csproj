@@ -4,9 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright></Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.20.913.1</Version>
-    <AssemblyVersion>1.20.913.1</AssemblyVersion>
-    <FileVersion>1.20.913.1</FileVersion>
+    <Version>1.20.914.3</Version>
+    <AssemblyVersion>1.20.914.3</AssemblyVersion>
+    <FileVersion>1.20.914.3</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

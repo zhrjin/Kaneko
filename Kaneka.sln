@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YTSoft.CC.Grains", "Samples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YTSoft.CC.IGrains", "Samples\Service2\YTSoft.CC.IGrains\YTSoft.CC.IGrains.csproj", "{1843095A-B417-4B39-927D-421B9C9B9190}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDemo", "Samples\Service2\TestDemo\TestDemo.csproj", "{5F0B9321-0F22-4DD8-837F-7CEC969062B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{1843095A-B417-4B39-927D-421B9C9B9190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1843095A-B417-4B39-927D-421B9C9B9190}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1843095A-B417-4B39-927D-421B9C9B9190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F0B9321-0F22-4DD8-837F-7CEC969062B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F0B9321-0F22-4DD8-837F-7CEC969062B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F0B9321-0F22-4DD8-837F-7CEC969062B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F0B9321-0F22-4DD8-837F-7CEC969062B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{22BFE2EF-678F-4C83-890E-56F6F3810AA6} = {39EF0D96-7AF9-4661-B66F-74B66FE28F79}
 		{A2073549-84BE-4CAA-9560-1AD6790C0399} = {39EF0D96-7AF9-4661-B66F-74B66FE28F79}
 		{1843095A-B417-4B39-927D-421B9C9B9190} = {39EF0D96-7AF9-4661-B66F-74B66FE28F79}
+		{5F0B9321-0F22-4DD8-837F-7CEC969062B4} = {B5247ECD-D532-41A8-A92C-C7702B750DED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F7C6488-1601-4F13-A0B4-1D4DE6AFCC50}

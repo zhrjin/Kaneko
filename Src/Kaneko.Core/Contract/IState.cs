@@ -28,6 +28,11 @@ namespace Kaneko.Core.Contract
         /// 版本号,乐观锁
         /// </summary>
         public int Version { set; get; }
+
+        /// <summary>
+        /// 是否删除 1-已删除
+        /// </summary>
+        public int IsDel { set; get; }
     }
 
     public interface IState
