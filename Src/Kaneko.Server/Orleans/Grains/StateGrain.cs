@@ -20,7 +20,7 @@ namespace Kaneko.Server.Orleans.Grains
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
     [StorageProvider(ProviderName = "RedisStore")]
-    public abstract class StateGrain<TState> : Grain<TState>, IIncomingGrainCallFilter where TState : IState
+    public abstract class StateGrain<PrimaryKey, TState> : Grain<TState>, IIncomingGrainCallFilter where TState : IState
     {
         /// <summary>
         /// 上下文用户信息
@@ -46,7 +46,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// Primary key of actor
         /// Because there are multiple types, dynamic assignment in OnActivateAsync
         /// </summary>
-        protected string GrainId { get; private set; }
+        protected PrimaryKey GrainId { get; private set; }
 
         /// <summary>
         /// Reference to the object to object mapper.
@@ -60,7 +60,16 @@ namespace Kaneko.Server.Orleans.Grains
 
         public override async Task OnActivateAsync()
         {
-            GrainId = this.GetPrimaryKeyString();
+            var type = typeof(PrimaryKey);
+            if (type == typeof(long) && this.GetPrimaryKeyLong() is PrimaryKey longKey)
+                GrainId = longKey;
+            else if (type == typeof(string) && this.GetPrimaryKeyString() is PrimaryKey stringKey)
+                GrainId = stringKey;
+            else if (type == typeof(Guid) && this.GetPrimaryKey() is PrimaryKey guidKey)
+                GrainId = guidKey;
+            else
+                throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
+
             DependencyInjection();
 
             var onReadDbTask = OnReadFromDbAsync();

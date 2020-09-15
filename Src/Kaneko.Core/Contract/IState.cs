@@ -2,8 +2,13 @@
 
 namespace Kaneko.Core.Contract
 {
-    public class BsseState : IState
+    public class BsseState<PrimaryKey> : IState
     {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public PrimaryKey Id { set; get; }
+
         /// <summary>
         /// 创建人
         /// </summary>

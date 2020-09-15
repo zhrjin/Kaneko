@@ -273,40 +273,57 @@
             The full qualified type name to apply grain age limit.
             </summary>
         </member>
-        <member name="T:Kaneko.Core.Contract.BaseDTO">
+        <member name="T:Kaneko.Core.Contract.BaseDTO`1">
             <summary>
             数据传输对象DTO抽象实现类
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDTO.PageIndex">
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.PageIndex">
             <summary>
             页标
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDTO.PageSize">
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.PageSize">
             <summary>
             每页笔数
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDTO.UserId">
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.UserId">
             <summary>
             用户ID
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDTO.UserName">
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.UserName">
             <summary>
             用户名称
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDTO.Version">
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.Version">
             <summary>
             版本号,乐观锁
             </summary>
         </member>
-        <member name="M:Kaneko.Core.Contract.BaseDTO.GetOrder">
+        <member name="P:Kaneko.Core.Contract.BaseDTO`1.IsDel">
+            <summary>
+            是否删除1-删除
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Contract.BaseDTO`1.GetOrder">
             <summary>
             排序字段
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.Contract.BaseDTO`1.Validate(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            
+            </summary>
+            <param name="validationContext"></param>
             <returns></returns>
         </member>
         <member name="T:Kaneko.Core.Contract.IDataTransferObject">
@@ -330,37 +347,42 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Kaneko.Core.Contract.BaseDO">
+        <member name="T:Kaneko.Core.Contract.SqlServerBaseDO`1">
             <summary>
             领域实体DO抽象实现类
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDO.CreateBy">
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.CreateBy">
             <summary>
             创建人
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDO.CreateDate">
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.CreateDate">
             <summary>
             创建时间
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDO.ModityBy">
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.ModityBy">
             <summary>
             修改人
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDO.ModityDate">
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.ModityDate">
             <summary>
             修改时间
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDO.Version">
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.Version">
             <summary>
             版本号,乐观锁
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BaseDO.IsDel">
+        <member name="P:Kaneko.Core.Contract.SqlServerBaseDO`1.IsDel">
             <summary>
             是否删除 1-已删除
             </summary>
@@ -385,32 +407,37 @@
             删除
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BsseState.CreateBy">
+        <member name="P:Kaneko.Core.Contract.BsseState`1.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState`1.CreateBy">
             <summary>
             创建人
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BsseState.CreateDate">
+        <member name="P:Kaneko.Core.Contract.BsseState`1.CreateDate">
             <summary>
             创建时间
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BsseState.ModityBy">
+        <member name="P:Kaneko.Core.Contract.BsseState`1.ModityBy">
             <summary>
             修改人
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BsseState.ModityDate">
+        <member name="P:Kaneko.Core.Contract.BsseState`1.ModityDate">
             <summary>
             修改时间
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BsseState.Version">
+        <member name="P:Kaneko.Core.Contract.BsseState`1.Version">
             <summary>
             版本号,乐观锁
             </summary>
         </member>
-        <member name="P:Kaneko.Core.Contract.BsseState.IsDel">
+        <member name="P:Kaneko.Core.Contract.BsseState`1.IsDel">
             <summary>
             是否删除 1-已删除
             </summary>
@@ -418,6 +445,21 @@
         <member name="T:Kaneko.Core.Contract.IViewObject">
             <summary>
             视图对象，用于展示层VO
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseVO`1.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseVO`1.Version">
+            <summary>
+            版本号,乐观锁
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseVO`1.IsDel">
+            <summary>
+            是否删除1-删除
             </summary>
         </member>
         <member name="T:Kaneko.Core.Data.FieldSortType">

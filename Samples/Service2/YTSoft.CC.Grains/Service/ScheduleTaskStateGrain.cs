@@ -15,7 +15,7 @@ using Kaneko.Core.Contract;
 namespace YTSoft.CC.Grains.Service
 {
     [Reentrant]
-    public class ScheduleTaskStateGrain : StateGrain<ScheduleTaskState>, IScheduleTaskStateGrain
+    public class ScheduleTaskStateGrain : StateGrain<long, ScheduleTaskState>, IScheduleTaskStateGrain
     {
         private readonly IScheduleTaskRepository _scheduleRepository;
 
@@ -31,7 +31,7 @@ namespace YTSoft.CC.Grains.Service
         protected override async Task<ScheduleTaskState> OnReadFromDbAsync()
         {
             var state = this.State;
-            if (string.IsNullOrEmpty(state?.Id))
+            if (state.Id <= 0)
             {
                 var dbResult = await _scheduleRepository.GetAsync(oo => oo.Id == this.GrainId, isMaster: false);
                 var result = this.ObjectMapper.Map<ScheduleTaskState>(dbResult);
@@ -59,12 +59,12 @@ namespace YTSoft.CC.Grains.Service
             //更新服务状态
             ScheduleTaskState scheduleTaskState = this.ObjectMapper.Map<ScheduleTaskState>(scheduleDO);
             await this.Persist(ProcessAction.Create, scheduleTaskState);
-            return ApiResultUtil.IsSuccess(model.Id);
+            return ApiResultUtil.IsSuccess(model.Id.ToString());
         }
 
         public async Task<ApiResult> DeleteAsync()
         {
-            if (string.IsNullOrWhiteSpace(this.GrainId))
+            if (this.GrainId <= 0)
             {
                 return ApiResultUtil.IsFailed("主键ID不能为空！");
             }

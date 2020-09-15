@@ -4,15 +4,20 @@
         <name>Kaneko.Hosts</name>
     </assembly>
     <members>
+        <member name="T:Kaneko.Hosts.Extensions.KanekoHostExtensions">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Kaneko.Hosts.Extensions.KanekoHostExtensions.AddKaneko(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Reflection.Assembly,Microsoft.Extensions.Configuration.IConfiguration,System.Action{Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions},System.Action{Microsoft.AspNetCore.Mvc.MvcOptions})">
             <summary>
             
             </summary>
             <param name="services"></param>
-            <param name="serviceName"></param>
             <param name="controllerAssembly"></param>
             <param name="configuration"></param>
-            <param name="setupAction"></param>
+            <param name="corsConfig"></param>
+            <param name="mvcConfig"></param>
             <returns></returns>
         </member>
         <member name="M:Kaneko.Hosts.Extensions.KanekoHostExtensions.UseKaneko(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
@@ -20,7 +25,7 @@
             
             </summary>
             <param name="app"></param>
-            <param name="serviceName"></param>
+            <param name="configuration"></param>
             <returns></returns>
         </member>
     </members>

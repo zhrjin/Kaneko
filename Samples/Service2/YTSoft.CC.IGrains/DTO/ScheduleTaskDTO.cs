@@ -8,13 +8,8 @@ using System.Linq.Expressions;
 
 namespace YTSoft.CC.IGrains.Entity
 {
-    public class ScheduleTaskDTO : BaseDTO
+    public class ScheduleTaskDTO : BaseDTO<long>
     {
-        /// <summary>
-        /// 任务ID，主键
-        /// </summary>
-        public string Id { set; get; }
-
         /// <summary>
         /// 任务编号
         /// </summary>

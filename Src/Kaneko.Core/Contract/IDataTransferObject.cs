@@ -7,8 +7,13 @@ namespace Kaneko.Core.Contract
     /// <summary>
     /// 数据传输对象DTO抽象实现类
     /// </summary>
-    public abstract class BaseDTO : IDataTransferObject
+    public abstract class BaseDTO<PrimaryKey> : IDataTransferObject
     {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public PrimaryKey Id { set; get; }
+
         /// <summary>
         /// 页标
         /// </summary>
@@ -27,12 +32,17 @@ namespace Kaneko.Core.Contract
         /// <summary>
         /// 用户名称
         /// </summary>
-        public string UserName{ get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// 版本号,乐观锁
         /// </summary>
         public int Version { set; get; }
+
+        /// <summary>
+        /// 是否删除1-删除
+        /// </summary>
+        public int IsDel { set; get; }
 
         /// <summary>
         /// 排序字段
@@ -43,6 +53,11 @@ namespace Kaneko.Core.Contract
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             return null;

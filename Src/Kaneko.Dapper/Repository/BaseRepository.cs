@@ -75,14 +75,18 @@ namespace Kaneko.Dapper.Repository
                     var fields = new List<string>();
                     foreach (var pi in pis)
                     {
-                        string fieldName = pi.GetFieldName().ToUpper();
+                        string fieldName = pi.GetFieldName().ToLower();
                         string columnDefinition = pi.GetColumnDefinition(dbType);
-                        if (tableInfos.Any(m => m.Name.ToUpper() == fieldName))
+                        if (tableInfos.Any(m => m.Name.ToLower() == fieldName))
                         {
+                            //default不更新
+                            columnDefinition = columnDefinition.ToLower();
+                            if (columnDefinition.IndexOf("default") > -1) { continue; }
+
                             //更新列
-                            var tInfo = tableInfos.Where(m => m.Name.ToUpper() == fieldName).FirstOrDefault();
+                            var tInfo = tableInfos.Where(m => m.Name.ToLower() == fieldName).FirstOrDefault();
                             string columnDefs = "", size = "";
-                            if (tInfo.DataType.ToUpper().IndexOf("CHAR") > -1)
+                            if (tInfo.DataType.ToLower().IndexOf("CHAR") > -1)
                             {
                                 size = tInfo.Size == -1 ? "(MAX)" : "(" + tInfo.Size.ToString() + ")";
                             }
@@ -90,13 +94,15 @@ namespace Kaneko.Dapper.Repository
                             columnDefs = $"{tInfo.Name.ParamSql(dbType)}{tInfo.DataType}{size}{tInfo.Nullable}";
                             columnDefs = columnDefs.Replace(" ", "");
 
-                            if (columnDefinition.ToUpper().IndexOf("PRIMARY") > -1 && columnDefinition.ToUpper().IndexOf("KEY") > -1)
+
+
+                            if (columnDefinition.ToLower().IndexOf("primary") > -1 && columnDefinition.ToLower().IndexOf("key") > -1)
                             {
 
-                                columnDefinition = columnDefinition.ToUpper().Replace("PRIMARY", "").Replace("KEY", "");
+                                columnDefinition = columnDefinition.ToLower().Replace("primary", "").Replace("key", "");
 
 
-                                if (columnDefinition.Replace(" ", "") != columnDefs.ToUpper())
+                                if (columnDefinition.Replace(" ", "") != columnDefs.ToLower())
                                 {
                                     //之前不是主键
                                     if (string.IsNullOrWhiteSpace(tInfo.PrimaryKey))
@@ -130,7 +136,7 @@ namespace Kaneko.Dapper.Repository
                             }
                             else
                             {
-                                if (columnDefinition.Replace(" ", "").ToUpper() != columnDefs.ToUpper())
+                                if (columnDefinition.Replace(" ", "").ToLower() != columnDefs.ToLower())
                                 {
                                     try
                                     {

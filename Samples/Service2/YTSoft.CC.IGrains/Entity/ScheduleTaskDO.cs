@@ -6,15 +6,8 @@ namespace YTSoft.CC.IGrains.Entity
 {
     [AutoMap(typeof(ScheduleTaskDTO))]
     [KanekoTable(name: "t_scheduletask")]
-    public class ScheduleTaskDO : BaseDO
+    public class ScheduleTaskDO : SqlServerBaseDO<long>
     {
-        /// <summary>
-        /// 任务ID，主键
-        /// </summary>
-        [KanekoId]
-        [KanekoColumn(Name = "id", ColumnDefinition = "varchar(20) not null primary key")]
-        public string Id { set; get; }
-
         /// <summary>
         /// 任务编号
         /// </summary>

@@ -5,13 +5,8 @@ using YTSoft.CC.IGrains.Entity;
 namespace YTSoft.CC.IGrains.State
 {
     [AutoMap(typeof(ScheduleTaskDO))]
-    public class ScheduleTaskState : BsseState
+    public class ScheduleTaskState : BsseState<long>
     {
-        /// <summary>
-        /// 任务ID，主键
-        /// </summary>
-        public string Id { set; get; }
-
         /// <summary>
         /// 任务编号
         /// </summary>

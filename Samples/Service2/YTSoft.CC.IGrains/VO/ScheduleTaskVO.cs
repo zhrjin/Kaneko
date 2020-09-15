@@ -7,13 +7,8 @@ namespace YTSoft.CC.IGrains.VO
 {
     [AutoMap(typeof(ScheduleTaskDO))]
     [AutoMap(typeof(ScheduleTaskState))]
-    public class ScheduleTaskVO : BaseVO
+    public class ScheduleTaskVO : BaseVO<long>
     {
-        /// <summary>
-        /// 任务ID，主键
-        /// </summary>
-        public string Id { set; get; }
-
         /// <summary>
         /// 任务编号
         /// </summary>

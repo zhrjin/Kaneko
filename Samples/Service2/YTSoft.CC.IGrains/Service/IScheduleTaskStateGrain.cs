@@ -3,13 +3,14 @@ using Kaneko.Server.Orleans.Grains;
 using YTSoft.CC.IGrains.Entity;
 using YTSoft.CC.IGrains.VO;
 using System.Threading.Tasks;
+using Orleans;
 
 namespace YTSoft.CC.IGrains.Service
 {
     /// <summary>
     /// 任务管理(有状态)
     /// </summary>
-    public interface IScheduleTaskStateGrain : IStateGrain
+    public interface IScheduleTaskStateGrain : IGrainWithIntegerKey
     {
         /// <summary>
         /// 获取详情

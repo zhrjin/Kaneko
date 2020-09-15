@@ -33,7 +33,7 @@ namespace TestDemo
 
                     while (times > 0)
                     {
-                        await client.GetGrain<IScheduleTaskStateGrain>(times.ToString()).GetAsync();
+                        await client.GetGrain<IScheduleTaskStateGrain>(times).GetAsync();
 
                         //using var httpclient = new HttpClient();
                         //var httpContent = new StringContent("{}");

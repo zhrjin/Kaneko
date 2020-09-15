@@ -2,7 +2,7 @@
 using Orleans.Concurrency;
 using System;
 using System.Threading;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace Kaneko.Server.Orleans.Services
 {
@@ -15,7 +15,7 @@ namespace Kaneko.Server.Orleans.Services
         private const int length = 19;
 
         public UtcUIDGrain()
-        { 
+        {
             this.startString = DateTimeOffset.UtcNow.ToString("yyyyMMddHHmmss");
             this.startLong = long.Parse(this.startString);
         }
@@ -59,6 +59,12 @@ namespace Kaneko.Server.Orleans.Services
                     return GenerateUtcId();
                 }
             }
+        }
+
+        public async Task<long> NewLongID()
+        {
+            var newId = await NewID();
+            return long.Parse(newId);
         }
     }
 }
