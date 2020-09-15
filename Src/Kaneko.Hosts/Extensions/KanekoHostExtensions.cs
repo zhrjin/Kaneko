@@ -17,16 +17,19 @@ using Kaneko.Hosts.Validator;
 
 namespace Kaneko.Hosts.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class KanekoHostExtensions
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="serviceName"></param>
         /// <param name="controllerAssembly"></param>
         /// <param name="configuration"></param>
-        /// <param name="setupAction"></param>
+        /// <param name="corsConfig"></param>
+        /// <param name="mvcConfig"></param>
         /// <returns></returns>
         public static IServiceCollection AddKaneko(this IServiceCollection services, Assembly controllerAssembly, IConfiguration configuration, Action<CorsOptions> corsConfig = null, Action<MvcOptions> mvcConfig = null)
         {
@@ -83,7 +86,7 @@ namespace Kaneko.Hosts.Extensions
         /// 
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="serviceName"></param>
+        /// <param name="configuration"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseKaneko(this IApplicationBuilder app, IConfiguration configuration)
         {

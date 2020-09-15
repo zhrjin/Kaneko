@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kaneko.Consul</name>
+    </assembly>
+    <members>
+        <member name="M:Kaneko.Consul.ConsulExtension.AddConsul(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            添加Consul功能
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Consul.ConsulExtension.UseConsul(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            使用Consul
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

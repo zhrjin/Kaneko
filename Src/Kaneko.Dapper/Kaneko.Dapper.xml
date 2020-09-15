@@ -1,0 +1,1860 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kaneko.Dapper</name>
+    </assembly>
+    <members>
+        <member name="T:Kaneko.Dapper.Contract.IBaseRepository`1">
+            <summary>
+            接口
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetMainTableName">
+            <summary>
+            获取主表名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetTableName">
+            <summary>
+            获取表名:内部会调用TableNameFunc 从主库中查询
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.BeginTransaction``1(System.Func{System.Data.IDbTransaction,``0})">
+            <summary>
+            事务中执行，内部已做TryCatch，Catch回滚
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="func"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.IsExistTable(System.String,System.Boolean)">
+            <summary>
+            是否存在表
+            </summary>
+            <param name="tableName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.IsExistField(System.String,System.String,System.Boolean)">
+            <summary>
+            是否存在字段
+            </summary>
+            <param name="tableName"></param>
+            <param name="fieldName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Add(`0,System.Boolean)">
+            <summary>
+            添加
+            </summary>
+            <param name="entity">数据实体</param>
+            <param name="returnLastIdentity">是否赋值最后一次的自增ID</param>
+            <returns>添加后的数据实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Add(`0[])">
+            <summary>
+            批量添加
+            </summary>
+            <param name="entities">数据实体</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Delete(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            删除
+            </summary>
+            <param name="expression">删除条件</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Set(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            更新
+            </summary>
+            <param name="entity">数据实体</param>
+            <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Set(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据字段修改
+            </summary>
+            <param name="setExpress">修改字段表达式 object =>dynamic 是一个匿名类</param>
+            <param name="whereExpress">条件表达式</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Get(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean)">
+            <summary>
+            获取一条数据
+            </summary>
+            <param name="expression">查询条件</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <returns>实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetList(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            获取列表 
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetOffsets(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            获取列表 Offset
+            </summary>
+            <param name="offset"></param>
+            <param name="size"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.Count(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Boolean)">
+            <summary>
+            获取数量
+            </summary>
+            <param name="expression">条件表达式</param>
+            <param name="isMaster">是否主从</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.BeginTransactionAsync``1(System.Func{System.Data.IDbTransaction,System.Threading.Tasks.Task{``0}})">
+            <summary>
+            事务中执行，内部已做TryCatch，Catch回滚
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="func"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.IsExistTableAsync(System.String,System.Boolean)">
+            <summary>
+            是否存在表
+            </summary>
+            <param name="tableName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.IsExistFieldAsync(System.String,System.String,System.Boolean)">
+            <summary>
+            是否存在字段
+            </summary>
+            <param name="tableName"></param>
+            <param name="fieldName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.AddAsync(`0,System.Boolean)">
+            <summary>
+            异步添加
+            </summary>
+            <param name="entity"></param>
+            <param name="returnLastIdentity">是否赋值最后一次的自增ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.AddAsync(`0[])">
+            <summary>
+            异步批量添加
+            </summary>
+            <param name="entities">数据实体</param>
+            <returns>bool</returns>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            异步删除
+            </summary>
+            <param name="expression">删除条件</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.SetAsync(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            异步更新
+            </summary>
+            <param name="entity">数据实体</param>
+            <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.SetAsync(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            异步根据字段修改
+            </summary>
+            <param name="setExpress">修改字段表达式</param>
+            <param name="whereExpress">条件表达式</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean)">
+            <summary>
+            异步获取一条数据
+            </summary>
+            <param name="expression">查询条件</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <returns>实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetListAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            异步获取列表
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetOffsetsAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            异步获取列表 Offset
+            </summary>
+            <param name="offset"></param>
+            <param name="size"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Boolean)">
+            <summary>
+            异步获取数量
+            </summary>
+            <param name="expression">条件表达式</param>
+            <param name="isMaster">是否主从</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IBaseRepository`1.GetAllAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            异步获取列表
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Contract.IPropertyAssist">
+            <summary>
+            通用的接口
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.DbStoreKey">
+            <summary>
+            数据库key
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.Transaction">
+            <summary>
+            事务
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.InTransaction">
+            <summary>
+            是否在事务中
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.TableNameFunc">
+            <summary>
+            表名生成方法
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.CreateScriptFunc">
+            <summary>
+            创建表的sql语句
+            参数：表名
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.ConnectionFunc">
+            <summary>
+            连接方法创建
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IPropertyAssist.OpenConnection(System.Boolean,System.Boolean)">
+            <summary>
+            打开连接
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Kaneko.Dapper.Contract.IPropertyAssist.ExecuteScript">
+            <summary>
+            执行的sql脚本
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Contract.IPropertyAssist.DDLExecutor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            自动生存表结构
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.DataContext.DataContext">
+            <summary>
+            数据库连接工具类
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DataContext.DataContext.DbConnection">
+            <summary>
+            连接对象
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataContext.#ctor(Microsoft.Extensions.Configuration.IConfiguration,System.Boolean,System.String,System.Func{System.Boolean,System.String})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="configuration">if null 则从appsettings.json中获取</param>
+            <param name="isMaster">是否从库</param>
+            <param name="dbStoreKey">存储字符串标识</param>
+            <param name="connectionFunc">连接字符串Func</param>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataContext.CreateAndOpen">
+            <summary>
+            打开链接
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataContext.GetFactory(Kaneko.Dapper.Enums.DatabaseType)">
+            <summary>
+            获取Factory
+            </summary>
+            <param name="dbType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataContext.Dispose">
+            <summary>
+            垃圾回收
+            </summary>
+        </member>
+        <member name="T:Kaneko.Dapper.DataContext.DataSettings">
+            <summary>
+            连接配置信息获取
+            1. master / secondary
+            2. xx.master / xx.secondary
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DataContext.DataSettings.Master">
+            <summary>
+            主库
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DataContext.DataSettings.Secondary">
+            <summary>
+            从库
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DataContext.DataSettings.Default">
+            <summary>
+            单例模式
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataSettings.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataSettings.Get(Microsoft.Extensions.Configuration.IConfiguration,System.Boolean,System.String,System.Func{System.Boolean,System.String})">
+            <summary>
+            获取连接字符串
+            </summary>
+            <param name="configuration"></param>
+            <param name="isMaster"></param>
+            <param name="dbStoreKey"></param>
+            <param name="connectionFunc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataSettings.ResolveConnectionString(System.String,System.String)">
+            <summary>
+            解析
+            </summary>
+            <param name="connectionString"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.DataContext.DataSettings.GetKey(System.Boolean,System.String)">
+            <summary>
+            获取
+            </summary>
+            <param name="isMaster"></param>
+            <param name="store">不能包含点</param>
+            <returns></returns>
+        </member>
+        <member name="P:Kaneko.Dapper.DBTableInfo.Name">
+            <summary>
+            列名称
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DBTableInfo.Nullable">
+            <summary>
+            是否可为null
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DBTableInfo.DataType">
+            <summary>
+            列类别
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DBTableInfo.Size">
+            <summary>
+            列长度
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DBTableInfo.TableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.DBTableInfo.PrimaryKey">
+            <summary>
+            是否主键
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.DDLExecutor.AutoAlterDbSchema(System.Reflection.Assembly)">
+            <summary>
+            自动生成表结构
+            </summary>
+            <param name="grainAssembly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.IDDLExecutor.AutoAlterDbSchema(System.Reflection.Assembly)">
+            <summary>
+            自动生成表结构
+            </summary>
+            <param name="grainAssembly"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Kaneko.Dapper.Enums.Constants.MSSQLVersion.SQLServer2012Bv">
+            <summary>
+            SQLServer2012版本
+            </summary>
+        </member>
+        <member name="T:Kaneko.Dapper.Enums.DatabaseType">
+            <summary>
+            数据库类型
+            </summary>
+        </member>
+        <member name="F:Kaneko.Dapper.Enums.DatabaseType.SqlServer">
+            <summary>
+            SqlServer
+            </summary>
+        </member>
+        <member name="F:Kaneko.Dapper.Enums.DatabaseType.GteSqlServer2012">
+            <summary>
+            >=SqlServer2012
+            </summary>
+        </member>
+        <member name="F:Kaneko.Dapper.Enums.DatabaseType.MySql">
+            <summary>
+            Mysql
+            </summary>
+        </member>
+        <member name="F:Kaneko.Dapper.Enums.DatabaseType.SQLite">
+            <summary>
+            Sqlite
+            </summary>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.ExpressionHelper">
+            <summary>
+            解析为 Dictionary 获取表达式中的key - value
+            只需要有等于号的
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionHelper.Resolve(System.Linq.Expressions.Expression,System.Collections.Generic.Dictionary{System.Object,System.Object}@)">
+            <summary>
+            获取参数
+            </summary>
+            <param name="expression"></param>
+            <param name="dictionary"></param>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.ExpressionExtensions">
+            <summary>
+            表达式扩展
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.IsNullableType(System.Type)">
+            <summary>
+            是否为空类型
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.IsOrHasGenericInterfaceTypeOf(System.Type,System.Type)">
+            <summary>
+            是否是
+            </summary>
+            <param name="type"></param>
+            <param name="genericTypeDefinition"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.GetTypeWithGenericTypeDefinitionOf(System.Type,System.Type)">
+            <summary>
+            是否是泛型
+            </summary>
+            <param name="type"></param>
+            <param name="genericTypeDefinition"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.FirstGenericType(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.GetMemberExpression(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            
+            </summary>
+            <param name="m"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.IsParameterAccess(System.Linq.Expressions.Expression)">
+            <summary>
+            Determines whether the expression is the parameter.
+            </summary>
+            <returns>Returns true if the specified expression is parameter;
+            otherwise, false.</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.IsParameterOrConvertAccess(System.Linq.Expressions.Expression)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.CheckExpressionForTypes(System.Linq.Expressions.Expression,System.Linq.Expressions.ExpressionType[])">
+            <summary>
+            检查类型
+            </summary>
+            <param name="e"></param>
+            <param name="types"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.IsBooleanComparison(System.Linq.Expressions.Expression)">
+            <summary>
+            是否是Boolean
+            </summary>
+            <param name="e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.MemberBinding)">
+            <summary>
+            获取Value
+            </summary>
+            <param name="binding"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.GetFieldNames``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            获取Fields
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="expr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ExpressionExtensions.Flatten(System.Collections.IEnumerable)">
+            <summary>
+            
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.BaseSqlExpression`1">
+            <summary>
+            BaseSqlExpression
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Update(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Update
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Select(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Select
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Where(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Where
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.In(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            In
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.OrderBy(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            OrderBy
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Max(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Max
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Min(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Min
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Avg(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Avg
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Count(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Count
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Sum(`0,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Sum
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Update(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Update
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Select(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Select
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Where(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Where
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.In(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            In
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.OrderBy(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            OrderBy
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Max(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Max
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Min(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Min
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Avg(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Avg
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Count(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Count
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.BaseSqlExpression`1.Sum(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Sum
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.ISqlExpression">
+            <summary>
+            interface
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Update(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Update
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Select(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Select
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Where(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Where
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.In(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            In
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.OrderBy(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            OrderBy
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Max(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Max
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Min(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Min
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Avg(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Avg
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Count(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Count
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.ISqlExpression.Sum(System.Linq.Expressions.Expression,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            Sum
+            </summary>
+            <param name="expression"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.MemberSqlExpression.IsEnumerable(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            是否是集合方法
+            </summary>
+            <param name="m"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.MethodCallSqlExpression.IsStaticArrayMethod(System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            是否是静态集合方法
+            </summary>
+            <param name="m"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.MethodCallSqlExpression.IsEnumerableMethod(System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            是否是集合方法
+            </summary>
+            <param name="m"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.SqlExpression">
+            <summary>
+            Expression => Sql 
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Delete``1(Kaneko.Dapper.Enums.DatabaseType,System.String)">
+            <summary>
+            删除
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Update``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{System.Object}},System.String)">
+            <summary>
+            修改
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Select``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String)">
+            <summary>
+            查询
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Count``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String)">
+            <summary>
+            数量
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Max``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String)">
+            <summary>
+            最大
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Min``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String)">
+            <summary>
+            最小
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Avg``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String)">
+            <summary>
+            平均值
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpression.Sum``1(Kaneko.Dapper.Enums.DatabaseType,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String)">
+            <summary>
+            求和
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dbType">数据库类型</param>
+            <param name="expression"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.SqlExpressionCompiler">
+            <summary>
+            参数编译器 
+            base ServiceStack
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCompiler.Compile``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            编译
+            </summary>
+            <typeparam name="TModel"></typeparam>
+            <typeparam name="TValue"></typeparam>
+            <param name="lambdaExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCompiler.Evaluate(System.Linq.Expressions.Expression)">
+            <summary>
+            编译
+            </summary>
+            <param name="arg"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.SqlExpressionCore`1">
+            <summary>
+            Expression核心
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Script">
+            <summary>
+            脚本
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlExpressionCore`1.DbParams">
+            <summary>
+            参数
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.#ctor(Kaneko.Dapper.Enums.DatabaseType,System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="dbType"></param>
+            <param name="tableName"></param>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Clear">
+            <summary>
+            清除
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Select(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            查询
+            </summary>
+            <param name="expression"></param>
+            <param name="orderBy">排序字段</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Where条件
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.OrderBy(System.String)">
+            <summary>
+            OrderBy
+            </summary>
+            <param name="orderBy"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Limit(System.Int32,System.Int32)">
+            <summary>
+            Limit
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Offset(System.Int32,System.Int32)">
+            <summary>
+            Offset
+            </summary>
+            <param name="offset"></param>
+            <param name="size"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Max(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            最大
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Min(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            最小值
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Avg(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            平均值
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Count(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            行数
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Sum(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            总计
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Delete">
+            <summary>
+            删除
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlExpressionCore`1.Update(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            修改
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.SqlExpressionFingerprint">
+            <summary>
+            base ServiceStack
+            </summary>
+        </member>
+        <member name="T:Kaneko.Dapper.Expressions.SqlGenerate">
+            <summary>
+            SqlGenrate
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.SelectFields">
+            <summary>
+            字段
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.TableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.SelectFieldsStr">
+            <summary>
+            字段字符串
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.Length">
+            <summary>
+            sql长度
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.Sql">
+            <summary>
+            脚本
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.DatabaseType">
+            <summary>
+            数据库类型
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.DbParams">
+            <summary>
+            数据库参数
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Expressions.SqlGenerate.Item(System.Int32)">
+            <summary>
+            索引数据
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlGenerate.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlGenerate.op_Addition(Kaneko.Dapper.Expressions.SqlGenerate,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sqlGenerate"></param>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlGenerate.Clear">
+            <summary>
+            清除
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlGenerate.RelaceLast(System.String,System.String)">
+            <summary>
+            替换最后一次出现字符
+            </summary>
+            <param name="oldStr"></param>
+            <param name="newStr"></param>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlGenerate.AddDbParameter(System.Object)">
+            <summary>
+            添加参数
+            </summary>
+            <param name="parameterValue"></param>
+        </member>
+        <member name="M:Kaneko.Dapper.Expressions.SqlGenerate.ToString">
+            <summary>
+            ToString
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Extensions.DapperExtensions">
+            <summary>
+            Dapper扩展
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetTableName``1(System.String,System.Func{System.String})">
+            <summary>
+            获取表名
+            </summary>
+            <param name="val"></param>
+            <param name="tableNameFunc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetTableName``1(``0,System.Func{System.String})">
+            <summary>
+            获取表名
+            </summary>
+            <param name="entity">实体实例</param>
+            <param name="tableNameFunc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetTableName``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Func{System.String})">
+            <summary>
+            获取表名
+            </summary>
+            <param name="expression">表达式数据</param>
+            <param name="tableNameFunc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetIdentityField(System.Type)">
+            <summary>
+            获取自增字段
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.IsAutoIdentity(System.Reflection.PropertyInfo)">
+            <summary>
+            是否自增字段
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.IsExistTableAsync(System.Data.IDbConnection,System.String,System.Action{System.String})">
+            <summary>
+            是否存在表
+            </summary>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="outSqlAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.IsExistFieldAsync(System.Data.IDbConnection,System.String,System.String,System.Action{System.String})">
+            <summary>
+            是否存在字段
+            </summary>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="fieldName"></param>
+            <param name="outSqlAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.InsertAsync``1(System.Data.IDbConnection,System.String,``0,System.Data.IDbTransaction,System.Boolean,System.Action{System.String})">
+            <summary>
+            插入数据
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="entity"></param>
+            <param name="transaction">事务</param>
+            <param name="returnLastIdentity">是否返回自增的数据</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns>-1 参数为空</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.InsertAsync``1(System.Data.IDbConnection,System.String,System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            批量插入数据
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="entities"></param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns>-1 参数为空</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.DeleteAsync``1(System.Data.IDbConnection,System.String,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            删除数据
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="whereExpress"></param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns>-1 参数为空</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.SetAsync``1(System.Data.IDbConnection,System.String,``0,System.Collections.Generic.IEnumerable{System.String},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            对象修改
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="entity"></param>
+            <param name="fields">选择字段</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.SetAsync``1(System.Data.IDbConnection,System.String,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            条件修改
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection">连接</param>
+            <param name="tableName">表名</param>
+            <param name="setExpress">修改内容表达式</param>
+            <param name="whereExpress">条件表达式</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetAsync``1(System.Data.IDbConnection,System.String,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            获取单条数据
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName">表名</param>
+            <param name="whereExpress">条件表达式</param>
+            <param name="fieldExpress">选择字段，默认为*</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetListAsync``1(System.Data.IDbConnection,System.String,System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.List{Kaneko.Core.Data.OrderByField},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            获取分页数据
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="whereExpress">条件表达式</param>
+            <param name="fieldExpress">选择字段，默认为*</param>
+            <param name="orderByFields">排序字段集合</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetAllAsync``1(System.Data.IDbConnection,System.String,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.List{Kaneko.Core.Data.OrderByField},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            获取所以数据
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="whereExpress">条件表达式</param>
+            <param name="fieldExpress">选择字段，默认为*</param>
+            <param name="orderByFields">排序字段集合</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetOffsetsAsync``1(System.Data.IDbConnection,System.String,System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.List{Kaneko.Core.Data.OrderByField},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            获取分页数据 Offset
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="offset"></param>
+            <param name="size"></param>
+            <param name="whereExpress">条件表达式</param>
+            <param name="fieldExpress">选择字段，默认为*</param>
+            <param name="orderByFields">排序字段集合</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.CountAsync``1(System.Data.IDbConnection,System.String,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction,System.Action{System.String})">
+            <summary>
+            获取数量
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <param name="whereExpress">条件表达式</param>
+            <param name="transaction">事务</param>
+            <param name="outSqlAction">返回sql语句</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetDbType(System.Data.IDbConnection)">
+            <summary>
+            获取db类型
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetMainTableName(System.Type)">
+            <summary>
+            获取主表名称
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.IsAutoUpdate(System.Type)">
+            <summary>
+            获取主表是否自动更新
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetValueFromExpression``1(System.Reflection.PropertyInfo,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            获取值
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="propertyInfo"></param>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetFieldName(System.Reflection.PropertyInfo)">
+            <summary>
+            获取列名
+            </summary>
+            <param name="propertyInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetFieldName(System.Reflection.MemberInfo)">
+            <summary>
+            获取列名
+            </summary>
+            <param name="propertyInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.DapperExtensions.GetColumnDefinition(System.Reflection.PropertyInfo,Kaneko.Dapper.Enums.DatabaseType)">
+            <summary>
+            获取列定义
+            </summary>
+            <param name="propertyInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Extensions.EntityDefinitionExtensions">
+            <summary>
+            字段定义说明
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.EntityDefinitionExtensions.GetAttribute``1(System.Type)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TAttribute">属性</typeparam>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.EntityDefinitionExtensions.GetAttribute``1(System.Reflection.PropertyInfo)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TAttribute">属性</typeparam>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.EntityDefinitionExtensions.GetProperty``1(System.Type)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TAttribute"></typeparam>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.EntityDefinitionExtensions.GetProperties``1(System.Type)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TAttribute"></typeparam>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.EntityDefinitionExtensions.GetPropertyByAttribute``1(System.Type)">
+            <summary>
+            
+            </summary>
+            <typeparam name="TAttribute">属性</typeparam>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Extensions.SqlAliasExtensions">
+            <summary>
+            Sql别名
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.ParamPrefix(Kaneko.Dapper.Enums.DatabaseType)">
+            <summary>
+            参数前缀
+            </summary>
+            <param name="dbType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.ParamSql(System.String,Kaneko.Dapper.Expressions.SqlGenerate)">
+            <summary>
+            获取添加左右标记 防止有关键字作为字段名/表名
+            </summary>
+            <param name="columnName"></param>
+            <param name="sqlGenerate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.ParamSql(System.String,System.Nullable{Kaneko.Dapper.Enums.DatabaseType})">
+            <summary>
+            获取添加左右标记 防止有关键字作为字段名/表名
+            </summary>
+            <param name="columnName"></param>
+            <param name="dbType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.SelectLastIdentity(Kaneko.Dapper.Enums.DatabaseType)">
+            <summary>
+            获取最后一次Insert
+            </summary>
+            <param name="dbType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.ExistTableSql(Kaneko.Dapper.Enums.DatabaseType,System.String,System.String)">
+            <summary>
+            是否存在表
+            </summary>
+            <param name="dbType"></param>
+            <param name="dbName"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.ExistFieldSql(Kaneko.Dapper.Enums.DatabaseType,System.String,System.String,System.String)">
+            <summary>
+            是否存在字段
+            </summary>
+            <param name="dbType"></param>
+            <param name="dbName"></param>
+            <param name="tableName"></param>
+            <param name="fieldName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.AddColumnsSql(Kaneko.Dapper.Enums.DatabaseType,System.String,System.String)">
+            <summary>
+            创建字段语句
+            </summary>
+            <param name="columnName"></param>
+            <param name="dbType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.AlterColumnsSql(Kaneko.Dapper.Enums.DatabaseType,System.String,System.String)">
+            <summary>
+            修改字段语句
+            </summary>
+            <param name="dbType"></param>
+            <param name="tableName"></param>
+            <param name="columnDefinitione"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.GetSchemaColumnsQueryScript(Kaneko.Dapper.Enums.DatabaseType,System.String)">
+            <summary>
+            查询表结构脚本
+            </summary>
+            <param name="columnName"></param>
+            <param name="dbType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.SqlAliasExtensions.CreatePrimaryKeyScript(Kaneko.Dapper.Enums.DatabaseType,System.String,System.String)">
+            <summary>
+            创建主键脚本
+            </summary>
+            <param name="dbType"></param>
+            <param name="tableName"></param>
+            <param name="primaryKeyFieldName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Extensions.TableExtensions">
+            <summary>
+            表管理
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Extensions.TableExtensions.CheckTableIfMissingCreate``1(Kaneko.Dapper.Contract.IBaseRepository{``0},System.Boolean)">
+            <summary>
+            检查表是否存在
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="repository"></param>
+            <param name="isMaster"></param>
+            <returns>false, 直接返回默认数据即可</returns>
+        </member>
+        <member name="T:Kaneko.Dapper.Repository.BaseRepository`1">
+            <summary>
+            实现IBaseRepository
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.#ctor(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            构造函数 
+            </summary>
+            <param name="configuration">配置注入</param>
+            <param name="dbStoreKey">数据库前缀</param>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.DDLExecutor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            自动生存表结构
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetMainTableName">
+            <summary>
+            获取主表名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetTableName">
+            <summary>
+            获取表名，调用TableNameFunc则是调用主库查询
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetTableIsAutoUpdate">
+            <summary>
+            是否自动更新表结构
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.BeginTransaction``1(System.Func{System.Data.IDbTransaction,``0})">
+            <summary>
+            事务中执行
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="func"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.IsExistTable(System.String,System.Boolean)">
+            <summary>
+            是否存在表
+            </summary>
+            <param name="tableName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.IsExistField(System.String,System.String,System.Boolean)">
+            <summary>
+            是否存在字段
+            </summary>
+            <param name="tableName"></param>
+            <param name="fieldName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Add(`0,System.Boolean)">
+            <summary>
+            添加
+            </summary>
+            <param name="entity">数据实体</param>
+            <param name="returnLastIdentity">是否赋值最后一次的自增ID</param>
+            <returns>添加后的数据实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Add(`0[])">
+            <summary>
+            添加
+            </summary>
+            <param name="entities">数据实体</param>
+            <returns>添加后的数据实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Delete(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            删除
+            </summary>
+            <param name="expression">删除条件</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Set(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            更新
+            </summary>
+            <param name="entity">数据实体</param>
+            <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+            <returns>是否成功</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Kaneko.Dapper.Repository.BaseRepository`1.Set(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})" -->
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Get(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean)">
+            <summary>
+            查找数据
+            </summary>
+            <param name="expression">查询条件</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <returns>实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetList(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            获取列表
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetOffsets(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            获取列表 Offset
+            </summary>
+            <param name="offset"></param>
+            <param name="size"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Count(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Boolean)">
+            <summary>
+            获取数量
+            </summary>
+            <param name="expression">条件表达式</param>
+            <param name="isMaster">是否主从</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.BeginTransactionAsync``1(System.Func{System.Data.IDbTransaction,System.Threading.Tasks.Task{``0}})">
+            <summary>
+            事务中执行
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="func"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.IsExistTableAsync(System.String,System.Boolean)">
+            <summary>
+            是否存在表
+            </summary>
+            <param name="tableName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.IsExistFieldAsync(System.String,System.String,System.Boolean)">
+            <summary>
+            是否存在字段
+            </summary>
+            <param name="tableName"></param>
+            <param name="fieldName"></param>
+            <param name="isMaster"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.AddAsync(`0,System.Boolean)">
+            <summary>
+            异步添加
+            </summary>
+            <param name="entity"></param>
+            <param name="returnLastIdentity">是否赋值最后一次的自增ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.AddAsync(`0[])">
+            <summary>
+            异步批量添加
+            </summary>
+            <param name="entities"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            异步删除
+            </summary>
+            <param name="expression">删除条件</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.SetAsync(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            异步更新
+            </summary>
+            <param name="entity">数据实体</param>
+            <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+            <returns>是否成功</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Kaneko.Dapper.Repository.BaseRepository`1.SetAsync(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})" -->
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean)">
+            <summary>
+            异步获取一条数据
+            </summary>
+            <param name="expression">查询条件</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <returns>实体</returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetListAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            异步获取列表
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetOffsetsAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            异步获取列表 Offset
+            </summary>
+            <param name="offset"></param>
+            <param name="size"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.GetAllAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Boolean,Kaneko.Core.Data.OrderByField[])">
+            <summary>
+            异步获取列表
+            </summary>
+            <param name="page"></param>
+            <param name="rows"></param>
+            <param name="expression">条件表达式</param>
+            <param name="fieldExpressison">按字段返回</param>
+            <param name="isMaster">是否主从</param>
+            <param name="orderByFields">排序字段集合</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Boolean)">
+            <summary>
+            异步获取数量
+            </summary>
+            <param name="expression">条件表达式</param>
+            <param name="isMaster">是否主从</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.Execute``1(System.Func{System.Data.IDbConnection,System.Threading.Tasks.Task{``0}},System.Boolean,System.Boolean)">
+            <summary>
+            包含connection的方法执行
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="func"></param>
+            <param name="isMaster"></param>
+            <param name="ignoreTransaction">是否忽略事务，true 将忽略事务，直接创建一个connection</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.BaseRepository`1.OutSqlAction(System.String)">
+            <summary>
+            填充ExecuteScript
+            </summary>
+            <param name="sql"></param>
+        </member>
+        <member name="T:Kaneko.Dapper.Repository.PropertyAssist">
+            <summary>
+            DbRespository 抽象类
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.PropertyAssist.#ctor(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            实例化
+            </summary>
+            <param name="configuration">配置注入</param>
+            <param name="dbStoreKey">数据库前缀</param>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.DbStoreKey">
+            <summary>
+            数据库名key
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.Transaction">
+            <summary>
+            事务
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.InTransaction">
+            <summary>
+            是否在事务中
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.PropertyAssist.OpenConnection(System.Boolean,System.Boolean)">
+            <summary>
+            打开连接 已赋值 connection 属性
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.ConnectionFunc">
+            <summary>
+            数据库连接方法
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.TableNameFunc">
+            <summary>
+            表名方法
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.CreateScriptFunc">
+            <summary>
+            创建表的脚本
+            </summary>
+        </member>
+        <member name="P:Kaneko.Dapper.Repository.PropertyAssist.ExecuteScript">
+            <summary>
+            执行的sql脚本
+            </summary>
+        </member>
+        <member name="M:Kaneko.Dapper.Repository.PropertyAssist.DDLExecutor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            自动生存表结构
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

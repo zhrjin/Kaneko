@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kaneko.Server</name>
+    </assembly>
+    <members>
+        <member name="T:Kaneko.Server.AutoMapper.IObjectMapper">
+            <summary>
+            Defines a simple interface to map objects.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.AutoMapper.IObjectMapper.Map``1(System.Object)">
+            <summary>
+            Converts an object to another. Creates a new object of <typeparamref name="TDestination"/>.
+            </summary>
+            <typeparam name="TDestination">Type of the destination object</typeparam>
+            <param name="source">Source object</param>
+        </member>
+        <member name="M:Kaneko.Server.AutoMapper.IObjectMapper.Map``2(``0,``1)">
+            <summary>
+            Execute a mapping from the source object to the existing destination object
+            </summary>
+            <typeparam name="TSource">Source type</typeparam>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="source">Source object</param>
+            <param name="destination">Destination object</param>
+            <returns>Returns the same <paramref name="destination"/> object after mapping operation</returns>
+        </member>
+        <member name="M:Kaneko.Server.AutoMapper.IObjectMapper.ProjectTo``1(System.Linq.IQueryable)">
+            <summary>
+            Project the input queryable.
+            </summary>
+            <remarks>Projections are only calculated once and cached</remarks>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="source">Queryable source</param>
+            <returns>Queryable result, use queryable extension methods to project and execute result</returns>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.IReminderGrain.GetReminderUsePeriod">
+            <summary>
+            定时时间（分钟）
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.IReminderGrain.GetReminderName">
+            <summary>
+            提醒名称
+            </summary>
+        </member>
+        <member name="T:Kaneko.Server.Orleans.Grains.MainGrain">
+            <summary>
+            常用Grain
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.MainGrain.CurrentUser">
+            <summary>
+            上下文用户信息
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.MainGrain.Logger">
+            <summary>
+            Log
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.MainGrain.GrainType">
+            <summary>
+            The real Type of the current Grain
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.MainGrain.GrainId">
+            <summary>
+            Primary key of actor
+            Because there are multiple types, dynamic assignment in OnActivateAsync
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.MainGrain.ObjectMapper">
+            <summary>
+            Reference to the object to object mapper.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.MainGrain.DependencyInjection">
+            <summary>
+            Unified method of dependency injection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.MainGrain.Invoke(Orleans.IIncomingGrainCallContext)">
+            <summary>
+            拦截器记录日志
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.MainGrain.FuncExceptionHandler">
+            <summary>
+            异常处理
+            </summary>
+        </member>
+        <member name="T:Kaneko.Server.Orleans.Grains.ReminderGrain">
+            <summary>
+            提醒Grain
+            </summary>
+            <typeparam name="TState"></typeparam>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderGrain.GetReminderName">
+            <summary>
+            异步获取提醒名称
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderGrain.GetReminderUsePeriod">
+            <summary>
+            异步获取定时时间（分钟）
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.ReminderGrain.ReminderName">
+            <summary>
+            提醒名称
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.ReminderGrain.ReminderUsePeriod">
+            <summary>
+            定时时间（分钟）
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderGrain.StartReminder(System.Nullable{System.TimeSpan})">
+            <summary>
+            启动
+            </summary>
+            <param name="timeSpan"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderGrain.ReceiveReminder(System.String,Orleans.Runtime.TickStatus)">
+            <summary>
+            消息接收
+            </summary>
+            <param name="reminderName"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1">
+            <summary>
+            提醒+状态Grain
+            </summary>
+            <typeparam name="PrimaryKey"></typeparam>
+            <typeparam name="TState"></typeparam>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1.GetReminderName">
+            <summary>
+            异步获取提醒名称
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1.GetReminderUsePeriod">
+            <summary>
+            异步获取定时时间（分钟）
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1.ReminderName">
+            <summary>
+            提醒名称
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1.ReminderUsePeriod">
+            <summary>
+            定时时间（分钟）
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1.StartReminder(System.Nullable{System.TimeSpan})">
+            <summary>
+            启动
+            </summary>
+            <param name="timeSpan"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.ReminderStateGrain`1.ReceiveReminder(System.String,Orleans.Runtime.TickStatus)">
+            <summary>
+            消息接收
+            </summary>
+            <param name="reminderName"></param>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Server.Orleans.Grains.StateGrain`1">
+            <summary>
+            有状态Grain
+            </summary>
+            <typeparam name="PrimaryKey"></typeparam>
+            <typeparam name="TState"></typeparam>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.CurrentUser">
+            <summary>
+            上下文用户信息
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.Logger">
+            <summary>
+            Log
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.GrainType">
+            <summary>
+            The real Type of the current Grain
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.Observer">
+            <summary>
+            事件转发器
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.GrainId">
+            <summary>
+            Primary key of actor
+            Because there are multiple types, dynamic assignment in OnActivateAsync
+            </summary>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.ObjectMapper">
+            <summary>
+            Reference to the object to object mapper.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.StateGrain`1.DependencyInjection">
+            <summary>
+            Unified method of dependency injection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.StateGrain`1.Invoke(Orleans.IIncomingGrainCallContext)">
+            <summary>
+            拦截器记录日志
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Kaneko.Server.Orleans.Grains.StateGrain`1.FuncExceptionHandler">
+            <summary>
+            异常处理
+            </summary>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Services.IUtcUID.NewID">
+            <summary>
+            通过utc时间生成分布式唯一id
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+    </members>
+</doc>

@@ -12,15 +12,15 @@ using YTSoft.CC.IGrains.Entity;
 
 namespace YTSoft.CC.Grains.Repository
 {
-    public interface IScheduleTaskRepository : IBaseRepository<ScheduleTaskDO>
+    public interface IScheduleTaskRepository10 : IBaseRepository<ScheduleTaskDO10>
     {
         Task<ScheduleTaskDO> GetModelAsync(string id);
     }
 
-    [ServiceDescriptor(typeof(IScheduleTaskRepository), ServiceLifetime.Transient)]
-    public class ScheduleTaskRepository : BaseRepository<ScheduleTaskDO>, IScheduleTaskRepository
+    [ServiceDescriptor(typeof(IScheduleTaskRepository10), ServiceLifetime.Transient)]
+    public class ScheduleTaskRepository10 : BaseRepository<ScheduleTaskDO10>, IScheduleTaskRepository10
     {
-        public ScheduleTaskRepository(IConfiguration configuration) : base(configuration)
+        public ScheduleTaskRepository10(IConfiguration configuration) : base(configuration)
         {
         }
 

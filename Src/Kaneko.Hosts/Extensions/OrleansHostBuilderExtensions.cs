@@ -25,6 +25,7 @@ using Kaneko.Core.Configuration;
 using Kaneko.Server.Orleans.HostServices;
 using Microsoft.Extensions.Logging;
 using Kaneko.Core.IdentityServer;
+using System.Threading.Tasks;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -168,15 +169,15 @@ namespace Kaneko.Hosts.Extensions
         {
             if (OrleansConfig.Consul.Enable)
             {
-                silo.UseConsulClustering(options => { options.Address = new Uri($"http://{OrleansConfig.Consul.HostName}:{OrleansConfig.Consul.Port}"); });
+                silo.UseConsulClustering(options => { options.Address = new Uri($"http://{OrleansConfig.Consul.HostName}:{OrleansConfig.Consul.Port}"); })
+                    .ConfigureEndpoints(siloPort: OrleansConfig.Orleans.SiloNetworkingPort, gatewayPort: OrleansConfig.Orleans.SiloGatewayPort);
             }
             else
             {
                 silo.UseLocalhostClustering();
             }
 
-            silo.ConfigureEndpoints(siloPort: OrleansConfig.Orleans.SiloNetworkingPort, gatewayPort: OrleansConfig.Orleans.SiloGatewayPort)
-            .Configure<ClusterOptions>(options =>
+            silo.Configure<ClusterOptions>(options =>
             {
                 options.ClusterId = OrleansConfig.ClusterId;
                 options.ServiceId = OrleansConfig.ServiceId;

@@ -19,24 +19,25 @@ namespace TestDemo
         }
         private static async Task<int> RunMainAsync()
         {
-
-            //using var client = await StartClientWithRetries();
+            using var client = await StartClientWithRetries();
             var rd = new Random();
-            var nnn = 10;
-            while (nnn>0)
+            var nnn = 3;
+            while (nnn > 0)
             {
                 try
                 {
                     Console.WriteLine("Please enter the number of executions");
-                    var times = 1000;// rd.Next(1000);
+                    var times = 1;// rd.Next(1000);
                     var topupWatch = new Stopwatch();
                     topupWatch.Start();
 
                     while (times > 0)
                     {
-                        using var httpclient = new HttpClient();
-                        var httpContent = new StringContent("{}");
-                        var resp = await httpclient.PostAsync(" http://127.0.0.1:8082/api/ScheduleTask/add", httpContent);
+                        await client.GetGrain<IScheduleTaskStateGrain>(times.ToString()).GetAsync();
+
+                        //using var httpclient = new HttpClient();
+                        //var httpContent = new StringContent("{}");
+                        //var resp = await httpclient.PostAsync(" http://127.0.0.1:8082/api/ScheduleTask/add", httpContent);
                         times--;
                     }
                     topupWatch.Stop();

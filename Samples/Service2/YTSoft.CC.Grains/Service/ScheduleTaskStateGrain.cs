@@ -77,11 +77,11 @@ namespace YTSoft.CC.Grains.Service
             return ApiResultUtil.IsSuccess();
         }
 
-        public Task<ApiResult<ScheduleTaskVO>> GetAsync()
+        public async Task<ApiResult<ScheduleTaskVO>> GetAsync()
         {
             var state = this.State;
             var scheduleVO = this.ObjectMapper.Map<ScheduleTaskVO>(state);
-            return Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
+            return await Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
         }
 
         public async Task<ApiResult> UpdateAsync(ScheduleTaskDTO model)

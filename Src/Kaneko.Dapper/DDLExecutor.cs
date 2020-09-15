@@ -1,6 +1,8 @@
 ﻿using Kaneko.Dapper.Repository;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,10 +25,9 @@ namespace Kaneko.Dapper
         /// </summary>
         /// <param name="grainAssembly"></param>
         /// <returns></returns>
-        public Task AutoAlterDbSchema(Assembly grainAssembly)
+        public async Task AutoAlterDbSchema(Assembly grainAssembly)
         {
             var eventType = typeof(PropertyAssist);
-
             var allType = grainAssembly.GetExportedTypes().Where(t => eventType.IsAssignableFrom(t) && t.IsClass);
             foreach (var type in allType)
             {
@@ -35,13 +36,11 @@ namespace Kaneko.Dapper
                     if (type.Name != "PropertyAssist")
                     {
                         var exec = (PropertyAssist)ServiceProvider.GetService(type);
-                        exec.DDLExecutor(Logger);
+                        await exec.DDLExecutor(Logger);
                     }
                 }
                 catch { }
             }
-
-            return Task.CompletedTask;
         }
     }
 

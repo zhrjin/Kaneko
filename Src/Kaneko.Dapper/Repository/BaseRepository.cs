@@ -35,14 +35,11 @@ namespace Kaneko.Dapper.Repository
         /// 自动生存表结构
         /// </summary>
         /// <returns></returns>
-        public override Task<bool> DDLExecutor(ILogger logger)
+        public override async Task<bool> DDLExecutor(ILogger logger)
         {
-            return Execute(async (connection) =>
+            return await Execute(async (connection) =>
             {
-                if (!GetTableIsAutoUpdate())
-                {
-                    return true;
-                }
+                if (!GetTableIsAutoUpdate()) { return true; }
 
                 string tableName = GetTableName();
                 var dbType = connection.GetDbType();
@@ -91,6 +88,7 @@ namespace Kaneko.Dapper.Repository
                             }
 
                             columnDefs = $"{tInfo.Name.ParamSql(dbType)}{tInfo.DataType}{size}{tInfo.Nullable}";
+                            columnDefs = columnDefs.Replace(" ", "");
 
                             if (columnDefinition.ToUpper().IndexOf("PRIMARY") > -1 && columnDefinition.ToUpper().IndexOf("KEY") > -1)
                             {
@@ -98,7 +96,7 @@ namespace Kaneko.Dapper.Repository
                                 columnDefinition = columnDefinition.ToUpper().Replace("PRIMARY", "").Replace("KEY", "");
 
 
-                                if (columnDefinition.Replace(" ", "").ToUpper() != columnDefs.ToUpper())
+                                if (columnDefinition.Replace(" ", "") != columnDefs.ToUpper())
                                 {
                                     //之前不是主键
                                     if (string.IsNullOrWhiteSpace(tInfo.PrimaryKey))

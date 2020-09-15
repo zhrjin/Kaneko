@@ -28,18 +28,16 @@ namespace YTSoft.CC.Hosts
                       {
                           webBuilder.UseStartup<Startup>().UseKestrel().UseIISIntegration();
                       })
-                      .ConfigureLogging((hostingContext, logging) =>
-                      {
-                          logging.SetMinimumLevel(LogLevel.Information);
-                          logging.AddConsole(options => options.IncludeScopes = true);
-                      })
-                      //.ConfigureLogging((context, logger) =>
+                      //.ConfigureLogging((hostingContext, logging) =>
                       //{
-                      //    logger.AddFilter("System", LogLevel.Warning);
-                      //    logger.AddFilter("Microsoft", LogLevel.Warning);
-                      //    logger.SetMinimumLevel(LogLevel.Information);
-                      //    logger.AddLog4Net();
+                      //    logging.SetMinimumLevel(LogLevel.Information);
+                      //    logging.AddConsole(options => options.IncludeScopes = true);
                       //})
+                      .ConfigureLogging((context, logger) =>
+                      {
+                          logger.AddLog4Net();
+                          logger.AddConsole(options => options.IncludeScopes = true);
+                      })
                       .ConfigureServices(services =>
                       {
                           services.Configure<ConsoleLifetimeOptions>(options =>

@@ -1,0 +1,1076 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kaneko.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Kaneko.Core.ApiResult.ApiResult">
+            <summary>
+            无数据，只结果标识
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.ApiResult.Code">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.ApiResult.Info">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.ApiResult.Success">
+            <summary>
+            成功标志
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.ApiResult.ApiResultCode">
+            <summary>
+            异常码
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Success">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Fail">
+            <summary>
+            失败
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Exception">
+            <summary>
+            异常
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Nologin">
+            <summary>
+            没有登录信息
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Initpassword">
+            <summary>
+            初始化密码
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.UnknownFail">
+            <summary>
+            未知错误
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.NotFound">
+            <summary>
+            未发现
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Unauthorized">
+            <summary>
+            无权限
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.Forbidden">
+            <summary>
+            访问被禁止
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.NotAcceptable">
+            <summary>
+            请求的格式不对
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.ApiResult.ApiResultCode.ArgumentError">
+            <summary>
+            参数校验错误
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.ApiResult.ApiResultList`1">
+            <summary>
+            列表数据结果集
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.ApiResultList`1.Data">
+            <summary>
+            数据
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.ApiResult.ApiResultPage`1">
+            <summary>
+            分页列表数据结果集
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.ApiResultPage`1.Count">
+            <summary>
+            笔数
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.ApiResult.ApiResultUtil">
+            <summary>
+            结果集
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsSuccess(System.String)">
+            <summary>
+            响应成功
+            </summary>
+            <param name="message"></param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsSuccess``1(``0,System.String)">
+            <summary>
+            响应成功
+            </summary>
+            <param name="data"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsSuccess``1(System.Collections.Generic.IList{``0},System.String)">
+            <summary>
+            响应成功
+            </summary>
+            <typeparam name="TVO"></typeparam>
+            <param name="data"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsSuccess``1(System.Collections.Generic.IList{``0},System.Int32,System.String)">
+            <summary>
+            响应成功
+            </summary>
+            <typeparam name="TVO"></typeparam>
+            <param name="data"></param>
+            <param name="count"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsFailed(System.String,Kaneko.Core.ApiResult.ApiResultCode)">
+            <summary>
+            响应失败
+            </summary>
+            <param name="message"></param>
+            <param name="resultCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsFailed``1(System.String,Kaneko.Core.ApiResult.ApiResultCode)">
+            <summary>
+            响应失败
+            </summary>
+            <typeparam name="TVO"></typeparam>
+            <param name="message"></param>
+            <param name="resultCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsFailedList``1(System.String,Kaneko.Core.ApiResult.ApiResultCode)">
+            <summary>
+            响应失败
+            </summary>
+            <typeparam name="TVO"></typeparam>
+            <param name="message"></param>
+            <param name="resultCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.ApiResult.ApiResultUtil.IsFailedPage``1(System.String,Kaneko.Core.ApiResult.ApiResultCode)">
+            <summary>
+            响应失败
+            </summary>
+            <typeparam name="TVO"></typeparam>
+            <param name="message"></param>
+            <param name="resultCode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Core.ApiResult.Pagination">
+            <summary>
+            分页
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.Pagination.Rows">
+            <summary>
+            每页行数
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.Pagination.Page">
+            <summary>
+            当前页
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.Pagination.Sidx">
+            <summary>
+            排序列
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.Pagination.Sord">
+            <summary>
+            排序类型
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.Pagination.Records">
+            <summary>
+            总记录数
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.Pagination.Total">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.ApiResult.ApiResult`1">
+            <summary>
+            单笔数据结果
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Kaneko.Core.ApiResult.ApiResult`1.Data">
+            <summary>
+            数据
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoColumnAttribute.Name">
+            <summary>
+            列名
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoColumnAttribute.Unique">
+            <summary>
+            唯一约束（默认为非）
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoColumnAttribute.Nullable">
+            <summary>
+            可空（默认为空）
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoColumnAttribute.ColumnDefinition">
+            <summary>
+            列定义
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoIdAttribute.AutoIdEntity">
+            <summary>
+            是否自增长字段
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoTableAttribute.Name">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Attributes.KanekoTableAttribute.IsAutoUpdate">
+            <summary>
+            表结构自动更新，默认true
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Configuration.GrainAgeLimitConfig.GrainAgeLimitInMins">
+            <remarks>
+            The CollectionAgeLimit must be greater than CollectionQuantum, which is set to 00:01:00 (by default).
+            https://dotnet.github.io/orleans/Documentation/clusters_and_clients/configuration_guide/activation_garbage_collection.html
+            See CollectionAgeLimitValidator.cs details.
+            </remarks>
+        </member>
+        <member name="P:Kaneko.Core.Configuration.GrainAgeLimitConfig.GrainType">
+            <summary>
+            The full qualified type name to apply grain age limit.
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.Contract.BaseDTO">
+            <summary>
+            数据传输对象DTO抽象实现类
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDTO.PageIndex">
+            <summary>
+            页标
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDTO.PageSize">
+            <summary>
+            每页笔数
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDTO.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDTO.UserName">
+            <summary>
+            用户名称
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDTO.Version">
+            <summary>
+            版本号,乐观锁
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Contract.BaseDTO.GetOrder">
+            <summary>
+            排序字段
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Core.Contract.IDataTransferObject">
+            <summary>
+            数据传输对象DTO
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.IDataTransferObject.PageIndex">
+            <summary>
+            页标
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.IDataTransferObject.PageSize">
+            <summary>
+            每页笔数
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Contract.IDataTransferObject.GetOrder">
+            <summary>
+            排序字段
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Core.Contract.BaseDO">
+            <summary>
+            领域实体DO抽象实现类
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDO.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDO.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDO.ModityBy">
+            <summary>
+            修改人
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDO.ModityDate">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDO.Version">
+            <summary>
+            版本号,乐观锁
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BaseDO.IsDel">
+            <summary>
+            是否删除 1-已删除
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.Contract.IDomainObject">
+            <summary>
+            用作泛型约束，表示继承自该接口的为领域实体DO
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.Contract.ProcessAction.Create">
+            <summary>
+            创建
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.Contract.ProcessAction.Update">
+            <summary>
+            修改
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.Contract.ProcessAction.Delete">
+            <summary>
+            删除
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState.CreateDate">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState.ModityBy">
+            <summary>
+            修改人
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState.ModityDate">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState.Version">
+            <summary>
+            版本号,乐观锁
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Contract.BsseState.IsDel">
+            <summary>
+            是否删除 1-已删除
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.Contract.IViewObject">
+            <summary>
+            视图对象，用于展示层VO
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.Data.FieldSortType">
+            <summary>
+            字段排序类型
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.Data.FieldSortType.Asc">
+            <summary>
+            顺序
+            </summary>
+        </member>
+        <member name="F:Kaneko.Core.Data.FieldSortType.Desc">
+            <summary>
+            倒序
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.Data.OrderByField">
+            <summary>
+            排序字段对象
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Data.OrderByField.Field">
+            <summary>
+            字段 使用nameof(Class.Property)
+            </summary>
+        </member>
+        <member name="P:Kaneko.Core.Data.OrderByField.OrderBy">
+            <summary>
+            排序类型
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Data.OrderByField.#ctor(System.String,Kaneko.Core.Data.FieldSortType)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="field"></param>
+            <param name="orderBy"></param>
+        </member>
+        <member name="M:Kaneko.Core.Data.OrderByField.Create``1(System.String,Kaneko.Core.Data.FieldSortType)">
+            <summary>
+            静态构造对象
+            </summary>
+            <param name="field"></param>
+            <param name="orderBy"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Core.Data.OrderByFieldExtension">
+            <summary>
+            扩展类
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Data.OrderByFieldExtension.OrderBy(System.String)">
+            <summary>
+            顺序构造对象扩展方法
+            </summary>
+            <param name="field"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.Data.OrderByFieldExtension.OrderByDesc(System.String)">
+            <summary>
+            倒序构造对象扩展方法
+            </summary>
+            <param name="field"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Kaneko.Core.DependencyInjection.IAssemblySelector">
+            <summary>
+            程序集选择器
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IAssemblySelector.FromAssemblyOf``1">
+            <summary>
+            Will scan for types from the assembly of type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type in which assembly that should be scanned.</typeparam>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IAssemblySelector.FromAssembliesOf(System.Type[])">
+            <summary>
+            Will scan for types from the assemblies of each <see cref="T:System.Type"/> in <paramref name="types"/>.
+            </summary>
+            <param name="types">The types in which assemblies that should be scanned.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IAssemblySelector.FromAssembliesOf(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Will scan for types from the assemblies of each <see cref="T:System.Type"/> in <paramref name="types"/>.
+            </summary>
+            <param name="types">The types in which assemblies that should be scanned.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IAssemblySelector.FromAssemblies(System.Reflection.Assembly[])">
+            <summary>
+            Will scan for types in each <see cref="T:System.Reflection.Assembly"/> in <paramref name="assemblies"/>.
+            </summary>
+            <param name="assemblies">The assemblies to should be scanned.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="assemblies"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IAssemblySelector.FromAssemblies(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            Will scan for types in each <see cref="T:System.Reflection.Assembly"/> in <paramref name="assemblies"/>.
+            </summary>
+            <param name="assemblies">The assemblies to should be scanned.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="assemblies"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IAssemblySelector.FromRuntimeAssemblies(System.Func{System.Reflection.AssemblyName,System.Boolean})">
+            <summary>
+            Will scan for types in each <see cref="T:System.Reflection.Assembly"/> in <paramref name="assemblies"/>.
+            </summary>
+            <param name="predicate">The AssemblyName to should be scanned.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="predicate"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.AssignableTo``1">
+            <summary>
+            Will match all types that are assignable to <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type that should be assignable from the matching types.</typeparam>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.AssignableTo(System.Type)">
+            <summary>
+            Will match all types that are assignable to the specified <paramref name="type" />.
+            </summary>
+            <param name="type">The type that should be assignable from the matching types.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="type"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.AssignableToAny(System.Type[])">
+            <summary>
+            Will match all types that are assignable to any of the specified <paramref name="types" />.
+            </summary>
+            <param name="types">The types that should be assignable from the matching types.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.AssignableToAny(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Will match all types that are assignable to any of the specified <paramref name="types" />.
+            </summary>
+            <param name="types">The types that should be assignable from the matching types.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.WithAttribute``1">
+            <summary>
+            Will match all types that has an attribute of type <typeparamref name="T"/> defined.
+            </summary>
+            <typeparam name="T">The type of attribute that needs to be defined.</typeparam>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.WithAttribute(System.Type)">
+            <summary>
+            Will match all types that has an attribute of <paramref name="attributeType" /> defined.
+            </summary>
+            <param name="attributeType">Type of the attribute.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="attributeType"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.WithAttribute``1(System.Func{``0,System.Boolean})">
+            <summary>
+            Will match all types that has an attribute of type <typeparamref name="T"/> defined,
+            and where the attribute itself matches the <paramref name="predicate"/>.
+            </summary>
+            <typeparam name="T">The type of attribute that needs to be defined.</typeparam>
+            <param name="predicate">The predicate to match the attribute.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="predicate"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.WithoutAttribute``1">
+            <summary>
+            Will match all types that doesn't have an attribute of type <typeparamref name="T"/> defined.
+            </summary>
+            <typeparam name="T">The type of attribute that needs to be defined.</typeparam>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.WithoutAttribute(System.Type)">
+            <summary>
+            Will match all types that doesn't have an attribute of <paramref name="attributeType" /> defined.
+            </summary>
+            <param name="attributeType">Type of the attribute.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="attributeType"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.WithoutAttribute``1(System.Func{``0,System.Boolean})">
+            <summary>
+            Will match all types that doesn't have an attribute of type <typeparamref name="T"/> defined,
+            and where the attribute itself matches the <paramref name="predicate"/>.
+            </summary>
+            <typeparam name="T">The type of attribute that needs to be defined.</typeparam>
+            <param name="predicate">The predicate to match the attribute.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="predicate"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.InNamespaceOf``1">
+            <summary>
+            Will match all types in the same namespace as the type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">A type inside the namespace to include.</typeparam>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.InNamespaceOf(System.Type[])">
+            <summary>
+            Will match all types in any of the namespaces of the <paramref name="types" /> specified.
+            </summary>
+            <param name="types">The types in the namespaces to include.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.InNamespaces(System.String[])">
+            <summary>
+            Will match all types in any of the <paramref name="namespaces"/> specified.
+            </summary>
+            <param name="namespaces">The namespaces to include.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="namespaces"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.InNamespaces(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Will match all types in any of the <paramref name="namespaces"/> specified.
+            </summary>
+            <param name="namespaces">The namespaces to include.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="namespaces"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.NotInNamespaceOf``1">
+            <summary>
+            Will match all types outside of the same namespace as the type <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.NotInNamespaceOf(System.Type[])">
+            <summary>
+            Will match all types outside of all of the namespaces of the <paramref name="types" /> specified.
+            </summary>
+            <param name="types">The types in the namespaces to include.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.NotInNamespaces(System.String[])">
+            <summary>
+            Will match all types outside of all of the <paramref name="namespaces"/> specified.
+            </summary>
+            <param name="namespaces">The namespaces to include.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="namespaces"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.NotInNamespaces(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Will match all types outside of all of the <paramref name="namespaces"/> specified.
+            </summary>
+            <param name="namespaces">The namespaces to include.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="namespaces"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeFilter.Where(System.Func{System.Type,System.Boolean})">
+            <summary>
+            Will match types based on the specified <paramref name="predicate"/>.
+            </summary>
+            <param name="predicate">The predicate to match types.</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="predicate" /> argument is <c>null</c>.</exception>
+        </member>
+        <member name="T:Kaneko.Core.DependencyInjection.IImplementationTypeSelector">
+            <summary>
+            类型选择器
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeSelector.AddClasses">
+            <summary>
+            添加所有公有或非抽象类到 <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>中.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeSelector.AddClasses(System.Boolean)">
+            <summary>
+            添加所有公有或非抽象类到 <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>中.
+            </summary>
+            <param name="publicOnly">要添加的类型是否是公有的</param>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeSelector.AddClasses(System.Action{Kaneko.Core.DependencyInjection.IImplementationTypeFilter})">
+             <summary>
+            添加所有公有或非抽象类，根据 <paramref name="action"/> 进行筛选后的结果到 <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>中.
+             </summary>
+             <param name="action">过滤函数</param>
+             <exception cref="T:System.ArgumentNullException">If the <paramref name="action"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IImplementationTypeSelector.AddClasses(System.Action{Kaneko.Core.DependencyInjection.IImplementationTypeFilter},System.Boolean)">
+            <summary>
+            添加所有公有或非抽象类，根据 <paramref name="action"/>
+            进行筛选后的结果到 <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="action">过滤函数</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="action"/> argument is <c>null</c>.</exception>
+            <param name="publicOnly">要添加的类型是否是公有的</param>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ILifetimeSelector.WithSingletonLifetime">
+            <summary>
+            Registers each matching concrete type with <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton"/> lifetime.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ILifetimeSelector.WithScopedLifetime">
+            <summary>
+            Registers each matching concrete type with <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped"/> lifetime.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ILifetimeSelector.WithTransientLifetime">
+            <summary>
+            Registers each matching concrete type with <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient"/> lifetime.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ILifetimeSelector.WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers each matching concrete type with the specified <paramref name="lifetime"/>.
+            </summary>
+        </member>
+        <member name="T:Kaneko.Core.DependencyInjection.ISelector">
+            <summary>
+            选择器
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ISelector.Populate(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="T:Kaneko.Core.DependencyInjection.IServiceTypeSelector">
+            <summary>
+            服务选择器，用于确定服务的类型、接口、特性等。
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.AsSelf">
+            <summary>
+            注册每个类型与自身的类型映射.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.As``1">
+            <summary>
+            注册每个类型与 <typeparamref name="T"/>类型映射.
+            </summary>
+            <typeparam name="T">类型（一般为接口）</typeparam>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.As(System.Type[])">
+            <summary>
+            注册多对多的类型映射关系根据 <paramref name="types" />.
+            </summary>
+            <param name="types">要匹配的类型列表</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.As(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            注册多对多的类型映射关系根据 <paramref name="types" />.
+            </summary>
+            <param name="types">要匹配的类型列表</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="types"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.AsImplementedInterfaces">
+            <summary>
+            注册每个类型与自身的接口类型映射.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.As(System.Func{System.Type,System.Collections.Generic.IEnumerable{System.Type}})">
+            <summary>
+            注册多对多的类型映射关系根据 <paramref name="selector"/> function，确定自定义的映射关系.
+            </summary>
+            <param name="selector">选择器代理用于确定类与继承类或接口的关系映射</param>
+            <exception cref="T:System.ArgumentNullException">If the <paramref name="selector"/> argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.AsMatchingInterface">
+            <summary>
+            Registers the type with the first found matching interface name.  (e.g. ClassName is matched to IClassName)
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.AsMatchingInterface(System.Action{System.Reflection.TypeInfo,Kaneko.Core.DependencyInjection.IImplementationTypeFilter})">
+            <summary>
+            Registers the type with the first found matching interface name.  (e.g. ClassName is matched to IClassName) 
+            </summary>
+            <param name="action">Filter for matching the Type to an implementing interface</param>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.IServiceTypeSelector.UsingAttributes">
+            <summary>
+            根据<see cref="T:Kaneko.Core.DependencyInjection.ServiceDescriptorAttribute"/>注册类型映射.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ReflectionExtensions.FindMatchingInterface(System.Reflection.TypeInfo,System.Action{System.Reflection.TypeInfo,Kaneko.Core.DependencyInjection.IImplementationTypeFilter})">
+            <summary>
+            Find matching interface by name C# interface name convention.  Optionally use a filter.
+            </summary>
+            <param name="typeInfo"></param>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ReflectionExtensions.GetKanekoAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+            Get specified type attribute<br/>
+            Return null if not found<br/>
+            Will not search inherited attributes<br/>
+            获取指定类型的属性<br/>
+            不存在时返回null<br/>
+            不搜索继承的属性<br/>
+            </summary>
+            <typeparam name="TAttribute">Attribute type</typeparam>
+            <param name="info">Member infomation</param>
+            <returns></returns>
+            <example>
+            <code language="cs">
+            var info = typeof(TestData).FastGetProperty("TestProperty");
+            var attribute = info.GetAttribute&lt;DescriptionAttribute&gt;();
+            </code>
+            </example>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ReflectionExtensions.GetKanekoAttributes``1(System.Reflection.MemberInfo)">
+            <summary>
+            Get specified type attributes<br/>
+            获取指定类型的属性<br/>
+            </summary>
+            <typeparam name="TAttribute">Attribute type</typeparam>
+            <param name="info">Member infomation</param>
+            <returns></returns>
+            <example>
+            <code language="cs">
+            var info = typeof(TestData).FastGetProperty("TestProperty");
+            var attributes = info.GetAttributes&lt;Attribute&gt;();
+            </code>
+            </example>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ReflectionExtensions.GetKanekoAttributes``1(System.Reflection.MemberInfo,System.Boolean)">
+            <summary>
+            Get specified type attributes with inherit option<br/>
+            获取指定类型的属性, 可以指定是否搜索继承<br/>
+            </summary>
+            <typeparam name="TAttribute">Attribute type</typeparam>
+            <param name="info">Member infomation</param>
+            <param name="inherit">Should search override method or property's attributes</param>
+            <returns></returns>
+            <example>
+            <code language="cs">
+            var info = typeof(TestData).FastGetProperty("TestProperty");
+            var attributes = info.GetAttributes&lt;Attribute&gt;(true);
+            </code>
+            </example>
+        </member>
+        <member name="M:Kaneko.Core.DependencyInjection.ServiceCollectionExtensions.Scan(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Kaneko.Core.DependencyInjection.IAssemblySelector})">
+            <summary>
+            Adds registrations to the <paramref name="services"/> collection using
+            conventions specified using the <paramref name="action"/>.
+            </summary>
+            <param name="services">The services to add to.</param>
+            <param name="action">The configuration action.</param>
+            <exception cref="T:System.ArgumentNullException">If either the <paramref name="services"/>
+            or <paramref name="action"/> arguments are <c>null</c>.</exception>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Kaneko.Core.DependencyInjection.ServiceCollectionExtensions.AddServiceExtensions(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Boolean)" -->
+        <member name="T:Kaneko.Core.Extensions.ExpressionExtensions">
+            <summary>
+            expression 扩展
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Extensions.ExpressionExtensions.And``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            and
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="expr1"></param>
+            <param name="expr2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.Extensions.ExpressionExtensions.Or``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            or
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="expr1"></param>
+            <param name="expr2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Core.Extensions.LoggerExtensions.LogError(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
+            <summary>
+            错误日志
+            </summary>
+            <param name="message"></param>
+            <param name="ex"></param>
+        </member>
+        <member name="M:Kaneko.Core.Extensions.LoggerExtensions.LogWarn(Microsoft.Extensions.Logging.ILogger,System.String)">
+            <summary>
+            警告日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Kaneko.Core.Extensions.LoggerExtensions.LogInfo(Microsoft.Extensions.Logging.ILogger,System.String)">
+            <summary>
+            信息日志
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Kaneko.Core.Extensions.ProcessExtensions.ProcessorAffinityList(System.Diagnostics.Process)">
+            <summary>
+            Enumerates the indexes of cores assgined to the current process by CPU affinity.
+            </summary>
+        </member>
+        <member name="M:Kaneko.Core.Utils.HashHelper.MD5File(System.String)">
+            <summary>
+            计算文件的 MD5 值
+            </summary>
+            <param name="fileName">要计算 MD5 值的文件名和路径</param>
+            <returns>MD5 值16进制字符串</returns>
+        </member>
+        <member name="M:Kaneko.Core.Utils.HashHelper.SHA1File(System.String)">
+            <summary>
+            计算文件的 sha1 值
+            </summary>
+            <param name="fileName">要计算 sha1 值的文件名和路径</param>
+            <returns>sha1 值16进制字符串</returns>
+        </member>
+        <member name="M:Kaneko.Core.Utils.HashHelper.HashFile(System.String,System.String)">
+            <summary>
+            计算文件的哈希值
+            </summary>
+            <param name="fileName">要计算哈希值的文件名和路径</param>
+            <param name="algName">算法:sha1,md5</param>
+            <returns>哈希值16进制字符串</returns>
+        </member>
+        <member name="M:Kaneko.Core.Utils.HashHelper.HashData(System.IO.Stream,System.String)">
+            <summary>
+            计算哈希值
+            </summary>
+            <param name="stream">要计算哈希值的 Stream</param>
+            <param name="algName">算法:sha1,md5</param>
+            <returns>哈希值字节数组</returns>
+        </member>
+        <member name="M:Kaneko.Core.Utils.HashHelper.ByteArrayToHexString(System.Byte[])">
+            <summary>
+            字节数组转换为16进制表示的字符串
+            </summary>
+        </member>
+        <member name="T:System.FastReflection.MethodInvoker">
+            <summary>
+            Delegate use to invoke any method
+            </summary>
+        </member>
+        <member name="T:System.FastReflection.MemberGetter">
+            <summary>
+            Delegate use to set get property or field
+            </summary>
+        </member>
+        <member name="T:System.FastReflection.MemberSetter">
+            <summary>
+            Delegate use to set any property or field
+            </summary>
+        </member>
+        <member name="T:System.FastReflection.ReflectionExtensions">
+            <summary>
+            Extension methods for reflection
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.MakeInvoker(System.Reflection.MethodInfo)">
+            <summary>
+            Create dynamic delegate from method info
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.MakeSetter(System.Reflection.MemberInfo)">
+            <summary>
+            Create setter delegate from member info, support property and field
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.MakeGetter(System.Reflection.MemberInfo)">
+            <summary>
+            Create setter delegate from member info, support property and field
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastInvoke(System.Reflection.MethodInfo,System.Object,System.Object[])">
+            <summary>
+            Same as MethodInfo.Invoke, but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastSetValue(System.Reflection.MemberInfo,System.Object,System.Object)">
+            <summary>
+            Same as PropertyInfo.SetValue or FieldInfo.SetValue, but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetValue(System.Reflection.MemberInfo,System.Object)">
+            <summary>
+            Same as PropertyInfo.GetValue or FieldInfo.GetValue, but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetProperties(System.Type,System.Reflection.BindingFlags)">
+            <summary>
+            Same as Type.GetProperties(bindFlags), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetProperties(System.Type)">
+            <summary>
+            Same as Type.GetProperties(), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetFields(System.Type,System.Reflection.BindingFlags)">
+            <summary>
+            Same as Type.GetFields(bindFlags), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetFields(System.Type)">
+            <summary>
+            Same as Type.GetFields(), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetMethods(System.Type,System.Reflection.BindingFlags)">
+            <summary>
+            Same as Type.GetMethods(bindingFlags), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetMethods(System.Type)">
+            <summary>
+            Same as Type.GetMethods(), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetCustomAttributes(System.Reflection.MemberInfo,System.Type)">
+            <summary>
+            Same as GetCustomAttributes(attributeType, false), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetCustomAttributes(System.Reflection.MemberInfo,System.Type,System.Boolean)">
+            <summary>
+            Same as GetCustomAttributes(attributeType, inherit), but work faster
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetInterfaces(System.Type)">
+            <summary>
+            Same as Type.GetInterfaces()
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetProperty(System.Type,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Same as Type.GetProperty(name, bindFlags)
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetProperty(System.Type,System.String)">
+            <summary>
+            Same as Type.GetProperty(name)
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetField(System.Type,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Same as Type.GetField(name, bindFlags)
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetField(System.Type,System.String)">
+            <summary>
+            Same as Type.GetField(name)
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetMethod(System.Type,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Same as Type.GetMethod(name, bindFlags)
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+        </member>
+        <member name="M:System.FastReflection.ReflectionExtensions.FastGetMethod(System.Type,System.String)">
+            <summary>
+            Same as Type.GetMethod(name)
+            Original implemenation is enough fast, here just call the original method
+            </summary>
+        </member>
+        <member name="T:System.FastReflection.StructTuple`2">
+            <summary>
+            Struct type tuple
+            </summary>
+        </member>
+    </members>
+</doc>
