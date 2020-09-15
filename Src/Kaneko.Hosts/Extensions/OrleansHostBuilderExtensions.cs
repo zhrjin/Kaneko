@@ -29,10 +29,20 @@ using System.Threading.Tasks;
 
 namespace Kaneko.Hosts.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class OrleansHostBuilderExtensions
     {
         static KanekoOptions OrleansConfig;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hostBuilder"></param>
+        /// <param name="grainAssembly"></param>
+        /// <param name="autoMapperAssembly"></param>
+        /// <returns></returns>
         public static IHostBuilder AddOrleans(this IHostBuilder hostBuilder, Assembly grainAssembly, Assembly autoMapperAssembly)
         {
             hostBuilder.ConfigureServices(serviceCollection =>
@@ -278,6 +288,37 @@ namespace Kaneko.Hosts.Extensions
                 //AutoMapper 注入
                 services.AddAutoMapper(autoMapperAssembly);
 
+                //添加多客户端
+                if (OrleansConfig.Orleans.Clients.Count > 0)
+                {
+                    services.AddOrleansMultiClient(build =>
+                    {
+                        foreach (var clusterConfig in OrleansConfig.Orleans.Clients)
+                        {
+                            int assCount = clusterConfig.ServiceAssembly.Length;
+                            Assembly[] assemblys = new Assembly[assCount];
+                            for (int i = 0; i < assCount; i++)
+                            {
+                                assemblys[i] = Assembly.Load(clusterConfig.ServiceAssembly[i]);
+                            }
+
+                            build.AddClient(opt =>
+                            {
+                                opt.ClusterId = clusterConfig.ClusterId;
+                                opt.ServiceId = clusterConfig.ServiceId;
+                                opt.SetServiceAssembly(assemblys);
+                                opt.Configure = (b =>
+                                {
+                                    b.UseConsulClustering(gatewayOptions =>
+                                    {
+                                        gatewayOptions.Address = new Uri($"http://{clusterConfig.Consul.HostName}:{clusterConfig.Consul.Port}");
+                                    });
+                                });
+                            });
+                        }
+                    });
+                }
+
                 //自动更新表结构
                 if (OrleansConfig.Orm.DDLAutoUpdate)
                 {
@@ -311,6 +352,24 @@ namespace Kaneko.Hosts.Extensions
                     return true;
             }
             return false;
+        }
+
+
+        private static Assembly[] GetGrainInterfacesAssembly(IList<OrleansClientConfig> orleansClusterConfigs)
+        {
+            List<Assembly> assemblys = new List<Assembly>();
+            foreach (var clusterConfig in orleansClusterConfigs)
+            {
+                foreach (var serviceAssembly in clusterConfig.ServiceAssembly)
+                {
+                    var ass = Assembly.Load(serviceAssembly);
+                    if (!assemblys.Contains(ass))
+                    {
+                        assemblys.Add(ass);
+                    }
+                }
+            }
+            return assemblys.ToArray();
         }
     }
 }

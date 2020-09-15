@@ -28,5 +28,19 @@
             <param name="configuration"></param>
             <returns></returns>
         </member>
+        <member name="T:Kaneko.Hosts.Extensions.OrleansHostBuilderExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Kaneko.Hosts.Extensions.OrleansHostBuilderExtensions.AddOrleans(Microsoft.Extensions.Hosting.IHostBuilder,System.Reflection.Assembly,System.Reflection.Assembly)">
+            <summary>
+            
+            </summary>
+            <param name="hostBuilder"></param>
+            <param name="grainAssembly"></param>
+            <param name="autoMapperAssembly"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

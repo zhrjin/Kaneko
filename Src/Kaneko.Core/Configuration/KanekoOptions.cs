@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Kaneko.Core.Configuration
 {
@@ -61,144 +59,13 @@ namespace Kaneko.Core.Configuration
 
         public MongoDBConfig MongoDB { get; set; } = new MongoDBConfig();
 
-        public RabbitMQOptions RabbitMQ { get; set; } = new RabbitMQOptions();
+        public RabbitMQConfig RabbitMQ { get; set; } = new RabbitMQConfig();
 
         public CapConfig Cap { get; set; } = new CapConfig();
 
-        public Redis Redis { get; set; } = new Redis();
+        public RedisConfig Redis { get; set; } = new RedisConfig();
 
-        public Orm Orm { get; set; } = new Orm();
-    }
+        public OrmConfig Orm { get; set; } = new OrmConfig();
 
-    public class ConsulConfig
-    {
-        public bool Enable { get; set; } = true;
-        public string HostName { get; set; }
-        public int Port { get; set; }
-        public string HealthCheckRelativeUri { get; set; } = "api/Consul/health";
-    }
-
-    public class GrainAgeLimitConfig
-    {
-        /// <remarks>
-        /// The CollectionAgeLimit must be greater than CollectionQuantum, which is set to 00:01:00 (by default).
-        /// https://dotnet.github.io/orleans/Documentation/clusters_and_clients/configuration_guide/activation_garbage_collection.html
-        /// See CollectionAgeLimitValidator.cs details.
-        /// </remarks>
-        [Range(1.001d, double.MaxValue, ErrorMessage = "The GrainAgeLimitInMins " +
-                                                       "(CollectionAgeLimit) must be greater than CollectionQuantum, " +
-                                                       "which is set to 1 min (by default). The type is double.")]
-        public double GrainAgeLimitInMins { get; set; }
-
-        /// <summary>
-        /// The full qualified type name to apply grain age limit.
-        /// </summary>
-        public string GrainType { get; set; }
-    }
-
-    public class DashboardConfig
-    {
-        public string WriteInterval { get; set; } = "00:00:05"; // Recommended, not less than
-        public bool HideTrace { get; set; } = true;
-        public bool Enable { get; set; } = true;
-        public int SiloDashboardPort { get; set; } = 7080;
-        public string UserName { get; set; } = "Silo";
-        public string Password { get; set; } = "Silo";
-    }
-
-    public class MongoDBConfig
-    {
-        public bool Enable { get; set; }
-        public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
-
-        public bool CreateShardKeyForCosmos { get; set; } = false;
-    }
-
-    public class CapConfig
-    {
-        public bool Enable { get; set; } = true;
-
-        public ServiceDiscoveryConfig ServiceDiscovery { get; set; } = new ServiceDiscoveryConfig();
-    }
-
-    public class ServiceDiscoveryConfig
-    {
-        public bool Enable { get; set; } = true;
-        public string HealthPath { get; set; } = "/api/Cap";
-    }
-
-    public class OrleansConfig
-    {
-        public int SiloGatewayPort { get; set; }
-
-        public int SiloNetworkingPort { get; set; }
-
-        public string MetricsTableWriteInterval { get; set; } = "00:00:30";
-
-        public DashboardConfig Dashboard { get; set; } = new DashboardConfig(); // We need initialization, else will be null, and no default will be available
-        public double DefaultGrainAgeLimitInMins { get; set; } = 5;
-
-        public double DefaultReminderGrainAgeLimitInMins { get; set; } = 10080;//7天
-
-        public IDictionary<string, GrainAgeLimitConfig> GrainAgeLimits { get; set; } = new ConcurrentDictionary<string, GrainAgeLimitConfig>();
-    }
-
-    public class RabbitMQOptions
-    {
-        public string HostName
-        {
-            get;
-            set;
-        }
-
-        public string Password
-        {
-            get;
-            set;
-        }
-
-        public string UserName
-        {
-            get;
-            set;
-        }
-
-        public string VirtualHost
-        {
-            get;
-            set;
-        }
-
-        public string ExchangeName
-        {
-            get;
-            set;
-        }
-
-        public int Port
-        {
-            get;
-            set;
-        }
-
-    }
-
-    public class Redis
-    {
-        public bool Enable { get; set; } = false;
-        public string HostName { get; set; }
-        public int Port { get; set; }
-        public string InstanceName { get; set; }
-        public string Password { get; set; }
-
-        public bool UseJson { get; set; } = false;
-
-        public int DatabaseNumber { get; set; } = 1;
-    }
-
-    public class Orm
-    {
-        public bool DDLAutoUpdate { set; get; } = true;
     }
 }
