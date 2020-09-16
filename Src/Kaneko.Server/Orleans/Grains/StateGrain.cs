@@ -11,6 +11,7 @@ using DotNetCore.CAP;
 using Kaneko.Core.Contract;
 using System.Diagnostics;
 using Kaneko.Core.Exceptions;
+using Kaneko.Core.ApiResult;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -72,16 +73,16 @@ namespace Kaneko.Server.Orleans.Grains
 
             DependencyInjection();
 
-            var onReadDbTask = OnReadFromDbAsync();
-            if (!onReadDbTask.IsCompletedSuccessfully)
-                await onReadDbTask;
-            var result = onReadDbTask.Result;
+            //var onReadDbTask = OnReadFromDbAsync();
+            //if (!onReadDbTask.IsCompletedSuccessfully)
+            //    await onReadDbTask;
+            //var result = onReadDbTask.Result;
 
-            if (result != null)
-            {
-                State = result;
-                await WriteStateAsync();
-            }
+            //if (result != null)
+            //{
+            //    State = result;
+            //    await WriteStateAsync();
+            //}
 
             await base.OnActivateAsync();
         }
@@ -140,6 +141,38 @@ namespace Kaneko.Server.Orleans.Grains
         }
 
         protected virtual Task<TState> OnReadFromDbAsync() => null;
+
+        /// <summary>
+        /// 重置状态数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult> ReinstantiateState()
+        {
+            try
+            {
+                var onReadDbTask = OnReadFromDbAsync();
+                if (!onReadDbTask.IsCompletedSuccessfully)
+                    await onReadDbTask;
+                var result = onReadDbTask.Result;
+
+                if (result != null)
+                {
+                    State = result;
+                    await WriteStateAsync();
+                }
+                else
+                {
+                    await ClearStateAsync();
+                }
+
+                return ApiResultUtil.IsSuccess();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("刷新状态", ex);
+                return ApiResultUtil.IsFailed(ex.Message);
+            }
+        }
 
         /// <summary>
         /// 拦截器记录日志

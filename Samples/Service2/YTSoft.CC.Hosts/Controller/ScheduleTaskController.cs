@@ -57,5 +57,11 @@ namespace YTSoft.CC.Hosts.Controller
         {
             return factory.GetGrain<IScheduleTaskGrain>(System.Guid.NewGuid().ToString()).GetPageSync(model);
         }
+
+        [HttpGet("refresh")]
+        public Task<ApiResult> Refresh(long id)
+        {
+            return factory.GetGrain<IScheduleTaskStateGrain>(id).ReinstantiateState();
+        }
     }
 }

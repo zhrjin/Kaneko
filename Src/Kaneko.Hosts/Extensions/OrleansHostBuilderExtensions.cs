@@ -288,36 +288,40 @@ namespace Kaneko.Hosts.Extensions
                 //AutoMapper 注入
                 services.AddAutoMapper(autoMapperAssembly);
 
-                //添加多客户端
-                if (OrleansConfig.Orleans.Clients.Count > 0)
+                try
                 {
-                    services.AddOrleansMultiClient(build =>
+                    //添加多客户端
+                    if (OrleansConfig.Orleans.Clients.Count > 0)
                     {
-                        foreach (var clusterConfig in OrleansConfig.Orleans.Clients)
+                        services.AddOrleansMultiClient(build =>
                         {
-                            int assCount = clusterConfig.ServiceAssembly.Length;
-                            Assembly[] assemblys = new Assembly[assCount];
-                            for (int i = 0; i < assCount; i++)
+                            foreach (var clusterConfig in OrleansConfig.Orleans.Clients)
                             {
-                                assemblys[i] = Assembly.Load(clusterConfig.ServiceAssembly[i]);
-                            }
-
-                            build.AddClient(opt =>
-                            {
-                                opt.ClusterId = clusterConfig.ClusterId;
-                                opt.ServiceId = clusterConfig.ServiceId;
-                                opt.SetServiceAssembly(assemblys);
-                                opt.Configure = (b =>
+                                int assCount = clusterConfig.ServiceAssembly.Length;
+                                Assembly[] assemblys = new Assembly[assCount];
+                                for (int i = 0; i < assCount; i++)
                                 {
-                                    b.UseConsulClustering(gatewayOptions =>
+                                    assemblys[i] = Assembly.Load(clusterConfig.ServiceAssembly[i]);
+                                }
+
+                                build.AddClient(opt =>
+                                {
+                                    opt.ClusterId = clusterConfig.ClusterId;
+                                    opt.ServiceId = clusterConfig.ServiceId;
+                                    opt.SetServiceAssembly(assemblys);
+                                    opt.Configure = (b =>
                                     {
-                                        gatewayOptions.Address = new Uri($"http://{clusterConfig.Consul.HostName}:{clusterConfig.Consul.Port}");
+                                        b.UseConsulClustering(gatewayOptions =>
+                                        {
+                                            gatewayOptions.Address = new Uri($"http://{clusterConfig.Consul.HostName}:{clusterConfig.Consul.Port}");
+                                        });
                                     });
                                 });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
+                catch { }
 
                 //自动更新表结构
                 if (OrleansConfig.Orm.DDLAutoUpdate)

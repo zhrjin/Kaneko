@@ -10,7 +10,7 @@ namespace YTSoft.CC.IGrains.Service
     /// <summary>
     /// 任务管理(有状态)
     /// </summary>
-    public interface IScheduleTaskStateGrain : IGrainWithIntegerKey
+    public interface IScheduleTaskStateGrain : IGrainWithIntegerKey, IStateGrain
     {
         /// <summary>
         /// 获取详情

@@ -4,13 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright></Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.20.915.4</Version>
-    <AssemblyVersion>1.20.915.4</AssemblyVersion>
-    <FileVersion>1.20.915.4</FileVersion>
+    <Version>1.20.916.3</Version>
+    <AssemblyVersion>1.20.916.3</AssemblyVersion>
+    <FileVersion>1.20.916.3</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Source\Git\Soa\KanekoMicoService\Src\Kaneko.Hosts\Kaneko.Hosts.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

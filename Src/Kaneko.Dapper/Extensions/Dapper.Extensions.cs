@@ -236,7 +236,7 @@ namespace Kaneko.Dapper.Extensions
             var identityPropertyInfo = typeof(TEntity).GetIdentityField();
             foreach (var pi in pis)
             {
-                if (identityPropertyInfo?.Name == pi.Name)
+                if (identityPropertyInfo?.Name == pi.Name && identityPropertyInfo.IsAutoIdentity())
                     continue;
 
                 addFields.Add($"{pi.GetFieldName().ParamSql(dbType)}");

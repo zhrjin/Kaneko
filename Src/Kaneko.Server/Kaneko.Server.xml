@@ -45,6 +45,12 @@
             提醒名称
             </summary>
         </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.IStateGrain.ReinstantiateState">
+            <summary>
+            重置状态数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Kaneko.Server.Orleans.Grains.MainGrain">
             <summary>
             常用Grain
@@ -218,6 +224,12 @@
         <member name="M:Kaneko.Server.Orleans.Grains.StateGrain`2.DependencyInjection">
             <summary>
             Unified method of dependency injection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaneko.Server.Orleans.Grains.StateGrain`2.ReinstantiateState">
+            <summary>
+            重置状态数据
             </summary>
             <returns></returns>
         </member>
