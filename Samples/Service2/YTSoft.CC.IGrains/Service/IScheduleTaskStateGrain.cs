@@ -4,13 +4,15 @@ using YTSoft.CC.IGrains.Entity;
 using YTSoft.CC.IGrains.VO;
 using System.Threading.Tasks;
 using Orleans;
+using YTSoft.CC.IGrains.State;
+using Kaneko.Core.Contract;
 
 namespace YTSoft.CC.IGrains.Service
 {
     /// <summary>
     /// 任务管理(有状态)
     /// </summary>
-    public interface IScheduleTaskStateGrain : IGrainWithIntegerKey, IStateGrain
+    public interface IScheduleTaskStateGrain : IGrainWithIntegerKey, IStateGrain<ScheduleTaskState>
     {
         /// <summary>
         /// 获取详情

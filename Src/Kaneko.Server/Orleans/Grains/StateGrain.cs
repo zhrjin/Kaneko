@@ -72,18 +72,6 @@ namespace Kaneko.Server.Orleans.Grains
                 throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
 
             DependencyInjection();
-
-            //var onReadDbTask = OnReadFromDbAsync();
-            //if (!onReadDbTask.IsCompletedSuccessfully)
-            //    await onReadDbTask;
-            //var result = onReadDbTask.Result;
-
-            //if (result != null)
-            //{
-            //    State = result;
-            //    await WriteStateAsync();
-            //}
-
             await base.OnActivateAsync();
         }
 
@@ -98,7 +86,7 @@ namespace Kaneko.Server.Orleans.Grains
             this.Observer = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
         }
 
-        protected async Task Persist(ProcessAction action, TState state = default)
+        protected virtual async Task Persist(ProcessAction action, TState state = default)
         {
             if (ProcessAction.Create == action || ProcessAction.Update == action)
             {
@@ -146,14 +134,18 @@ namespace Kaneko.Server.Orleans.Grains
         /// 重置状态数据
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult> ReinstantiateState()
+        public virtual async Task<ApiResult> ReinstantiateState(TState state = default)
         {
             try
             {
-                var onReadDbTask = OnReadFromDbAsync();
-                if (!onReadDbTask.IsCompletedSuccessfully)
-                    await onReadDbTask;
-                var result = onReadDbTask.Result;
+                TState result = (TState)state;
+                if (result == null)
+                {
+                    var onReadDbTask = OnReadFromDbAsync();
+                    if (!onReadDbTask.IsCompletedSuccessfully)
+                        await onReadDbTask;
+                    result = onReadDbTask.Result;
+                }
 
                 if (result != null)
                 {

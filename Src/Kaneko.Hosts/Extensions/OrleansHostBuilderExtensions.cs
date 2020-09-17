@@ -26,6 +26,7 @@ using Kaneko.Server.Orleans.HostServices;
 using Microsoft.Extensions.Logging;
 using Kaneko.Core.IdentityServer;
 using System.Threading.Tasks;
+using Orleans.Serialization;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -356,24 +357,6 @@ namespace Kaneko.Hosts.Extensions
                     return true;
             }
             return false;
-        }
-
-
-        private static Assembly[] GetGrainInterfacesAssembly(IList<OrleansClientConfig> orleansClusterConfigs)
-        {
-            List<Assembly> assemblys = new List<Assembly>();
-            foreach (var clusterConfig in orleansClusterConfigs)
-            {
-                foreach (var serviceAssembly in clusterConfig.ServiceAssembly)
-                {
-                    var ass = Assembly.Load(serviceAssembly);
-                    if (!assemblys.Contains(ass))
-                    {
-                        assemblys.Add(ass);
-                    }
-                }
-            }
-            return assemblys.ToArray();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Kaneko.Core.Contract;
+using System;
 using YTSoft.CC.IGrains.Entity;
 
 namespace YTSoft.CC.IGrains.State

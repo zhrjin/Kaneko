@@ -6,6 +6,7 @@ using Orleans;
 using System.Threading.Tasks;
 using YTSoft.CC.IGrains.Entity;
 using YTSoft.CC.IGrains.Service;
+using YTSoft.CC.IGrains.State;
 using YTSoft.CC.IGrains.VO;
 
 namespace YTSoft.CC.Hosts.Controller

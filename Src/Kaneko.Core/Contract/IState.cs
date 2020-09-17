@@ -38,9 +38,18 @@ namespace Kaneko.Core.Contract
         /// 是否删除 1-已删除
         /// </summary>
         public int IsDel { set; get; }
+
+        public GrainDataState GrainDataState { set; get; }
     }
 
     public interface IState
     {
+        GrainDataState GrainDataState { set; get; }
+    }
+
+    public enum GrainDataState
+    {
+        Init = 0,
+        Loaded = 1
     }
 }
