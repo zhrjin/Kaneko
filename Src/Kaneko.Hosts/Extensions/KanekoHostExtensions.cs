@@ -1,6 +1,4 @@
 ﻿using Kaneko.Consul;
-using Kaneko.Server.Orleans.Grains.HealthCheck;
-using Kaneko.Hosts.HealthCheck;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +8,11 @@ using System;
 using System.Reflection;
 using Kaneko.Consul.Controller;
 using Kaneko.Hosts.Controller;
-using Kaneko.Hosts.Attributes;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Kaneko.Hosts.Validator;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -59,6 +58,29 @@ namespace Kaneko.Hosts.Extensions
             });
 
             services.AddControllers(mvcConfig)
+                    .AddJsonOptions(options =>
+                    {
+                        //格式化日期时间格式
+                        options.JsonSerializerOptions.Converters.Add(new DatetimeJsonConverter());
+
+                        //数据格式首字母小写
+                        //options.JsonSerializerOptions.PropertyNamingPolicy =JsonNamingPolicy.CamelCase;
+
+                        //数据格式原样输出
+                        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+
+                        //取消Unicode编码
+                        options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+
+                        //忽略空值
+                        //options.JsonSerializerOptions.IgnoreNullValues = true;
+
+                        //允许额外符号
+                        options.JsonSerializerOptions.AllowTrailingCommas = true;
+
+                        //反序列化过程中属性名称是否使用不区分大小写的比较
+                        options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                    })
                     .AddApplicationPart(controllerAssembly)
                     .AddApplicationPart(typeof(KaneKoController).Assembly)
                     .AddApplicationPart(typeof(ConsulController).Assembly)

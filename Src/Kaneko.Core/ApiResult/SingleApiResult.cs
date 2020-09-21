@@ -1,4 +1,6 @@
 ﻿using Kaneko.Core.Contract;
+using System.Text.Json.Serialization;
+
 namespace Kaneko.Core.ApiResult
 {
     /// <summary>
@@ -10,6 +12,7 @@ namespace Kaneko.Core.ApiResult
         /// <summary>
         /// 数据
         /// </summary>
+        [JsonPropertyName("data")]
         public TVO Data { set; get; }
     }
 }

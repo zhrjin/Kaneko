@@ -4,9 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright></Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.20.917.4</Version>
-    <AssemblyVersion>1.20.917.4</AssemblyVersion>
-    <FileVersion>1.20.917.4</FileVersion>
+    <Version>1.20.921.2</Version>
+    <AssemblyVersion>1.20.921.2</AssemblyVersion>
+    <FileVersion>1.20.921.2</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

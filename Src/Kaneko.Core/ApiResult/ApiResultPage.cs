@@ -1,4 +1,5 @@
 ﻿using Kaneko.Core.Contract;
+using System.Text.Json.Serialization;
 
 namespace Kaneko.Core.ApiResult
 {
@@ -11,6 +12,7 @@ namespace Kaneko.Core.ApiResult
         /// <summary>
         /// 笔数
         /// </summary>
+        [JsonPropertyName("count")]
         public int Count { set; get; }
     }
 }

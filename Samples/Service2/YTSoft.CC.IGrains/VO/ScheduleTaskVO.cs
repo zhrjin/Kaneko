@@ -28,5 +28,7 @@ namespace YTSoft.CC.IGrains.VO
         /// 状态
         /// </summary>
         public TaskState TaskState { set; get; }
+
+        public int? ddddd { set; get; }
     }
 }

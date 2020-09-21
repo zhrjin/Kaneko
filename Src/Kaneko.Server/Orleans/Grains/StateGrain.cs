@@ -86,11 +86,18 @@ namespace Kaneko.Server.Orleans.Grains
             this.Observer = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
         }
 
+        /// <summary>
+        /// 持久化
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         protected virtual async Task Persist(ProcessAction action, TState state = default)
         {
             if (ProcessAction.Create == action || ProcessAction.Update == action)
             {
                 this.State = state;
+                this.State.GrainDataState = GrainDataState.Loaded;
                 await WriteStateAsync();
             }
             else if (ProcessAction.Delete == action)

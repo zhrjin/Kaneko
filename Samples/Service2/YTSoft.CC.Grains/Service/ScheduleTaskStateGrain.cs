@@ -24,6 +24,27 @@ namespace YTSoft.CC.Grains.Service
             this._scheduleRepository = scheduleTaskRepository;
         }
 
+        public override async Task OnActivateAsync()
+        {
+            await base.OnActivateAsync();
+
+#if DEBUG //解决开发环境Redis缓存和数据库数据不一致
+            if (GrainDataState.Init == this.State.GrainDataState)
+            {
+                var onReadDbTask = OnReadFromDbAsync();
+                if (!onReadDbTask.IsCompletedSuccessfully)
+                    await onReadDbTask;
+                var result = onReadDbTask.Result;
+                if (result != null)
+                {
+                    State = result;
+                    State.GrainDataState = GrainDataState.Loaded;
+                    await WriteStateAsync();
+                }
+            }
+#endif
+        }
+
         /// <summary>
         /// 初始化状态数据
         /// </summary>
