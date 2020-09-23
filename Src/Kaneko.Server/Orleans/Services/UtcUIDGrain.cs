@@ -20,6 +20,18 @@ namespace Kaneko.Server.Orleans.Services
             this.startLong = long.Parse(this.startString);
         }
 
+        public override Task OnActivateAsync()
+        {
+            if (!this.GetPrimaryKeyLong().Equals(GrainIdKey.UtcUIDGrainKey))
+            {
+                throw new Exception("GrainId Need to use GrainIdKey.UtcUIDGrainKey!");
+            }
+
+            base.OnActivateAsync();
+
+            return Task.CompletedTask;
+        }
+
         public Task<string> NewID()
         {
             return Task.FromResult(GenerateUtcId());

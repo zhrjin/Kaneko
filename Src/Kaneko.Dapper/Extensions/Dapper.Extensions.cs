@@ -4,7 +4,6 @@ using Kaneko.Dapper.Expressions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -120,8 +119,8 @@ namespace Kaneko.Dapper.Extensions
             var dbType = connection.GetDbType();
             var dbName = connection.Database;
             var sql = dbType.ExistTableSql(dbName, tableName);
-            var task = await connection.QueryFirstOrDefaultAsync<int>(sql);
             outSqlAction?.Invoke(sql);
+            var task = await connection.QueryFirstOrDefaultAsync<int>(sql);
             return task > 0;
         }
 
@@ -140,8 +139,8 @@ namespace Kaneko.Dapper.Extensions
             var dbType = connection.GetDbType();
             var dbName = connection.Database;
             var sql = dbType.ExistFieldSql(dbName, tableName, fieldName);
-            var task = await connection.QueryFirstOrDefaultAsync<int>(sql);
             outSqlAction?.Invoke(sql);
+            var task = await connection.QueryFirstOrDefaultAsync<int>(sql);
             return task > 0;
         }
 
@@ -191,17 +190,18 @@ namespace Kaneko.Dapper.Extensions
             if (identityPropertyInfo != null && returnLastIdentity)
             {
                 sql += dbType.SelectLastIdentity();
+                // 返回sql
+                outSqlAction?.Invoke(sql);
                 task = await connection.ExecuteScalarAsync<int>(sql, entity, transaction);
                 if (task > 0)
                     identityPropertyInfo.SetValue(entity, task);
             }
             else
             {
+                // 返回sql
+                outSqlAction?.Invoke(sql);
                 task = await connection.ExecuteAsync(sql, entity, transaction);
             }
-            // 返回sql
-            outSqlAction?.Invoke(sql);
-
             return task;
         }
 
@@ -244,10 +244,9 @@ namespace Kaneko.Dapper.Extensions
             }
 
             var sql = $"insert into {tableName.ParamSql(dbType)}({string.Join(", ", addFields)}) values({string.Join(", ", atFields)});";
-            var task = await connection.ExecuteAsync(sql, entities, transaction);
             // 返回sql
             outSqlAction?.Invoke(sql);
-
+            var task = await connection.ExecuteAsync(sql, entities, transaction);
             return task;
         }
 
@@ -276,9 +275,9 @@ namespace Kaneko.Dapper.Extensions
 
             var dbType = connection.GetDbType();
             var sqlExpression = SqlExpression.Delete<TEntity>(dbType, tableName).Where(whereExpress);
-            var task = await connection.ExecuteAsync(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var task = await connection.ExecuteAsync(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return task;
         }
 
@@ -332,9 +331,9 @@ namespace Kaneko.Dapper.Extensions
                 throw new Exception($"实体[{nameof(TEntity)}]未标记任何更新字段");
 
             var sql = $"update {tableName.ParamSql(dbType)} set {string.Join(", ", setFields)} where {string.Join(", ", whereFields)}";
-            var result = await connection.ExecuteAsync(sql, entity, transaction);
             // 返回sql
             outSqlAction?.Invoke(sql);
+            var result = await connection.ExecuteAsync(sql, entity, transaction);
             return result > 0;
         }
 
@@ -365,9 +364,9 @@ namespace Kaneko.Dapper.Extensions
 
             var dbType = connection.GetDbType();
             var sqlExpression = SqlExpression.Update<TEntity>(dbType, setExpress, tableName).Where(whereExpress);
-            var result = await connection.ExecuteAsync(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var result = await connection.ExecuteAsync(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return result > 0;
         }
 
@@ -398,9 +397,9 @@ namespace Kaneko.Dapper.Extensions
 
             var dbType = connection.GetDbType();
             var sqlExpression = SqlExpression.Select(dbType, fieldExpress, tableName).Where(whereExpress);
-            var task = await connection.QueryFirstOrDefaultAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var task = await connection.QueryFirstOrDefaultAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return task;
         }
 
@@ -443,9 +442,9 @@ namespace Kaneko.Dapper.Extensions
                 orderBy = $" {string.Join(", ", orderByFields.Select(oo => oo.Field.ParamSql(dbType) + " " + oo.OrderBy))}";
             sqlExpression.OrderBy(orderBy).Limit(page, rows);
 
-            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return task;
         }
 
@@ -483,10 +482,9 @@ namespace Kaneko.Dapper.Extensions
             if ((orderByFields?.Count ?? 0) > 0)
                 orderBy = $" {string.Join(", ", orderByFields.Select(oo => oo.Field.ParamSql(dbType) + " " + oo.OrderBy))}";
             sqlExpression.OrderBy(orderBy);
-
-            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return task;
         }
 
@@ -528,10 +526,9 @@ namespace Kaneko.Dapper.Extensions
             if ((orderByFields?.Count ?? 0) > 0)
                 orderBy = $" {string.Join(", ", orderByFields.Select(oo => oo.Field.ParamSql(dbType) + " " + oo.OrderBy))}";
             sqlExpression.OrderBy(orderBy).Offset(offset, size);
-
-            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var task = await connection.QueryAsync<TEntity>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return task;
         }
 
@@ -558,9 +555,9 @@ namespace Kaneko.Dapper.Extensions
 
             var dbType = connection.GetDbType();
             var sqlExpression = SqlExpression.Count<TEntity>(dbType, tableName: tableName).Where(whereExpress);
-            var task = await connection.QueryFirstOrDefaultAsync<int>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             // 返回sql
             outSqlAction?.Invoke(sqlExpression.Script);
+            var task = await connection.QueryFirstOrDefaultAsync<int>(sqlExpression.Script, sqlExpression.DbParams, transaction);
             return task;
         }
 

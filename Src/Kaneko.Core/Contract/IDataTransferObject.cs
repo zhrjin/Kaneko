@@ -47,10 +47,15 @@ namespace Kaneko.Core.Contract
         /// <summary>
         /// 排序字段
         /// </summary>
+        public OrderByField[] Order { get; set; }
+
+        /// <summary>
+        /// 排序字段
+        /// </summary>
         /// <returns></returns>
         public virtual OrderByField[] GetOrder()
         {
-            return null;
+            return Order;
         }
 
         /// <summary>
@@ -84,6 +89,11 @@ namespace Kaneko.Core.Contract
         /// </summary>
         /// <returns></returns>
         OrderByField[] GetOrder();
+
+        /// <summary>
+        /// 排序字段
+        /// </summary>
+        OrderByField[] Order { get; set; }
     }
 
 }

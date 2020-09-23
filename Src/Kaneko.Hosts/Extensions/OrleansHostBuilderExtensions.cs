@@ -200,22 +200,25 @@ namespace Kaneko.Hosts.Extensions
             silo.Configure<GrainCollectionOptions>(options =>
             {
                 options.CollectionAge = TimeSpan.FromMinutes(OrleansConfig.Orleans.DefaultGrainAgeLimitInMins);
-                var assemblyList = GetStateGrainTypesFromAssembly(assembly);
-                if (assemblyList != null)
+                double grainAgeLimitInMins = OrleansConfig.Orleans.DefaultReminderGrainAgeLimitInMins;
+                if (grainAgeLimitInMins > 0)
                 {
-                    double grainAgeLimitInMins = OrleansConfig.Orleans.DefaultReminderGrainAgeLimitInMins;
-                    foreach (var grainAgeLimitConfig in assemblyList)
+                    var assemblyList = GetStateGrainTypesFromAssembly(assembly);
+                    if (assemblyList != null)
                     {
-                        try
+                        foreach (var grainAgeLimitConfig in assemblyList)
                         {
-                            double timeSpan = grainAgeLimitInMins + RandomHelper.GetRandomNumber(1, 120);
-                            options.ClassSpecificCollectionAge.Add(grainAgeLimitConfig.FullName,
-                                TimeSpan.FromMinutes(timeSpan));
-                        }
-                        catch (Exception e)
-                        {
-                            throw new ArgumentException(
-                                $"Assigning Age Limit on {grainAgeLimitConfig} has failed, because {grainAgeLimitConfig} is an invalid type\n{e.Message}");
+                            try
+                            {
+                                double timeSpan = grainAgeLimitInMins;//+ RandomHelper.GetRandomNumber(1, 120);
+                                options.ClassSpecificCollectionAge.Add(grainAgeLimitConfig.FullName,
+                                    TimeSpan.FromMinutes(timeSpan));
+                            }
+                            catch (Exception e)
+                            {
+                                throw new ArgumentException(
+                                    $"Assigning Age Limit on {grainAgeLimitConfig} has failed, because {grainAgeLimitConfig} is an invalid type\n{e.Message}");
+                            }
                         }
                     }
                 }

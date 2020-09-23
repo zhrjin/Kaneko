@@ -1,7 +1,10 @@
 ﻿using Kaneko.Core.ApiResult;
+using Kaneko.Core.Contract;
+using Kaneko.Core.Extensions;
 using Kaneko.Hosts.Controller;
 using Kaneko.Server.Orleans.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Orleans;
 using System.Threading.Tasks;
 using YTSoft.CC.IGrains.Entity;
@@ -32,7 +35,7 @@ namespace YTSoft.CC.Hosts.Controller
         public async Task<ApiResult> AddAsync([FromForm] ScheduleTaskDTO model)
         {
             //生成唯一ID
-            long newId = await factory.GetGrain<IUtcUID>(System.Guid.NewGuid().ToString()).NewLongID();
+            long newId = await factory.GetGrain<IUtcUID>(GrainIdKey.UtcUIDGrainKey).NewLongID();
             model.Id = newId;
             return await factory.GetGrain<IScheduleTaskStateGrain>(newId).AddAsync(model);
         }
@@ -63,6 +66,13 @@ namespace YTSoft.CC.Hosts.Controller
         public Task<ApiResult> Refresh(long id)
         {
             return factory.GetGrain<IScheduleTaskStateGrain>(id).ReinstantiateState();
+        }
+
+        [HttpGet("list-lr")]
+        public Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync([FromQuery] SearchDTO search)
+        {
+            var model = search.DeserializeObject<ScheduleTaskDTO>();
+            return factory.GetGrain<IScheduleTaskGrain>(System.Guid.NewGuid().ToString()).GetPageLRSync(model);
         }
     }
 }

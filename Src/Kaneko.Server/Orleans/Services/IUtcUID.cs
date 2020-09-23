@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Kaneko.Server.Orleans.Services
 {
-    public interface IUtcUID : IGrainWithStringKey
+    public interface IUtcUID : IGrainWithIntegerKey
     {
         /// <summary>
         /// 通过utc时间生成分布式唯一id

@@ -14,7 +14,7 @@ namespace Kaneko.Core.Configuration
         public DashboardConfig Dashboard { get; set; } = new DashboardConfig(); // We need initialization, else will be null, and no default will be available
         public double DefaultGrainAgeLimitInMins { get; set; } = 5;
 
-        public double DefaultReminderGrainAgeLimitInMins { get; set; } = 10080;//7天
+        public double DefaultReminderGrainAgeLimitInMins { get; set; }
 
         public IDictionary<string, GrainAgeLimitConfig> GrainAgeLimits { get; set; } = new ConcurrentDictionary<string, GrainAgeLimitConfig>();
 

@@ -75,6 +75,31 @@ namespace Kaneko.Core.ApiResult
         }
 
         /// <summary>
+        /// 响应成功
+        /// </summary>
+        /// <typeparam name="TVO"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="count"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static ApiResultPageLR<TVO> IsSuccess<TVO>(IList<TVO> data, int count, int pageIndex, int pageSize, string message = "") where TVO : IViewObject
+        {
+            return new ApiResultPageLR<TVO>()
+            {
+                Info = message,
+                Code = ApiResultCode.Success,
+                Data = new ApiResultLR<TVO>
+                {
+                    Rows = data ?? default,
+                    Records = count,
+                    Page = pageIndex,
+                    Total = count > 0 ? (count % pageSize == 0 ? count / pageSize : count / pageSize + 1) : 0
+                }
+            };
+        }
+
+        /// <summary>
         /// 响应失败
         /// </summary>
         /// <param name="message"></param>
@@ -137,6 +162,22 @@ namespace Kaneko.Core.ApiResult
                 Info = message,
                 Code = resultCode,
                 Data = default
+            };
+        }
+
+        /// <summary>
+        /// 响应失败
+        /// </summary>
+        /// <typeparam name="TVO"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        public static ApiResultPageLR<TVO> IsFailedPageLR<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.Fail) where TVO : IViewObject
+        {
+            return new ApiResultPageLR<TVO>()
+            {
+                Info = message,
+                Code = resultCode,
             };
         }
     }

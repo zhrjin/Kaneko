@@ -61,11 +61,13 @@ namespace YTSoft.CC.IGrains.Entity
         /// <returns></returns>
         public override OrderByField[] GetOrder()
         {
-            var list = new List<OrderByField>()
-            {
-               OrderByField.Create<ScheduleTaskDO>(nameof(ScheduleTaskDO.LineCode), FieldSortType.Asc)
-            };
-            return list.ToArray();
+            return base.GetOrder();
+
+            //var list = new List<OrderByField>()
+            //{
+            //   OrderByField.Create<ScheduleTaskDO>(nameof(ScheduleTaskDO.LineCode), FieldSortType.Asc)
+            //};
+            //return list.ToArray();
         }
     }
 }

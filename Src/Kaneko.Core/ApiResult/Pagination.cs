@@ -27,6 +27,7 @@
         /// 总记录数
         /// </summary>
         public int Records { get; set; }
+
         /// <summary>
         /// 总页数
         /// </summary>
