@@ -21,10 +21,11 @@ namespace YTSoft.CC.Grains.Service
             this._scheduleRepository = scheduleTaskRepository;
         }
 
-        public async Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync(ScheduleTaskDTO model)
+        public async Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync(SearchDTO<ScheduleTaskDTO> model)
         {
-            var expression = model.GetExpression();
-            var orders = model.GetOrder();
+            var dto = model.Data;
+            var expression = dto.GetExpression();
+            var orders = dto.GetOrder();
             var count = await _scheduleRepository.CountAsync(expression);
             if (count == 0)
             {
@@ -36,10 +37,11 @@ namespace YTSoft.CC.Grains.Service
             return ApiResultUtil.IsSuccess(scheduleTaskVOs, count, model.PageIndex, model.PageSize);
         }
 
-        public async Task<ApiResultPage<ScheduleTaskVO>> GetPageSync(ScheduleTaskDTO model)
+        public async Task<ApiResultPage<ScheduleTaskVO>> GetPageSync(SearchDTO<ScheduleTaskDTO> model)
         {
-            var expression = model.GetExpression();
-            var orders = model.GetOrder();
+            var dto = model.Data;
+            var expression = dto.GetExpression();
+            var orders = dto.GetOrder();
             var count = await _scheduleRepository.CountAsync(expression);
             if (count == 0)
             {

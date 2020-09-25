@@ -25,14 +25,14 @@ namespace YTSoft.CC.IGrains.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ApiResult> AddAsync(ScheduleTaskDTO model);
+        Task<ApiResult> AddAsync(SubmitDTO<ScheduleTaskDTO> model);
 
         /// <summary>
         /// 更新
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ApiResult> UpdateAsync(ScheduleTaskDTO model);
+        Task<ApiResult> UpdateAsync(SubmitDTO<ScheduleTaskDTO> model);
 
         /// <summary>
         /// 删除

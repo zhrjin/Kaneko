@@ -15,26 +15,6 @@ namespace Kaneko.Core.Contract
         public PrimaryKey Id { set; get; }
 
         /// <summary>
-        /// 页标
-        /// </summary>
-        public int PageIndex { get; set; }
-
-        /// <summary>
-        /// 每页笔数
-        /// </summary>
-        public int PageSize { get; set; }
-
-        /// <summary>
-        /// 用户ID
-        /// </summary>
-        public string UserId { get; set; }
-
-        /// <summary>
-        /// 用户名称
-        /// </summary>
-        public string UserName { get; set; }
-
-        /// <summary>
         /// 版本号,乐观锁
         /// </summary>
         public int Version { set; get; }
@@ -74,16 +54,6 @@ namespace Kaneko.Core.Contract
     /// </summary>
     public interface IDataTransferObject : IValidatableObject
     {
-        /// <summary>
-        /// 页标
-        /// </summary>
-        int PageIndex { get; set; }
-
-        /// <summary>
-        /// 每页笔数
-        /// </summary>
-        int PageSize { get; set; }
-
         /// <summary>
         /// 排序字段
         /// </summary>

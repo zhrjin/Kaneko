@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using Orleans.Providers;
 using AutoMapper;
 using Kaneko.Core.Extensions;
-using Kaneko.Core.Utils;
 using Kaneko.Server.AutoMapper;
 using Kaneko.Dapper;
 using Kaneko.Core.DependencyInjection;
@@ -23,10 +22,12 @@ using DotNetCore.CAP.Dashboard.NodeDiscovery;
 using Kaneko.Server.Orleans.Services;
 using Kaneko.Core.Configuration;
 using Kaneko.Server.Orleans.HostServices;
-using Microsoft.Extensions.Logging;
-using Kaneko.Core.IdentityServer;
-using System.Threading.Tasks;
-using Orleans.Serialization;
+using Kaneko.Server.Orleans.Grains;
+using Microsoft.AspNetCore.Hosting;
+using App.Metrics;
+using App.Metrics.AspNetCore;
+using App.Metrics.Formatters.InfluxDB;
+using App.Metrics.Formatters.Prometheus;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -65,11 +66,12 @@ namespace Kaneko.Hosts.Extensions
                 .Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(30))
                 .UseLinuxEnvironmentStatistics()
                 .UsePerfCounterEnvironmentStatistics()
-                .AddNewRelicTelemetryConsumer().ConfigureLogging(logger =>
-                {
-                    logger.SetMinimumLevel(LogLevel.Warning);
-                    logger.AddConsole(options => options.IncludeScopes = true);
-                })
+                //.AddNewRelicTelemetryConsumer()
+                //.ConfigureLogging(logger =>
+                //{
+                //    logger.SetMinimumLevel(LogLevel.Warning);
+                //    logger.AddConsole(options => options.IncludeScopes = true);
+                //})
                 //.AddIncomingGrainCallFilter<IncomingGrainCallFilter>()
                 //.AddOutgoingGrainCallFilter<OutgoingGrainCallFilter>()
                 ;
@@ -124,6 +126,53 @@ namespace Kaneko.Hosts.Extensions
                     o.PerfCountersWriteInterval = TimeSpan.Parse(OrleansConfig.Orleans.MetricsTableWriteInterval);
                 });
             });
+
+            //hostBuilder.ConfigureMetricsWithDefaults((context, builder) =>
+            //{
+            //    var metricsInfluxDbOptions = OrleansConfig.MetricsInfluxDb;
+            //    if (metricsInfluxDbOptions != null)
+            //    {
+            //        if (metricsInfluxDbOptions.Enabled == true)
+            //        {
+            //            builder.Report
+            //                .ToInfluxDb(options =>
+            //                {
+            //                    options.InfluxDb.Database = metricsInfluxDbOptions?.Database
+            //                                                ?? "AppMetricsDB";
+            //                    options.InfluxDb.UserName = metricsInfluxDbOptions?.UserName
+            //                                                ?? "admin";
+            //                    options.InfluxDb.Password = metricsInfluxDbOptions?.Password
+            //                                                ?? "admin";
+            //                    options.InfluxDb.BaseUri = metricsInfluxDbOptions?.BaseUri
+            //                                               ?? new Uri("http://127.0.0.1:8086");
+            //                    options.InfluxDb.CreateDataBaseIfNotExists =
+            //                        metricsInfluxDbOptions?.CreateDataBaseIfNotExists
+            //                        ?? true;
+            //                    options.HttpPolicy.BackoffPeriod = metricsInfluxDbOptions?.BackoffPeriod
+            //                                                       ?? TimeSpan.FromSeconds(30);
+            //                    options.HttpPolicy.FailuresBeforeBackoff =
+            //                        metricsInfluxDbOptions?.FailuresBeforeBackoff
+            //                        ?? 5;
+            //                    options.HttpPolicy.Timeout = metricsInfluxDbOptions?.Timeout
+            //                                                 ?? TimeSpan.FromSeconds(10);
+            //                    options.FlushInterval = metricsInfluxDbOptions?.FlushInterval
+            //                                            ?? TimeSpan.FromSeconds(20);
+            //                    options.MetricsOutputFormatter =
+            //                        new MetricsInfluxDbLineProtocolOutputFormatter();
+            //                });
+            //        }
+            //    }
+            //})
+            //.UseMetrics(options =>
+            //{
+            //    options.EndpointOptions = endpointsOptions =>
+            //    {
+            //        endpointsOptions.MetricsTextEndpointOutputFormatter =
+            //            new MetricsPrometheusTextOutputFormatter();
+            //    };
+            //})
+            ;
+
             return hostBuilder;
         }
 
@@ -159,10 +208,31 @@ namespace Kaneko.Hosts.Extensions
                     });
 
                 });
+
+                silo.AddMongoDBGrainStorage(GrainStorageKey.MongoDBStore, op =>
+                {
+                    op.Configure(ooop =>
+                    {
+                        ooop.DatabaseName = OrleansConfig.MongoDB.DatabaseName + "_grain";
+                        ooop.CreateShardKeyForCosmos = OrleansConfig.MongoDB.CreateShardKeyForCosmos;
+                        ooop.ConfigureJsonSerializerSettings = settings =>
+                        {
+                            settings.NullValueHandling = NullValueHandling.Include;
+                            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+                            settings.DefaultValueHandling = DefaultValueHandling.Populate;
+                        };
+                    });
+
+                });
             }
+            else
+            {
+                silo.AddMemoryGrainStorage(GrainStorageKey.MongoDBStore);
+            }
+
             if (OrleansConfig.Redis.Enable)
             {
-                silo.AddRedisGrainStorage("RedisStore", optionsBuilder => optionsBuilder.Configure(options =>
+                silo.AddRedisGrainStorage(GrainStorageKey.RedisStore, optionsBuilder => optionsBuilder.Configure(options =>
                 {
                     options.DataConnectionString = $"{OrleansConfig.Redis.HostName}:{OrleansConfig.Redis.Port}";
                     options.UseJson = OrleansConfig.Redis.UseJson;
@@ -171,7 +241,7 @@ namespace Kaneko.Hosts.Extensions
             }
             else
             {
-                silo.AddMemoryGrainStorage("RedisStore");
+                silo.AddMemoryGrainStorage(GrainStorageKey.RedisStore);
             }
 
         }

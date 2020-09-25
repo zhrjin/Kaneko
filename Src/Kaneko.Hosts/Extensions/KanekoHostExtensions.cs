@@ -101,6 +101,10 @@ namespace Kaneko.Hosts.Extensions
                 });
             });
 
+            //services.AddMetricsReportingHostedService();
+            //services.AddMetricsTrackingMiddleware();
+            //services.AddMetricsEndpoints();
+
             return services;
         }
 
@@ -112,6 +116,18 @@ namespace Kaneko.Hosts.Extensions
         /// <returns></returns>
         public static IApplicationBuilder UseKaneko(this IApplicationBuilder app, IConfiguration configuration)
         {
+            //app.UseMetricsAllMiddleware();
+            //app.UseMetricsActiveRequestMiddleware();
+            //app.UseMetricsErrorTrackingMiddleware();
+            //app.UseMetricsPostAndPutSizeTrackingMiddleware();
+            //app.UseMetricsRequestTrackingMiddleware();
+            //app.UseMetricsOAuth2TrackingMiddleware();
+            //app.UseMetricsApdexTrackingMiddleware();
+            //app.UseMetricsAllEndpoints();
+            //app.UseMetricsEndpoint();
+            //app.UseMetricsTextEndpoint();
+            //app.UseEnvInfoEndpoint();
+
             string serviceName = configuration["ServiceName"];
             if (bool.Parse(configuration["Consul:Enable"]))
             {

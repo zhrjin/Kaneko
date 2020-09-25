@@ -2,6 +2,7 @@
 
 namespace Kaneko.Core.Contract
 {
+    //[Serializable]
     public class BsseState<PrimaryKey> : IState
     {
         /// <summary>
@@ -15,6 +16,11 @@ namespace Kaneko.Core.Contract
         public string CreateBy { set; get; }
 
         /// <summary>
+        /// 创建人姓名
+        /// </summary>
+        public string CreateByName { set; get; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateDate { set; get; }
@@ -23,6 +29,11 @@ namespace Kaneko.Core.Contract
         /// 修改人
         /// </summary>
         public string ModityBy { set; get; }
+
+        /// <summary>
+        /// 修改人
+        /// </summary>
+        public string ModityByName { set; get; }
 
         /// <summary>
         /// 修改时间

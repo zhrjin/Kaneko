@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Kaneko.Core.Attributes;
 using Kaneko.Core.Contract;
 using YTSoft.CC.IGrains.Entity;
 using YTSoft.CC.IGrains.State;
 
 namespace YTSoft.CC.IGrains.VO
 {
+    [EventName("Event.TaskInterface")]
     [AutoMap(typeof(ScheduleTaskDO))]
     [AutoMap(typeof(ScheduleTaskState))]
     public class ScheduleTaskVO : BaseVO<long>

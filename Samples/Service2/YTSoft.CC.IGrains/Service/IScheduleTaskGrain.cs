@@ -16,12 +16,12 @@ namespace YTSoft.CC.IGrains.Service
         /// 获取列表
         /// </summary>
         /// <returns></returns>
-        Task<ApiResultPage<ScheduleTaskVO>> GetPageSync(ScheduleTaskDTO model);
+        Task<ApiResultPage<ScheduleTaskVO>> GetPageSync(SearchDTO<ScheduleTaskDTO> model);
 
         /// <summary>
         /// 获取列表
         /// </summary>
         /// <returns></returns>
-        Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync(ScheduleTaskDTO model);
+        Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync(SearchDTO<ScheduleTaskDTO> model);
     }
 }

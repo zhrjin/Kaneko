@@ -5,12 +5,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using Kaneko.Core.Extensions;
 using YTSoft.CC.IGrains.VO;
+using Kaneko.Core.Contract;
 
 namespace YTSoft.CC.Grains.EventBus
 {
     public interface ISubscriberService
     {
-        public void CheckReceivedMessage(ScheduleTaskVO scheduleTaskVO);
+        public void CheckReceivedMessage(EventData<ScheduleTaskVO> scheduleTaskVO);
     }
 
     [ServiceDescriptor(typeof(ISubscriberService), ServiceLifetime.Transient)]
@@ -28,7 +29,7 @@ namespace YTSoft.CC.Grains.EventBus
 
 
         [CapSubscribe(EventContract.TaskInterface)]
-        public void CheckReceivedMessage(ScheduleTaskVO scheduleTaskVO)
+        public void CheckReceivedMessage(EventData<ScheduleTaskVO> scheduleTaskVO)
         {
 
         }

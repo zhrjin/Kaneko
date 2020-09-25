@@ -32,22 +32,22 @@ namespace YTSoft.CC.Hosts.Controller
         }
 
         [HttpPost("add")]
-        public async Task<ApiResult> AddAsync([FromForm] ScheduleTaskDTO model)
+        public async Task<ApiResult> AddAsync([FromForm] SubmitDTO<ScheduleTaskDTO> model)
         {
             //生成唯一ID
             long newId = await factory.GetGrain<IUtcUID>(GrainIdKey.UtcUIDGrainKey).NewLongID();
-            model.Id = newId;
+            model.Data.Id = newId;
             return await factory.GetGrain<IScheduleTaskStateGrain>(newId).AddAsync(model);
         }
 
         [HttpPost("update")]
-        public Task<ApiResult> UpdateAsync([FromForm] ScheduleTaskDTO model)
+        public Task<ApiResult> UpdateAsync([FromForm] SubmitDTO<ScheduleTaskDTO> model)
         {
-            if (model.Id <= 0)
+            if (model.Data.Id <= 0)
             {
                 return Task.FromResult(ApiResultUtil.IsFailed("Id不能为空！"));
             }
-            return factory.GetGrain<IScheduleTaskStateGrain>(model.Id).UpdateAsync(model);
+            return factory.GetGrain<IScheduleTaskStateGrain>(model.Data.Id).UpdateAsync(model);
         }
 
         [HttpDelete]
@@ -57,7 +57,7 @@ namespace YTSoft.CC.Hosts.Controller
         }
 
         [HttpGet("list")]
-        public Task<ApiResultPage<ScheduleTaskVO>> GetPageSync([FromQuery] ScheduleTaskDTO model)
+        public Task<ApiResultPage<ScheduleTaskVO>> GetPageSync([FromQuery] SearchDTO<ScheduleTaskDTO> model)
         {
             return factory.GetGrain<IScheduleTaskGrain>(System.Guid.NewGuid().ToString()).GetPageSync(model);
         }

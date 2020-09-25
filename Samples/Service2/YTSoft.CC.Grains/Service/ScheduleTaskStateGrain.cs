@@ -11,6 +11,7 @@ using YTSoft.CC.IGrains.VO;
 using Orleans.Concurrency;
 using YTSoft.CC.Grains.EventBus;
 using Kaneko.Core.Contract;
+using System.Collections.Generic;
 
 namespace YTSoft.CC.Grains.Service
 {
@@ -51,23 +52,18 @@ namespace YTSoft.CC.Grains.Service
         /// <returns></returns>
         protected override async Task<ScheduleTaskState> OnReadFromDbAsync()
         {
-            var state = this.State;
-            if (state.Id <= 0)
-            {
-                var dbResult = await _scheduleRepository.GetAsync(oo => oo.Id == this.GrainId, isMaster: false);
-                var result = this.ObjectMapper.Map<ScheduleTaskState>(dbResult);
-                return result;
-            }
-            return null;
+            var dbResult = await _scheduleRepository.GetAsync(oo => oo.Id == this.GrainId, isMaster: false);
+            var result = this.ObjectMapper.Map<ScheduleTaskState>(dbResult);
+            return result;
         }
 
-        public async Task<ApiResult> AddAsync(ScheduleTaskDTO model)
+        public async Task<ApiResult> AddAsync(SubmitDTO<ScheduleTaskDTO> model)
         {
             //参数校验
-            if (!model.IsValid(out string exMsg)) { return ApiResultUtil.IsFailed(exMsg); }
+            if (!model.Data.IsValid(out string exMsg)) { return ApiResultUtil.IsFailed(exMsg); }
 
             //转换为数据库实体
-            ScheduleTaskDO scheduleDO = this.ObjectMapper.Map<ScheduleTaskDO>(model);
+            ScheduleTaskDO scheduleDO = this.ObjectMapper.Map<ScheduleTaskDO>(model.Data);
 
             scheduleDO.CreateBy = model.UserId;
             scheduleDO.CreateDate = System.DateTime.Now;
@@ -80,7 +76,7 @@ namespace YTSoft.CC.Grains.Service
             //更新服务状态
             ScheduleTaskState scheduleTaskState = this.ObjectMapper.Map<ScheduleTaskState>(scheduleDO);
             await this.Persist(ProcessAction.Create, scheduleTaskState);
-            return ApiResultUtil.IsSuccess(model.Id.ToString());
+            return ApiResultUtil.IsSuccess(model.Data.Id.ToString());
         }
 
         public async Task<ApiResult> DeleteAsync()
@@ -105,24 +101,25 @@ namespace YTSoft.CC.Grains.Service
             return await Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
         }
 
-        public async Task<ApiResult> UpdateAsync(ScheduleTaskDTO model)
+        public async Task<ApiResult> UpdateAsync(SubmitDTO<ScheduleTaskDTO> model)
         {
-            if (model.Version != this.State.Version) { return ApiResultUtil.IsFailed("数据已被修改，请重新再加载！"); }
+            var dto = model.Data;
+            if (dto.Version != this.State.Version) { return ApiResultUtil.IsFailed("数据已被修改，请重新再加载！"); }
 
-            bool bRet = await _scheduleRepository.SetAsync(() => new { task_name = model.TaskName, line_code = model.LineCode, version = (model.Version + 1) }, oo => oo.Id == this.GrainId);
+            bool bRet = await _scheduleRepository.SetAsync(() => new { task_name = dto.TaskName, line_code = dto.LineCode, version = (dto.Version + 1) }, oo => oo.Id == this.GrainId);
 
             if (!bRet) { return ApiResultUtil.IsFailed("数据更新失败！"); }
 
             ScheduleTaskState scheduleTaskState = this.State;
-            scheduleTaskState.TaskName = model.TaskName;
-            scheduleTaskState.LineCode = model.LineCode;
+            scheduleTaskState.TaskName = dto.TaskName;
+            scheduleTaskState.LineCode = dto.LineCode;
             scheduleTaskState.Version++;
 
             ///任务完成 进行系统对接
-            if (model.TaskState == TaskState.Complete)
+            if (dto.TaskState == TaskState.Complete)
             {
                 ScheduleTaskVO scheduleTaskVO = this.ObjectMapper.Map<ScheduleTaskVO>(this.State);
-                await Observer.PublishAsync(EventContract.TaskInterface, scheduleTaskVO);
+                await PublishAsync(scheduleTaskVO);
             }
             await this.Persist(ProcessAction.Update, scheduleTaskState);
             return ApiResultUtil.IsSuccess();

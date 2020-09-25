@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Kaneko.Server</AssemblyName>
     <RootNamespace>Kaneko.Server</RootNamespace>
-    <Version>1.20.923.3</Version>
-    <AssemblyVersion>1.20.923.3</AssemblyVersion>
-    <FileVersion>1.20.923.3</FileVersion>
+    <Version>1.20.925.2</Version>
+    <AssemblyVersion>1.20.925.2</AssemblyVersion>
+    <FileVersion>1.20.925.2</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -15,10 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="BrotliSharpLib" Version="0.3.3" />
     <PackageReference Include="Consul" Version="1.6.1.1" />
-    <PackageReference Include="DotNetCore.CAP" Version="3.1.0" />
-    <PackageReference Include="DotNetCore.CAP.MongoDB" Version="3.1.0" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="3.1.0" />
+    <PackageReference Include="DotNetCore.CAP" Version="3.1.1" />
+    <PackageReference Include="DotNetCore.CAP.MongoDB" Version="3.1.1" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -37,9 +38,12 @@
     <PackageReference Include="Microsoft.Orleans.OrleansTelemetryConsumers.Linux" Version="3.3.0" />
     <PackageReference Include="Microsoft.Orleans.OrleansTelemetryConsumers.NewRelic" Version="3.3.0" />
     <PackageReference Include="Orleans.MultiClient" Version="3.2.0" />
-    <PackageReference Include="Orleans.Persistence.Redis" Version="3.0.1" />
+    <!--<PackageReference Include="Orleans.Persistence.Redis" Version="3.0.1" />-->
     <PackageReference Include="Orleans.Providers.MongoDB" Version="3.1.7" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+
+    <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>

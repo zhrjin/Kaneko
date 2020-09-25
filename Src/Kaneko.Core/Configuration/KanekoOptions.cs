@@ -67,5 +67,8 @@ namespace Kaneko.Core.Configuration
 
         public OrmConfig Orm { get; set; } = new OrmConfig();
 
+        public  AppMetricsInfluxDbOptions MetricsInfluxDb { get; set; } =
+           new AppMetricsInfluxDbOptions();
+
     }
 }

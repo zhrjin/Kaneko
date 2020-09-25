@@ -1,5 +1,4 @@
-﻿using Kaneko.Core.ApiResult;
-using Kaneko.Core.Contract;
+﻿using Kaneko.Core.Contract;
 using Kaneko.Core.Data;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -9,13 +8,11 @@ namespace Kaneko.Core.Extensions
 {
     public static class SearchDTOExtensions
     {
-        public static T DeserializeObject<T>(this SearchDTO search) where T : IDataTransferObject
+        public static SearchDTO<T> DeserializeObject<T>(this SearchDTO search) where T : IDataTransferObject
         {
+         
             T dTO = JsonConvert.DeserializeObject<T>(search.QueryJson);
             Pagination pagination = JsonConvert.DeserializeObject<Pagination>(search.Pagination);
-
-            dTO.PageIndex = pagination.Page;
-            dTO.PageSize = pagination.Rows;
 
             string orderField = pagination.Sidx;
             FieldSortType sord = (string.IsNullOrWhiteSpace(pagination.Sord) || pagination.Sord.Trim().ToLower() == "asc") ? FieldSortType.Asc : FieldSortType.Desc;
@@ -42,7 +39,15 @@ namespace Kaneko.Core.Extensions
             }
 
             dTO.Order = orderByFields.ToArray();
-            return dTO;
+
+            var result = new SearchDTO<T>
+            {
+                PageIndex = pagination.Page,
+                PageSize = pagination.Rows,
+                Data = dTO
+            };
+
+            return result;
         }
     }
 }

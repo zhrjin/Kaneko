@@ -1,9 +1,26 @@
 ﻿using Kaneko.Core.Attributes;
 using System;
-using System.Data;
-
 namespace Kaneko.Core.Contract
 {
+    /// <summary>
+    /// 领域实体DO抽象实现类 带修改人中文名称
+    /// </summary>
+    /// <typeparam name="PrimaryKey"></typeparam>
+    public abstract class SqlServerWithOperatorBaseDO<PrimaryKey> : SqlServerBaseDO<PrimaryKey>
+    {
+        /// <summary>
+        /// 创建人姓名
+        /// </summary>
+        [KanekoColumn(Name = "create_by_name", ColumnDefinition = "nvarchar(36) null")]
+        public virtual string CreateByName { set; get; }
+
+        /// <summary>
+        /// 修改人姓名
+        /// </summary>
+        [KanekoColumn(Name = "modity_by_name", ColumnDefinition = "nvarchar(36) null")]
+        public virtual string ModityByName { set; get; }
+    }
+
     /// <summary>
     /// 领域实体DO抽象实现类
     /// </summary>
@@ -19,7 +36,7 @@ namespace Kaneko.Core.Contract
         /// <summary>
         /// 创建人
         /// </summary>
-        [KanekoColumn(Name = "create_by", ColumnDefinition = "varchar(20) null")]
+        [KanekoColumn(Name = "create_by", ColumnDefinition = "varchar(36) null")]
         public virtual string CreateBy { set; get; }
 
         /// <summary>
@@ -31,7 +48,7 @@ namespace Kaneko.Core.Contract
         /// <summary>
         /// 修改人
         /// </summary>
-        [KanekoColumn(Name = "modity_by", ColumnDefinition = "varchar(20) null")]
+        [KanekoColumn(Name = "modity_by", ColumnDefinition = "varchar(36) null")]
         public virtual string ModityBy { set; get; }
 
         /// <summary>

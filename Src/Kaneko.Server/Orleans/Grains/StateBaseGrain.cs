@@ -1,24 +1,29 @@
-﻿using Microsoft.Extensions.Logging;
-using Orleans;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Kaneko.Server.AutoMapper;
-using Orleans.Runtime;
-using Kaneko.Core.IdentityServer;
-using System.Diagnostics;
 using Kaneko.Core.Extensions;
+using Microsoft.Extensions.Logging;
+using Orleans;
+using Orleans.Providers;
+using Kaneko.Core.IdentityServer;
+using Orleans.Runtime;
 using DotNetCore.CAP;
-using Kaneko.Server.Orleans.Services;
-using Kaneko.Core.DependencyInjection;
-using Kaneko.Core.Attributes;
 using Kaneko.Core.Contract;
+using System.Diagnostics;
+using Kaneko.Core.Exceptions;
+using Kaneko.Core.ApiResult;
+using Kaneko.Core.Attributes;
+using Kaneko.Core.DependencyInjection;
+using Kaneko.Server.Orleans.Services;
 
 namespace Kaneko.Server.Orleans.Grains
 {
     /// <summary>
-    /// 常用Grain
+    /// 有状态Grain
     /// </summary>
-    public abstract class MainGrain : Grain, IIncomingGrainCallFilter
+    /// <typeparam name="PrimaryKey"></typeparam>
+    /// <typeparam name="TState"></typeparam>
+    public abstract class StateBaseGrain<PrimaryKey, TState> : Grain<TState>, IIncomingGrainCallFilter where TState : IState
     {
         /// <summary>
         /// 上下文用户信息
@@ -31,37 +36,45 @@ namespace Kaneko.Server.Orleans.Grains
         protected ILogger Logger { get; private set; }
 
         /// <summary>
-        /// 事件转发器
-        /// </summary>
-        protected ICapPublisher Observer { get; set; }
-
-        /// <summary>
         /// The real Type of the current Grain
         /// </summary>
         protected Type GrainType { get; }
 
         /// <summary>
+        /// 事件转发器
+        /// </summary>
+        protected ICapPublisher Observer { get; set; }
+
+        /// <summary>
         /// Primary key of actor
         /// Because there are multiple types, dynamic assignment in OnActivateAsync
         /// </summary>
-        protected string GrainId { get; private set; }
+        protected PrimaryKey GrainId { get; private set; }
 
         /// <summary>
         /// Reference to the object to object mapper.
         /// </summary>
-        public IObjectMapper ObjectMapper { get; set; }
+        protected IObjectMapper ObjectMapper { get; set; }
 
-        public MainGrain()
+        public StateBaseGrain()
         {
             this.GrainType = this.GetType();
         }
 
-        public override Task OnActivateAsync()
+        public override async Task OnActivateAsync()
         {
-            GrainId = this.GetPrimaryKeyString();
+            var type = typeof(PrimaryKey);
+            if (type == typeof(long) && this.GetPrimaryKeyLong() is PrimaryKey longKey)
+                GrainId = longKey;
+            else if (type == typeof(string) && this.GetPrimaryKeyString() is PrimaryKey stringKey)
+                GrainId = stringKey;
+            else if (type == typeof(Guid) && this.GetPrimaryKey() is PrimaryKey guidKey)
+                GrainId = guidKey;
+            else
+                throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
+
             DependencyInjection();
-            base.OnActivateAsync();
-            return Task.CompletedTask;
+            await base.OnActivateAsync();
         }
 
         /// <summary>
@@ -73,6 +86,93 @@ namespace Kaneko.Server.Orleans.Grains
             this.ObjectMapper = (IObjectMapper)this.ServiceProvider.GetService(typeof(IObjectMapper));
             this.Logger = (ILogger)this.ServiceProvider.GetService(typeof(ILogger<>).MakeGenericType(this.GrainType));
             this.Observer = (ICapPublisher)this.ServiceProvider.GetService(typeof(ICapPublisher));
+        }
+
+        /// <summary>
+        /// 持久化
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        protected virtual async Task Persist(ProcessAction action, TState state = default)
+        {
+            if (ProcessAction.Create == action || ProcessAction.Update == action)
+            {
+                this.State = state;
+                this.State.GrainDataState = GrainDataState.Loaded;
+                await WriteStateAsync();
+            }
+            else if (ProcessAction.Delete == action)
+            {
+                await this.ClearStateAsync();
+                this.DeactivateOnIdle();
+            }
+        }
+
+        [Obsolete]
+        private async Task ProcessChange(Func<ICapPublisher, Task<IStatable<TState>>> commandFunc, Action<Exception> errorFunc)
+        {
+            try
+            {
+                var statable = await commandFunc.Invoke(this.Observer);
+                if (ProcessAction.Create == statable.GetAction() || ProcessAction.Update == statable.GetAction())
+                {
+                    this.State = statable.GetState();
+                    await WriteStateAsync();
+                }
+                else if (ProcessAction.Delete == statable.GetAction())
+                {
+                    await this.ClearStateAsync();
+                    this.DeactivateOnIdle();
+                }
+            }
+            catch (KanekoException ex)
+            {
+                errorFunc(ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("", ex);
+                errorFunc(ex);
+            }
+        }
+
+        protected virtual Task<TState> OnReadFromDbAsync() => null;
+
+        /// <summary>
+        /// 重置状态数据
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<ApiResult> ReinstantiateState(TState state = default)
+        {
+            try
+            {
+                TState result = (TState)state;
+                if (result == null)
+                {
+                    var onReadDbTask = OnReadFromDbAsync();
+                    if (!onReadDbTask.IsCompletedSuccessfully)
+                        await onReadDbTask;
+                    result = onReadDbTask.Result;
+                }
+
+                if (result != null)
+                {
+                    State = result;
+                    await WriteStateAsync();
+                }
+                else
+                {
+                    await ClearStateAsync();
+                }
+
+                return ApiResultUtil.IsSuccess();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("刷新状态", ex);
+                return ApiResultUtil.IsFailed(ex.Message);
+            }
         }
 
         /// <summary>
