@@ -108,6 +108,7 @@ namespace YTSoft.CC.Grains.Service
 
             bool bRet = await _scheduleRepository.SetAsync(() => new { task_name = dto.TaskName, line_code = dto.LineCode, version = (dto.Version + 1) }, oo => oo.Id == this.GrainId);
 
+
             if (!bRet) { return ApiResultUtil.IsFailed("数据更新失败！"); }
 
             ScheduleTaskState scheduleTaskState = this.State;

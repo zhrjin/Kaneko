@@ -15,6 +15,9 @@ using Kaneko.Core.ApiResult;
 using Kaneko.Core.Attributes;
 using Kaneko.Core.DependencyInjection;
 using Kaneko.Server.Orleans.Services;
+using StackExchange.Profiling;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -185,31 +188,37 @@ namespace Kaneko.Server.Orleans.Grains
             var timer = Stopwatch.StartNew();
             try
             {
-                string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
-                if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
-
-                await context.Invoke();
-
-                timer.Stop();
-                double lElapsedMilliseconds = timer.Elapsed.TotalMilliseconds;
-                try
+                var profiler = MiniProfiler.StartNew("StartNew");
+                using (profiler.Step("BaseGrain"))
                 {
-                    string sMessage = string.Format(
-                          "{0}.{1}({2}),耗时:{3}ms",
-                          context.Grain.GetType().FullName,
-                          context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
-                          (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
-                          lElapsedMilliseconds.ToString("0.00"));
+                    string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+                    if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
 
-                    Logger.LogInfo(sMessage);
+                    await context.Invoke();
 
-                    if (lElapsedMilliseconds > 3 * 1000)
+                    timer.Stop();
+                    double lElapsedMilliseconds = timer.Elapsed.TotalMilliseconds;
+                    try
                     {
-                        //超3秒发出警告
-                        Logger.LogWarn("超时警告：" + sMessage);
+                        string sMessage = string.Format(
+                              "{0}.{1}({2}),耗时:{3}ms",
+                              context.Grain.GetType().FullName,
+                              context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
+                              (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
+                              lElapsedMilliseconds.ToString("0.00"));
+
+                        Logger.LogInfo(sMessage);
+
+                        if (lElapsedMilliseconds > 3 * 1000)
+                        {
+                            //超3秒发出警告
+                            Logger.LogWarn("超时警告：" + sMessage);
+                        }
                     }
+                    catch { }
                 }
-                catch { }
+
+                SqlProfilerLog(profiler);
             }
             catch (Exception exception)
             {
@@ -221,6 +230,58 @@ namespace Kaneko.Server.Orleans.Grains
                     await FuncExceptionHandler(exception);
                 }
                 throw exception;
+            }
+        }
+
+        /// <summary>
+        /// sql跟踪
+        /// </summary>
+        /// <param name="profiler"></param>
+        private void SqlProfilerLog(MiniProfiler profiler)
+        {
+            try
+            {
+                if (profiler?.Root != null)
+                {
+                    var root = profiler.Root;
+                    if (root.HasChildren)
+                    {
+                        root.Children.ForEach(chil =>
+                        {
+                            if (chil.CustomTimings?.Count > 0)
+                            {
+                                foreach (var customTiming in chil.CustomTimings)
+                                {
+                                    var errSql = new List<string>();
+                                    var allSql = new List<string>();
+                                    var warnSql = new List<string>();
+                                    int i = 1;
+                                    customTiming.Value?.ForEach(value =>
+                                    {
+                                        var msg = $@"【{customTiming.Key}{i++}】{value.CommandString} Execute time :{value.DurationMilliseconds} ms,Start offset :{value.StartMilliseconds} ms,Errored :{value.Errored}";
+                                        if (value.Errored)
+                                            errSql.Add(msg);
+                                        if (value.DurationMilliseconds >= 3 * 1000)
+                                            warnSql.Add(msg);
+                                        allSql.Add(msg);
+                                    });
+
+                                    if (errSql.Count > 0)
+                                        Logger.LogError("异常sql:\r\n" + string.Join("\r\n", errSql), new Exception());
+
+                                    if (warnSql.Count > 0)
+                                        Logger.LogWarn("超时sql:\r\n" + string.Join("\r\n", warnSql));
+
+                                    Logger.LogInfo("sql:\r\n" + string.Join("\r\n", allSql));
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("Profiler", ex);
             }
         }
 

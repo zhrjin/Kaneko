@@ -286,6 +286,17 @@ namespace Kaneko.Dapper.Repository
         }
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entitys">数据实体</param>
+        /// <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+        /// <returns>是否成功</returns>
+        public bool Set(TEntity[] entitys, Expression<Func<TEntity, object>> fields = null)
+        {
+            return SetAsync(entitys, fields).Result;
+        }
+
+        /// <summary>
         /// 根据字段修改
         /// </summary>
         /// <param name="setExpress">修改字段表达式：() => new { SomeProperty1 = "", SomeProperty2 = "" } or Dictionary<string, object></string></param>
@@ -485,6 +496,26 @@ namespace Kaneko.Dapper.Repository
             {
                 var tableName = entity.GetTableName(TableNameFunc);
                 var task = await connection.SetAsync(tableName, entity, fieldNames, Transaction, OutSqlAction);
+                return task;
+            }, true);
+        }
+
+        /// <summary>
+        /// 异步更新
+        /// </summary>
+        /// <param name="entities">数据实体</param>
+        /// <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+        /// <returns>是否成功</returns>
+        public async Task<bool> SetAsync(TEntity[] entities, Expression<Func<TEntity, object>> fields = null)
+        {
+            if ((entities?.Count() ?? 0) <= 0)
+                return false;
+
+            var fieldNames = fields.GetFieldNames()?.ToList();
+            return await Execute(async (connection) =>
+            {
+                var tableName = entities.First().GetTableName(TableNameFunc);
+                var task = await connection.SetAsync(tableName, entities, fieldNames, Transaction, OutSqlAction);
                 return task;
             }, true);
         }

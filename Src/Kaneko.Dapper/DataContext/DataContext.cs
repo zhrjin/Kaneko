@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using Kaneko.Dapper.Enums;
+using StackExchange.Profiling;
 
 namespace Kaneko.Dapper.DataContext
 {
@@ -64,6 +65,10 @@ namespace Kaneko.Dapper.DataContext
             DbConnection.ConnectionString = connectionString;
             if (DbConnection.State != ConnectionState.Open)
                 DbConnection.Open();
+            if (MiniProfiler.Current != null)
+            {
+                DbConnection = new StackExchange.Profiling.Data.ProfiledDbConnection((DbConnection)DbConnection, MiniProfiler.Current);
+            }
         }
 
         /// <summary>

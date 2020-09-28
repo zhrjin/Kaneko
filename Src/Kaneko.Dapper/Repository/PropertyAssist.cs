@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Kaneko.Dapper.Contract;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using StackExchange.Profiling;
 
 namespace Kaneko.Dapper.Repository
 {
@@ -58,7 +60,6 @@ namespace Kaneko.Dapper.Repository
                 connection = new DataContext.DataContext(_configuration, isMaster, DbStoreKey, ConnectionFunc).DbConnection;
             else
                 connection = Transaction.Connection;
-
 
             if (connection == null)
                 throw new Exception("数据库连接创建失败，请检查连接字符串是否正确...");

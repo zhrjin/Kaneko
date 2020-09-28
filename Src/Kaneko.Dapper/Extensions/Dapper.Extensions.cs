@@ -15,6 +15,7 @@ using Kaneko.Core.Contract;
 using Kaneko.Core.Data;
 using Kaneko.Core.Attributes;
 using Kaneko.Core.DependencyInjection;
+using StackExchange.Profiling.Data;
 
 namespace Kaneko.Dapper.Extensions
 {
@@ -337,6 +338,63 @@ namespace Kaneko.Dapper.Extensions
             return result > 0;
         }
 
+
+        /// <summary>
+        /// 对象修改
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entity"></param>
+        /// <param name="fields">选择字段</param>
+        /// <param name="transaction">事务</param>
+        /// <param name="outSqlAction">返回sql语句</param>
+        /// <returns></returns>
+        public static async Task<bool> SetAsync<TEntity>(this
+            IDbConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<string> fields = null,
+            IDbTransaction transaction = null,
+            Action<string> outSqlAction = null)
+            where TEntity : IDomainObject
+        {
+            if (string.IsNullOrEmpty(tableName))
+                throw new ArgumentNullException(nameof(tableName));
+            if ((entities?.Count() ?? 0) <= 0)
+                throw new ArgumentNullException(nameof(entities));
+
+            var setFields = new List<string>();
+            var whereFields = new List<string>();
+            var dbType = connection.GetDbType();
+
+            var pis = typeof(TEntity).GetProperties();
+            foreach (var pi in pis)
+            {
+                string fieldName = pi.GetFieldName();
+                var obs = pi.GetKanekoAttribute<KanekoIdAttribute>();
+                if (obs != null)
+                {
+                    whereFields.Add($"{fieldName.ParamSql(dbType)} = @{pi.Name}");
+                }
+                else
+                {
+                    if ((fields?.Count() ?? 0) <= 0 || fields.Contains(fieldName))
+                        setFields.Add($"{fieldName.ParamSql(dbType)} = @{pi.Name}");
+                }
+            }
+            if (whereFields.Count <= 0)
+                throw new Exception($"实体[{nameof(TEntity)}]未设置主键Key属性");
+            if (setFields.Count <= 0)
+                throw new Exception($"实体[{nameof(TEntity)}]未标记任何更新字段");
+
+            var sql = $"update {tableName.ParamSql(dbType)} set {string.Join(", ", setFields)} where {string.Join(", ", whereFields)}";
+            // 返回sql
+            outSqlAction?.Invoke(sql);
+            var result = await connection.ExecuteAsync(sql, entities, transaction);
+            return result > 0;
+        }
+
         /// <summary>
         /// 条件修改
         /// </summary>
@@ -570,11 +628,17 @@ namespace Kaneko.Dapper.Extensions
         /// <returns></returns>
         internal static DatabaseType GetDbType(this IDbConnection connection)
         {
-            if (connection is MySqlConnection)
-                return DatabaseType.MySql;
-            if (connection is SqlConnection connection1)
+            var currentConnection = connection;
+            if (connection is ProfiledDbConnection profiledDbConnection)
             {
-                return MSSqlDbType.GetOrAdd(connection.ConnectionString, (connectionString) =>
+                currentConnection = profiledDbConnection.WrappedConnection;
+            }
+
+            if (currentConnection is MySqlConnection)
+                return DatabaseType.MySql;
+            if (currentConnection is SqlConnection connection1)
+            {
+                return MSSqlDbType.GetOrAdd(currentConnection.ConnectionString, (connectionString) =>
                 {
                     var sqlConnection = connection1;
                     var v = sqlConnection.ServerVersion;
@@ -584,7 +648,7 @@ namespace Kaneko.Dapper.Extensions
                     return DatabaseType.SqlServer;
                 });
             }
-            if (connection is Microsoft.Data.Sqlite.SqliteConnection)
+            if (currentConnection is Microsoft.Data.Sqlite.SqliteConnection)
                 return DatabaseType.SQLite;
 
             return DatabaseType.MySql;

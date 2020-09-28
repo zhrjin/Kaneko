@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using YTSoft.CC.Grains.Service;
 using YTSoft.CC.IGrains.Service;
+using SkyApm.Agent.GeneralHost;
 
 namespace YTSoft.CC.Hosts
 {
@@ -40,11 +41,14 @@ namespace YTSoft.CC.Hosts
                       })
                       .ConfigureServices(services =>
                       {
+                          services.AddHostedService<Worker>();
+
                           services.Configure<ConsoleLifetimeOptions>(options =>
                           {
                               options.SuppressStatusMessages = true;
                           });
                       })
+                      .AddSkyAPM()
                       .AddOrleans(typeof(ScheduleTaskGrain).Assembly, typeof(IScheduleTaskGrain).Assembly);
     }
 }

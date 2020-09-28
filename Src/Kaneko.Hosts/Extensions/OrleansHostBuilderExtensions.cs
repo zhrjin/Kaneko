@@ -24,10 +24,6 @@ using Kaneko.Core.Configuration;
 using Kaneko.Server.Orleans.HostServices;
 using Kaneko.Server.Orleans.Grains;
 using Microsoft.AspNetCore.Hosting;
-using App.Metrics;
-using App.Metrics.AspNetCore;
-using App.Metrics.Formatters.InfluxDB;
-using App.Metrics.Formatters.Prometheus;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -60,7 +56,7 @@ namespace Kaneko.Hosts.Extensions
                 .ConfigureApplicationParts(parts =>
                 {
                     parts.AddApplicationPart(grainAssembly).WithReferences();
-                    parts.AddApplicationPart(typeof(UtcUIDGrain).Assembly).WithReferences();
+                    parts.AddKanekoParts();
                 })
                 .Configure<SiloOptions>(options => options.SiloName = OrleansConfig.ServiceName)
                 .Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(30))
@@ -126,52 +122,6 @@ namespace Kaneko.Hosts.Extensions
                     o.PerfCountersWriteInterval = TimeSpan.Parse(OrleansConfig.Orleans.MetricsTableWriteInterval);
                 });
             });
-
-            //hostBuilder.ConfigureMetricsWithDefaults((context, builder) =>
-            //{
-            //    var metricsInfluxDbOptions = OrleansConfig.MetricsInfluxDb;
-            //    if (metricsInfluxDbOptions != null)
-            //    {
-            //        if (metricsInfluxDbOptions.Enabled == true)
-            //        {
-            //            builder.Report
-            //                .ToInfluxDb(options =>
-            //                {
-            //                    options.InfluxDb.Database = metricsInfluxDbOptions?.Database
-            //                                                ?? "AppMetricsDB";
-            //                    options.InfluxDb.UserName = metricsInfluxDbOptions?.UserName
-            //                                                ?? "admin";
-            //                    options.InfluxDb.Password = metricsInfluxDbOptions?.Password
-            //                                                ?? "admin";
-            //                    options.InfluxDb.BaseUri = metricsInfluxDbOptions?.BaseUri
-            //                                               ?? new Uri("http://127.0.0.1:8086");
-            //                    options.InfluxDb.CreateDataBaseIfNotExists =
-            //                        metricsInfluxDbOptions?.CreateDataBaseIfNotExists
-            //                        ?? true;
-            //                    options.HttpPolicy.BackoffPeriod = metricsInfluxDbOptions?.BackoffPeriod
-            //                                                       ?? TimeSpan.FromSeconds(30);
-            //                    options.HttpPolicy.FailuresBeforeBackoff =
-            //                        metricsInfluxDbOptions?.FailuresBeforeBackoff
-            //                        ?? 5;
-            //                    options.HttpPolicy.Timeout = metricsInfluxDbOptions?.Timeout
-            //                                                 ?? TimeSpan.FromSeconds(10);
-            //                    options.FlushInterval = metricsInfluxDbOptions?.FlushInterval
-            //                                            ?? TimeSpan.FromSeconds(20);
-            //                    options.MetricsOutputFormatter =
-            //                        new MetricsInfluxDbLineProtocolOutputFormatter();
-            //                });
-            //        }
-            //    }
-            //})
-            //.UseMetrics(options =>
-            //{
-            //    options.EndpointOptions = endpointsOptions =>
-            //    {
-            //        endpointsOptions.MetricsTextEndpointOutputFormatter =
-            //            new MetricsPrometheusTextOutputFormatter();
-            //    };
-            //})
-            ;
 
             return hostBuilder;
         }

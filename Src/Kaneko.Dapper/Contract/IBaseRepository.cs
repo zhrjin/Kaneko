@@ -81,6 +81,14 @@ namespace Kaneko.Dapper.Contract
         bool Set(TEntity entity, Expression<Func<TEntity, object>> fields = null);
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity">数据实体</param>
+        /// <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+        /// <returns>是否成功</returns>
+        bool Set(TEntity[] entitys, Expression<Func<TEntity, object>> fields = null);
+
+        /// <summary>
         /// 根据字段修改
         /// </summary>
         /// <param name="setExpress">修改字段表达式 object =>dynamic 是一个匿名类</param>
@@ -184,6 +192,14 @@ namespace Kaneko.Dapper.Contract
         /// <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
         /// <returns>是否成功</returns>
         Task<bool> SetAsync(TEntity entity, Expression<Func<TEntity, object>> fields = null);
+
+        /// <summary>
+        /// 异步更新
+        /// </summary>
+        /// <param name="entities">数据实体</param>
+        /// <param name="fields">x=> x.SomeProperty1 or x=> new { x.SomeProperty1, x.SomeProperty2 }</param>
+        /// <returns>是否成功</returns>
+        Task<bool> SetAsync(TEntity[] entities, Expression<Func<TEntity, object>> fields = null);
 
         /// <summary>
         /// 异步根据字段修改

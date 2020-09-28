@@ -34,6 +34,7 @@ namespace YTSoft.CC.Hosts
                 mvcConfig: (mvcConfig) =>
                 {
                     mvcConfig.Filters.Add<GlobalExceptionFilter>();
+                    //mvcConfig.Filters.Add<ActionFilter>();
                 });
         }
 
