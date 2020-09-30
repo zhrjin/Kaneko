@@ -98,6 +98,9 @@ namespace YTSoft.CC.Grains.Service
         {
             var state = this.State;
             var scheduleVO = this.ObjectMapper.Map<ScheduleTaskVO>(state);
+
+            var dd = await this.GrainFactory.GetGrain<IScheduleTaskGrain>("1").GetPageSync(new SearchDTO<ScheduleTaskDTO> { PageIndex = 1, PageSize = 10 });
+
             return await Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
         }
 

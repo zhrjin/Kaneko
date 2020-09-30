@@ -24,8 +24,8 @@ namespace YTSoft.CC.Grains.Service
         public async Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync(SearchDTO<ScheduleTaskDTO> model)
         {
             var dto = model.Data;
-            var expression = dto.GetExpression();
-            var orders = dto.GetOrder();
+            var expression = dto?.GetExpression();
+            var orders = dto?.GetOrder();
             var count = await _scheduleRepository.CountAsync(expression);
             if (count == 0)
             {
@@ -40,8 +40,8 @@ namespace YTSoft.CC.Grains.Service
         public async Task<ApiResultPage<ScheduleTaskVO>> GetPageSync(SearchDTO<ScheduleTaskDTO> model)
         {
             var dto = model.Data;
-            var expression = dto.GetExpression();
-            var orders = dto.GetOrder();
+            var expression = dto?.GetExpression();
+            var orders = dto?.GetOrder();
             var count = await _scheduleRepository.CountAsync(expression);
             if (count == 0)
             {

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Kaneko.Hosts.Extensions;
-using YTSoft.CC.Hosts.Controller;
 using System;
+using SkyApm.Tracing;
 
 namespace YTSoft.CC.Hosts
 {
@@ -19,6 +19,8 @@ namespace YTSoft.CC.Hosts
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddSingleton<ISamplingInterceptor, CustomSamplingInterceptor>();
+
             services.AddKaneko(typeof(Startup).Assembly, Configuration,
                 corsConfig: (corsConfig) =>
                 {
@@ -34,7 +36,6 @@ namespace YTSoft.CC.Hosts
                 mvcConfig: (mvcConfig) =>
                 {
                     mvcConfig.Filters.Add<GlobalExceptionFilter>();
-                    //mvcConfig.Filters.Add<ActionFilter>();
                 });
         }
 

@@ -242,7 +242,7 @@ namespace Orleans.Sagas
             {
                 State.Properties.Add(property.Key, property.Value);
             }
-            
+
         }
 
         private ActivityContext CreateActivityRuntimeContext(ActivityDefinition definition)
@@ -266,6 +266,19 @@ namespace Orleans.Sagas
         private void ResumeCompleted()
         {
             logger.Info($"Saga {this} has completed with status '{State.Status}'.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override async Task OnDeactivateAsync()
+        {
+            if (await HasCompleted())
+            {
+                await ClearStateAsync();
+            }
+            await base.OnDeactivateAsync();
         }
     }
 }

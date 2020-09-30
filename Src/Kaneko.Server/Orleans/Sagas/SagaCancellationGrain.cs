@@ -1,9 +1,12 @@
-﻿using Orleans.Placement;
+﻿using Kaneko.Server.Orleans.Grains;
+using Orleans.Placement;
+using Orleans.Providers;
 using System.Threading.Tasks;
 
 namespace Orleans.Sagas
 {
     [PreferLocalPlacement]
+    [StorageProvider(ProviderName = GrainStorageKey.RedisStore)]
     public class SagaCancellationGrain : Grain<SagaCancellationGrainState>, ISagaCancellationGrain
     {
         public async Task RequestAbort()

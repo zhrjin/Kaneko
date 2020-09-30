@@ -41,14 +41,12 @@ namespace YTSoft.CC.Hosts
                       })
                       .ConfigureServices(services =>
                       {
-                          services.AddHostedService<Worker>();
-
                           services.Configure<ConsoleLifetimeOptions>(options =>
                           {
                               options.SuppressStatusMessages = true;
                           });
                       })
-                      .AddSkyAPM()
+                      //.AddSkyAPM()
                       .AddOrleans(typeof(ScheduleTaskGrain).Assembly, typeof(IScheduleTaskGrain).Assembly);
     }
 }

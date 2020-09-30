@@ -19,11 +19,12 @@ using Kaneko.Dapper;
 using Kaneko.Core.DependencyInjection;
 using MongoDB.Driver;
 using DotNetCore.CAP.Dashboard.NodeDiscovery;
-using Kaneko.Server.Orleans.Services;
 using Kaneko.Core.Configuration;
 using Kaneko.Server.Orleans.HostServices;
 using Kaneko.Server.Orleans.Grains;
 using Microsoft.AspNetCore.Hosting;
+using SkyApm.Agent.GeneralHost;
+using Kaneko.Server.SkyAPM;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -122,6 +123,8 @@ namespace Kaneko.Hosts.Extensions
                     o.PerfCountersWriteInterval = TimeSpan.Parse(OrleansConfig.Orleans.MetricsTableWriteInterval);
                 });
             });
+
+            hostBuilder.AddSkyAPM();
 
             return hostBuilder;
         }
@@ -249,6 +252,9 @@ namespace Kaneko.Hosts.Extensions
         {
             silo.ConfigureServices((context, services) =>
             {
+                //SkyAPM
+                services.UseSkyApm();
+
                 if (OrleansConfig.Redis.Enable)
                 {
                     services.AddStackExchangeRedisCache(options =>

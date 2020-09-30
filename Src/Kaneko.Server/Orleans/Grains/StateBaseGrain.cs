@@ -18,6 +18,9 @@ using Kaneko.Server.Orleans.Services;
 using StackExchange.Profiling;
 using System.Collections.Generic;
 using System.Linq;
+using SkyApm.Tracing;
+using SkyApm.Tracing.Segments;
+using Kaneko.Server.SkyAPM.Orleans.Diagnostic;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -28,6 +31,9 @@ namespace Kaneko.Server.Orleans.Grains
     /// <typeparam name="TState"></typeparam>
     public abstract class StateBaseGrain<PrimaryKey, TState> : Grain<TState>, IIncomingGrainCallFilter where TState : IState
     {
+        private static readonly DiagnosticListener _diagnosticListener =
+          new DiagnosticListener(KanekoDiagnosticListenerNames.DiagnosticListenerName);
+
         /// <summary>
         /// 上下文用户信息
         /// </summary>
@@ -185,40 +191,19 @@ namespace Kaneko.Server.Orleans.Grains
         /// <returns></returns>
         public async Task Invoke(IIncomingGrainCallContext context)
         {
+            string OperId = this.GrainId.ToString();
+            var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId);
             var timer = Stopwatch.StartNew();
             try
             {
-                var profiler = MiniProfiler.StartNew("StartNew");
-                using (profiler.Step("BaseGrain"))
-                {
-                    string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
-                    if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
+                string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+                if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
 
-                    await context.Invoke();
+                await context.Invoke();
 
-                    timer.Stop();
-                    double lElapsedMilliseconds = timer.Elapsed.TotalMilliseconds;
-                    try
-                    {
-                        string sMessage = string.Format(
-                              "{0}.{1}({2}),耗时:{3}ms",
-                              context.Grain.GetType().FullName,
-                              context.InterfaceMethod == null ? "" : context.InterfaceMethod.Name,
-                              (context.Arguments == null ? "" : string.Join(", ", context.Arguments)),
-                              lElapsedMilliseconds.ToString("0.00"));
+                timer.Stop();
 
-                        Logger.LogInfo(sMessage);
-
-                        if (lElapsedMilliseconds > 3 * 1000)
-                        {
-                            //超3秒发出警告
-                            Logger.LogWarn("超时警告：" + sMessage);
-                        }
-                    }
-                    catch { }
-                }
-
-                SqlProfilerLog(profiler);
+                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId);
             }
             catch (Exception exception)
             {
@@ -229,6 +214,9 @@ namespace Kaneko.Server.Orleans.Grains
                 {
                     await FuncExceptionHandler(exception);
                 }
+
+                _diagnosticListener.OrleansInvokeError(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, exception);
+
                 throw exception;
             }
         }
@@ -315,5 +303,6 @@ namespace Kaneko.Server.Orleans.Grains
             };
             await Observer.PublishAsync(eventName, @event);
         }
+
     }
 }

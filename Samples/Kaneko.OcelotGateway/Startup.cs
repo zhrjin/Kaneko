@@ -9,6 +9,7 @@ using Ocelot.Provider.Polly;
 using Ocelot.Cache.CacheManager;
 using Microsoft.OpenApi.Models;
 using System;
+using Kaneko.Server.SkyAPM;
 
 namespace Kaneko.OcelotGateway
 {
@@ -24,6 +25,8 @@ namespace Kaneko.OcelotGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.UseSkyApm();
+
             var ocelotOptions = new OcelotOptions();
             Configuration.Bind(ocelotOptions);
 
