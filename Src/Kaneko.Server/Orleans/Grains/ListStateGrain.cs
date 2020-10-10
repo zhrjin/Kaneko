@@ -22,6 +22,8 @@ namespace Kaneko.Server.Orleans.Grains
                 this.State = await OnReadFromDbAsync();
                 await WriteStateAsync();
             }
+
+            await OnActivateNextAsync();
         }
     }
 }

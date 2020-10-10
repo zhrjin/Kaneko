@@ -70,7 +70,7 @@ namespace Kaneko.Server.Orleans.Grains
             this.GrainType = this.GetType();
         }
 
-        public override async Task OnActivateAsync()
+        public override Task OnActivateAsync()
         {
             var type = typeof(PrimaryKey);
             if (type == typeof(long) && this.GetPrimaryKeyLong() is PrimaryKey longKey)
@@ -83,7 +83,13 @@ namespace Kaneko.Server.Orleans.Grains
                 throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
 
             DependencyInjection();
-            await base.OnActivateAsync();
+            base.OnActivateAsync();
+            return Task.CompletedTask;
+        }
+
+        public virtual Task OnActivateNextAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

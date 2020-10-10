@@ -67,6 +67,12 @@ namespace Kaneko.Server.Orleans.Grains
             GrainId = this.GetPrimaryKeyString();
             DependencyInjection();
             base.OnActivateAsync();
+            OnActivateNextAsync();
+            return Task.CompletedTask;
+        }
+
+        public virtual Task OnActivateNextAsync()
+        {
             return Task.CompletedTask;
         }
 

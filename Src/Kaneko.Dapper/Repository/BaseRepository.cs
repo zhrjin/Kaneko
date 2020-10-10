@@ -108,8 +108,6 @@ namespace Kaneko.Dapper.Repository
                             columnDefs = $"{tInfo.Name.ParamSql(dbType)}{tInfo.DataType}{size}{tInfo.Nullable}";
                             columnDefs = columnDefs.Replace(" ", "");
 
-
-
                             if (columnDefinition.ToLower().IndexOf("primary") > -1 && columnDefinition.ToLower().IndexOf("key") > -1)
                             {
 
@@ -143,8 +141,8 @@ namespace Kaneko.Dapper.Repository
                                     }
                                     else
                                     {
-                                        excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
-                                        logger.LogWarning($"DDL执行器：{excSqlScript.Trim()}，主键列不自动更新");
+                                        //excSqlScript = dbType.AlterColumnsSql(tableName, columnDefinition);
+                                        //logger.LogWarning($"DDL执行器：{excSqlScript.Trim()}，主键列不自动更新");
                                     }
                                 }
                             }

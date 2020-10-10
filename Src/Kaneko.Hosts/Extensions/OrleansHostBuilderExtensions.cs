@@ -62,16 +62,7 @@ namespace Kaneko.Hosts.Extensions
                 .Configure<SiloOptions>(options => options.SiloName = OrleansConfig.ServiceName)
                 .Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(30))
                 .UseLinuxEnvironmentStatistics()
-                .UsePerfCounterEnvironmentStatistics()
-                //.AddNewRelicTelemetryConsumer()
-                //.ConfigureLogging(logger =>
-                //{
-                //    logger.SetMinimumLevel(LogLevel.Warning);
-                //    logger.AddConsole(options => options.IncludeScopes = true);
-                //})
-                //.AddIncomingGrainCallFilter<IncomingGrainCallFilter>()
-                //.AddOutgoingGrainCallFilter<OutgoingGrainCallFilter>()
-                ;
+                .UsePerfCounterEnvironmentStatistics();
 
                 if (OrleansConfig.Orleans.Dashboard.Enable)
                 {
@@ -111,7 +102,6 @@ namespace Kaneko.Hosts.Extensions
                 {
                     options.ResponseTimeout = TimeSpan.FromMinutes(5);
                 });
-
 
                 SetReminder(siloBuilder);
                 SetStorage(siloBuilder);
