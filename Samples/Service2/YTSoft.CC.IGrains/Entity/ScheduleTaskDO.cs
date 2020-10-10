@@ -5,7 +5,7 @@ using Kaneko.Core.Contract;
 namespace YTSoft.CC.IGrains.Entity
 {
     [AutoMap(typeof(ScheduleTaskDTO))]
-    [KanekoTable(name: "t_scheduletask")]
+    [KanekoTable(name: "t_scheduletask333")]
     public class ScheduleTaskDO : SqlServerBaseDO<long>
     {
         /// <summary>

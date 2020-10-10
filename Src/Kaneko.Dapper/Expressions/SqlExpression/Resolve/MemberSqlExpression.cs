@@ -24,7 +24,10 @@ namespace Kaneko.Dapper.Expressions
                 return sqlGenerate;
             }
 
-            sqlGenerate.SelectFields.Add(expression.Member.GetFieldName().ParamSql(sqlGenerate));
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate.SelectFields.Add(fieldName.ParamSql(sqlGenerate));
             return sqlGenerate;
         }
 
@@ -50,7 +53,10 @@ namespace Kaneko.Dapper.Expressions
 
                 if (expression.IsParameterOrConvertAccess())
                 {
-                    sqlGenerate += $" {expression.Member.GetFieldName().ParamSql(sqlGenerate)}";
+                    string fieldName = expression.Member.GetFieldName();
+                    if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+                    sqlGenerate += $" {fieldName.ParamSql(sqlGenerate)}";
                     return sqlGenerate;
                 }
             }
@@ -71,7 +77,10 @@ namespace Kaneko.Dapper.Expressions
 
         protected override SqlGenerate OrderBy(MemberExpression expression, SqlGenerate sqlGenerate)
         {
-            sqlGenerate += expression.Member.GetFieldName().ParamSql(sqlGenerate);
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate += fieldName.ParamSql(sqlGenerate);
             return sqlGenerate;
         }
 
@@ -98,7 +107,10 @@ namespace Kaneko.Dapper.Expressions
                 var pis = obj.GetType().GetProperties();
                 foreach (var p in pis)
                 {
-                    sqlGenerate += $"{p.GetFieldName().ParamSql(sqlGenerate)} = ";
+                    string fieldName = p.GetFieldName();
+                    if (string.IsNullOrEmpty(fieldName)) { continue; }
+
+                    sqlGenerate += $"{fieldName.ParamSql(sqlGenerate)} = ";
                     sqlGenerate.AddDbParameter(p.GetValue(obj));
                     sqlGenerate += ",";
                 }
@@ -112,31 +124,46 @@ namespace Kaneko.Dapper.Expressions
 
         protected override SqlGenerate Max(MemberExpression expression, SqlGenerate sqlGenerate)
         {
-            sqlGenerate.Sql.AppendFormat("select max({0}) from {1}", expression.Member.GetFieldName().ParamSql(sqlGenerate), sqlGenerate.TableName);
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate.Sql.AppendFormat("select max({0}) from {1}", fieldName.ParamSql(sqlGenerate), sqlGenerate.TableName);
             return sqlGenerate;
         }
 
         protected override SqlGenerate Min(MemberExpression expression, SqlGenerate sqlGenerate)
         {
-            sqlGenerate.Sql.AppendFormat("select min({0}) from {1}", expression.Member.GetFieldName().ParamSql(sqlGenerate), sqlGenerate.TableName);
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate.Sql.AppendFormat("select min({0}) from {1}", fieldName.ParamSql(sqlGenerate), sqlGenerate.TableName);
             return sqlGenerate;
         }
 
         protected override SqlGenerate Avg(MemberExpression expression, SqlGenerate sqlGenerate)
         {
-            sqlGenerate.Sql.AppendFormat("select avg({0}) from {1}", expression.Member.GetFieldName().ParamSql(sqlGenerate), sqlGenerate.TableName);
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate.Sql.AppendFormat("select avg({0}) from {1}", fieldName.ParamSql(sqlGenerate), sqlGenerate.TableName);
             return sqlGenerate;
         }
 
         protected override SqlGenerate Count(MemberExpression expression, SqlGenerate sqlGenerate)
         {
-            sqlGenerate.Sql.AppendFormat("select count({0}) from {1}", expression.Member.GetFieldName().ParamSql(sqlGenerate), sqlGenerate.TableName);
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate.Sql.AppendFormat("select count({0}) from {1}", fieldName.ParamSql(sqlGenerate), sqlGenerate.TableName);
             return sqlGenerate;
         }
 
         protected override SqlGenerate Sum(MemberExpression expression, SqlGenerate sqlGenerate)
         {
-            sqlGenerate.Sql.AppendFormat("select sum({0}) from {1}", expression.Member.GetFieldName().ParamSql(sqlGenerate), sqlGenerate.TableName);
+            string fieldName = expression.Member.GetFieldName();
+            if (string.IsNullOrEmpty(fieldName)) { return sqlGenerate; }
+
+            sqlGenerate.Sql.AppendFormat("select sum({0}) from {1}", fieldName.ParamSql(sqlGenerate), sqlGenerate.TableName);
             return sqlGenerate;
         }
 

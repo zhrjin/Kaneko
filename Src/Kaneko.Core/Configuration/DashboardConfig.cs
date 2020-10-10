@@ -8,5 +8,6 @@
         public int SiloDashboardPort { get; set; } = 7080;
         public string UserName { get; set; } = "Silo";
         public string Password { get; set; } = "Silo";
+        public string BasePath { get; set; } = "OrleansDashborad";
     }
 }

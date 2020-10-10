@@ -4,6 +4,15 @@ namespace Kaneko.Core.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class KanekoColumnAttribute : Attribute
     {
+        public KanekoColumnAttribute()
+        {
+        }
+
+        public KanekoColumnAttribute(string name)
+        {
+            Name = name;
+        }
+
         /// <summary>
         /// 列名
         /// </summary>

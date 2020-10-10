@@ -7,7 +7,7 @@ using YTSoft.CC.IGrains.Entity;
 namespace YTSoft.CC.IGrains.State
 {
     [AutoMap(typeof(ScheduleTaskDO))]
-    public class ScheduleTaskState : BsseState<long>
+    public class ScheduleTaskState : BaseState<long>
     {
         public List<TestC> TestC { set; get; }
 

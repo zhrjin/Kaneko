@@ -82,6 +82,7 @@ namespace Kaneko.Hosts.Extensions
                         o.HideTrace = OrleansConfig.Orleans.Dashboard.HideTrace;
                         o.Username = OrleansConfig.Orleans.Dashboard.UserName;
                         o.Password = OrleansConfig.Orleans.Dashboard.Password;
+                        o.BasePath = OrleansConfig.Orleans.Dashboard.BasePath;
                     });
                 }
 
@@ -255,6 +256,8 @@ namespace Kaneko.Hosts.Extensions
                 //SkyAPM
                 services.UseSkyApm();
 
+                services.AddHttpClient();
+
                 if (OrleansConfig.Redis.Enable)
                 {
                     services.AddStackExchangeRedisCache(options =>
@@ -288,7 +291,7 @@ namespace Kaneko.Hosts.Extensions
                             configure.VirtualHost = OrleansConfig.RabbitMQ.VirtualHost;
                         });
 
-                        x.UseDashboard();
+                        x.UseDashboard(option => option.PathMatch = "/CapDashboard");
 
                         if (OrleansConfig.Cap.ServiceDiscovery.Enable)
                         {

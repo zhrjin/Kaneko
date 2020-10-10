@@ -3,7 +3,7 @@
 namespace Kaneko.Core.Contract
 {
     //[Serializable]
-    public class BsseState<PrimaryKey> : IState
+    public class BaseState<PrimaryKey> : IState
     {
         /// <summary>
         /// 主键
@@ -51,6 +51,14 @@ namespace Kaneko.Core.Contract
         public int IsDel { set; get; }
 
         public GrainDataState GrainDataState { set; get; }
+    }
+
+    public class BaseState<PrimaryKey, TStateClass> : BaseState<PrimaryKey>, ICloneable<TStateClass>
+    {
+        public virtual TStateClass Clone()
+        {
+            return (TStateClass)MemberwiseClone();
+        }
     }
 
     public interface IState

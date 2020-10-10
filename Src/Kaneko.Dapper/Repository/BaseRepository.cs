@@ -54,9 +54,21 @@ namespace Kaneko.Dapper.Repository
                     {
                         var pis = typeof(TEntity).FastGetProperties();
                         string columnScript = "";
-                        foreach (var pi in pis) { columnScript += pi.GetColumnDefinition(dbType) + ","; }
+                        foreach (var pi in pis)
+                        {
+                            string def = pi.GetColumnDefinition(dbType);
+                            if (string.IsNullOrEmpty(def)) { continue; }
 
-                        columnScript.TrimEnd(',');
+                            if (string.IsNullOrWhiteSpace(columnScript))
+                            {
+                                columnScript = def;
+                            }
+                            else
+                            {
+                                columnScript += "," + def;
+                            }
+                        }
+
                         excSqlScript = $"create table {tableName}({columnScript});";
                         var task = await connection.ExecuteAsync(excSqlScript);
                         return task > 0;
@@ -76,6 +88,8 @@ namespace Kaneko.Dapper.Repository
                     foreach (var pi in pis)
                     {
                         string fieldName = pi.GetFieldName().ToLower();
+                        if (string.IsNullOrEmpty(fieldName)) { continue; }
+
                         string columnDefinition = pi.GetColumnDefinition(dbType);
                         if (tableInfos.Any(m => m.Name.ToLower() == fieldName))
                         {

@@ -63,7 +63,10 @@ namespace Kaneko.Dapper.Expressions
                 var pis = typeof(T).GetProperties();
                 foreach (var pi in pis)
                 {
-                    fields += $"{pi.GetFieldName().ParamSql(dbType)} as {pi.Name.ParamSql(dbType)},";
+                    string fieldName = pi.GetFieldName();
+                    if (string.IsNullOrEmpty(fieldName)) { continue; }
+
+                    fields += $"{fieldName.ParamSql(dbType)} as {pi.Name.ParamSql(dbType)},";
                 }
 
                 fields = fields.TrimEnd(',');
@@ -105,7 +108,9 @@ namespace Kaneko.Dapper.Expressions
                 var property = typeof(T).GetProperty<KanekoIdAttribute>();
                 if (property == null)
                     property = typeof(T).GetProperties()[0];
-                orderBy = $"order by {property.GetFieldName()} desc";
+
+                string fieldName = property.GetFieldName();
+                if (!string.IsNullOrEmpty(fieldName)) { orderBy = $"order by {fieldName} desc"; }
             }
 
             if (!orderBy.StartsWith("order by"))

@@ -181,7 +181,10 @@ namespace Kaneko.Dapper.Extensions
                 if (identityPropertyInfo?.Name == pi.Name && identityPropertyInfo.IsAutoIdentity())
                     continue;
 
-                addFields.Add($"{pi.GetFieldName().ParamSql(dbType)}");
+                string fieldName = pi.GetFieldName();
+                if (string.IsNullOrEmpty(fieldName)) { continue; }
+
+                addFields.Add($"{fieldName.ParamSql(dbType)}");
                 atFields.Add($"@{pi.Name}");
             }
 
@@ -240,7 +243,10 @@ namespace Kaneko.Dapper.Extensions
                 if (identityPropertyInfo?.Name == pi.Name && identityPropertyInfo.IsAutoIdentity())
                     continue;
 
-                addFields.Add($"{pi.GetFieldName().ParamSql(dbType)}");
+                string fieldName = pi.GetFieldName();
+                if (string.IsNullOrEmpty(fieldName)) { continue; }
+
+                addFields.Add($"{fieldName.ParamSql(dbType)}");
                 atFields.Add($"@{pi.Name}");
             }
 
@@ -709,7 +715,9 @@ namespace Kaneko.Dapper.Extensions
         public static string GetFieldName(this PropertyInfo propertyInfo)
         {
             var attribute = propertyInfo.GetKanekoAttribute<KanekoColumnAttribute>();
-            if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
+            if (attribute == null) { return string.Empty; }
+
+            if (!string.IsNullOrWhiteSpace(attribute.Name))
             {
                 return attribute.Name;
             }
@@ -726,7 +734,8 @@ namespace Kaneko.Dapper.Extensions
         public static string GetFieldName(this MemberInfo memberInfo)
         {
             var attribute = memberInfo.GetKanekoAttribute<KanekoColumnAttribute>();
-            if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
+            if (attribute == null) { return string.Empty; }
+            if (!string.IsNullOrWhiteSpace(attribute.Name))
             {
                 return attribute.Name;
             }
@@ -742,6 +751,9 @@ namespace Kaneko.Dapper.Extensions
         public static string GetColumnDefinition(this PropertyInfo propertyInfo, DatabaseType databaseType)
         {
             var attribute = propertyInfo.GetKanekoAttribute<KanekoColumnAttribute>();
+
+            if (attribute == null) { return string.Empty; }
+
             string column = propertyInfo.Name, columnDefinition = "varchar(255)";
             if (attribute != null)
             {

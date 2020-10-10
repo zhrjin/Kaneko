@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="https://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+
+
+        });
+
+        var _baseUrl = "http://localhost:6114/ComConcrete";
+
+        function btnGetSync() {
+            $.ajax({
+                //请求方式
+                type: "GET",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask?id=2020091303520900002",
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    $("#txtResult").html(e.responseText);
+                }
+            });
+        }
+
+        function btnAddAsync() {
+            $.ajax({
+                //请求方式
+                type: "POST",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask/add",
+                data:
+                {
+                    "data": {
+                        "id": "",
+                        "taskCode": "200910002",
+                        "taskName": "测试任务2",
+                        "lineCode": "10002",
+                    },
+                    "userId": "admin",
+                    "userName": "admin"
+                },
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    $("#txtResult").html(e.responseText);
+                }
+            });
+        }
+
+        function btnUpdateAsync() {
+            $.ajax({
+                //请求方式
+                type: "POST",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask/update",
+                data: {
+                    "id": "2020091303520900002",
+                    "taskCode": "2009100022",
+                    "taskName": "测试任务22",
+                    "taskState": "1"
+                },
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    $("#txtResult").html(e.responseText);
+                }
+            });
+        }
+
+        function btnDeleteAsync() {
+            $.ajax({
+                //请求方式
+                type: "DELETE",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask?id=2020091303520900002",
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    $("#txtResult").html(e.responseText);
+                }
+            });
+        }
+
+        function btnGetPageSync() {
+
+            var op = {};
+            op.pagination = JSON.stringify({
+                rows: 20,                // 每页行数     100 
+                page: 1,                  // 当前页
+                sidx: 'task_code asc',                 // 排序列
+                sord: '',                 // 排序类型
+                records: 0,               // 总记录数
+                total: 0                  // 总页数
+            });
+
+            op.queryJson = JSON.stringify({
+                "taskCode": "",
+                "taskName": "",
+                "lineCode": "",
+                "userId": "",
+                "userName": "",
+                "pageIndex": 1,
+                "pageSize": 10
+            });
+
+            $.ajax({
+                //请求方式
+                type: "GET",
+                dataType: "json",
+                //请求地址
+                url: _baseUrl + "/api/ScheduleTask/list-lr",
+                data: op,
+                //请求成功
+                success: function (result) {
+                    console.log(result);
+                    $("#txtResult").html(JSON.stringify(result));
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    $("#txtResult").html(e.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div id="txtResult" style="border:1px solid red;height:200px;margin:5px;overflow-y:auto;">测试结果</div>
+    </div>
+    <button onclick="btnGetSync()">GetSync</button>
+    <button onclick="btnAddAsync()">AddAsync</button>
+    <button onclick="btnUpdateAsync()">UpdateAsync</button>
+    <button onclick="btnDeleteAsync()">DeleteAsync</button>
+    <button onclick="btnGetPageSync()">GetPageSync</button>
+
+</body>
+</html>

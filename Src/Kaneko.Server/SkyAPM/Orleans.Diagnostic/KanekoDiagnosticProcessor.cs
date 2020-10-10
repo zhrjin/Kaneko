@@ -3,6 +3,7 @@ using SkyApm.Common;
 using SkyApm.Diagnostics;
 using SkyApm.Tracing;
 using SkyApm.Tracing.Segments;
+using System.Collections.Generic;
 
 namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
 {
@@ -16,21 +17,28 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
         private readonly ITracingContext _tracingContext;
         private readonly IEntrySegmentContextAccessor _entrySegmentContextAccessor;
         private readonly ILocalSegmentContextAccessor _localSegmentContextAccessor;
+        private readonly IExitSegmentContextAccessor _exitSegmentContextAccessor;
 
         public KanekoDiagnosticProcessor(ITracingContext tracingContext,
             IEntrySegmentContextAccessor entrySegmentContextAccessor,
-            ILocalSegmentContextAccessor localSegmentContextAccessor
+            ILocalSegmentContextAccessor localSegmentContextAccessor,
+            IExitSegmentContextAccessor exitSegmentContextAccessor
             )
         {
             _tracingContext = tracingContext;
             _entrySegmentContextAccessor = entrySegmentContextAccessor;
             _localSegmentContextAccessor = localSegmentContextAccessor;
+            _exitSegmentContextAccessor = exitSegmentContextAccessor;
         }
 
         [DiagnosticName(KanekoDiagnosticListenerNames.OrleansInvokeBefore)]
         public void OrleansInvokeBefore([Object] KanekoExcuteData eventData)
         {
             var context = _tracingContext.CreateLocalSegmentContext(eventData.OperatioName);
+
+            //var context = _tracingContext.CreateEntrySegmentContext(eventData.OperatioName,
+            //    new TextCarrierHeaderCollection(new Dictionary<string, string>()));
+
             context.Span.Component = GetComponent();
 
             context.Span.AddTag("grain.instance", eventData.GrainType);
