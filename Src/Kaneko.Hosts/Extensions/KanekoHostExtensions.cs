@@ -63,6 +63,9 @@ namespace Kaneko.Hosts.Extensions
                         //格式化日期时间格式
                         options.JsonSerializerOptions.Converters.Add(new DatetimeJsonConverter());
 
+                        //long
+                        options.JsonSerializerOptions.Converters.Add(new LongJsonConverter());
+
                         //数据格式首字母小写
                         //options.JsonSerializerOptions.PropertyNamingPolicy =JsonNamingPolicy.CamelCase;
 
