@@ -12,7 +12,7 @@ namespace Orleans.Sagas
 {
     [PreferLocalPlacement]
     [StorageProvider(ProviderName = GrainStorageKey.RedisStore)]
-    public sealed class SagaGrain : Grain<SagaState>, ISagaGrain
+    public sealed class SagaGrain : SagaBaseGrain<SagaState>, ISagaGrain
     {
         private static readonly string ReminderName = nameof(SagaGrain);
 
@@ -20,6 +20,7 @@ namespace Orleans.Sagas
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<SagaGrain> logger;
         private bool isActive;
+        private IGrainReminder grainReminder;
 
         public SagaGrain(IGrainActivationContext grainContext, IServiceProvider serviceProvider, ILogger<SagaGrain> logger)
         {
@@ -92,48 +93,73 @@ namespace Orleans.Sagas
             return GrainFactory.GetGrain<ISagaCancellationGrain>(this.GetPrimaryKey());
         }
 
-        private async Task<IGrainReminder> RegisterReminderAsync()
+        private async Task RegisterReminderAsync()
         {
             var reminderTime = TimeSpan.FromMinutes(1);
-            return await RegisterOrUpdateReminder(ReminderName, reminderTime, reminderTime);
+            grainReminder = await RegisterOrUpdateReminder(ReminderName, reminderTime, reminderTime);
+        }
+
+        private async Task UnRegisterReminderAsync()
+        {
+            if (grainReminder == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await UnregisterReminder(grainReminder);
+                grainReminder = null;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(1, "Failed to unregister the reminder", ex);
+            }
         }
 
         private async Task ResumeNoWaitAsync()
         {
             isActive = true;
 
-            await CheckForAbortAsync();
-
-            while (State.Status == SagaStatus.Executing ||
-                   State.Status == SagaStatus.Compensating)
+            try
             {
+                if (State.NumCompletedActivities > 0)
+                {
+                    await CheckForAbortAsync();
+                }
+
+                while (State.Status == SagaStatus.Executing ||
+                       State.Status == SagaStatus.Compensating)
+                {
+                    switch (State.Status)
+                    {
+                        case SagaStatus.Executing:
+                            await ResumeExecuting();
+                            break;
+                        case SagaStatus.Compensating:
+                            await ResumeCompensating();
+                            break;
+                    }
+                }
+
                 switch (State.Status)
                 {
-                    case SagaStatus.Executing:
-                        await ResumeExecuting();
+                    case SagaStatus.NotStarted:
+                        ResumeNotStarted();
                         break;
-                    case SagaStatus.Compensating:
-                        await ResumeCompensating();
+                    case SagaStatus.Executed:
+                    case SagaStatus.Compensated:
+                    case SagaStatus.Aborted:
+                        ResumeCompleted();
                         break;
                 }
-            }
 
-            switch (State.Status)
+                await UnRegisterReminderAsync();
+            }
+            finally
             {
-                case SagaStatus.NotStarted:
-                    ResumeNotStarted();
-                    break;
-                case SagaStatus.Executed:
-                case SagaStatus.Compensated:
-                case SagaStatus.Aborted:
-                    ResumeCompleted();
-                    break;
+                isActive = false;
             }
-
-            var reminder = await RegisterReminderAsync();
-            await UnregisterReminder(reminder);
-
-            isActive = false;
         }
 
         private void ResumeNotStarted()
@@ -150,11 +176,6 @@ namespace Orleans.Sagas
         {
             while (State.NumCompletedActivities < State.Activities.Count)
             {
-                if (await CheckForAbortAsync())
-                {
-                    return;
-                }
-
                 var definition = State.Activities[State.NumCompletedActivities];
                 var currentActivity = GetActivity(definition);
 
@@ -174,6 +195,12 @@ namespace Orleans.Sagas
                     State.CompensationIndex = State.NumCompletedActivities;
                     State.Status = SagaStatus.Compensating;
                     await WriteStateAsync();
+                    return;
+                }
+
+                // To ensure running first activity 
+                if (await CheckForAbortAsync())
+                {
                     return;
                 }
             }

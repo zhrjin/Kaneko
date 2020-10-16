@@ -18,5 +18,6 @@ namespace Kaneko.Core.IdentityServer
 
         public string UserAccess  = "UserAccess";
         public string UserData  = "KanekoUserData";
+        public string SkyWalking = "KanekoSkyWalking";
     }
 }

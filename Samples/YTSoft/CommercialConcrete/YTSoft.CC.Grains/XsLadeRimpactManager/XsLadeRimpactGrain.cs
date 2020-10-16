@@ -148,6 +148,7 @@ namespace YTSoft.CC.Grains.XsLadeRimpactManager
                 x.Add("GrainId", GrainId);
                 x.Add("EventType", "ADD");
                 x.Add("Data", model);
+                 
             });
 
             //应收款

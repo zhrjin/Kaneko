@@ -16,8 +16,8 @@ namespace Kaneko.Server.SkyAPM
         /// <returns></returns>
         public static IServiceCollection UseSkyApm(this IServiceCollection services)
         {
-            services.AddSingleton<ISamplingInterceptor, IgnoreSamplingInterceptor>();
             services.AddSkyAPM(ext => ext.AddAspNetCoreHosting());
+            services.AddSingleton<ISamplingInterceptor, IgnoreSamplingInterceptor>();
             return services;
         }
     }

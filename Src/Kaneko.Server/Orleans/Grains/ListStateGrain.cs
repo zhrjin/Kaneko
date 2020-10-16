@@ -10,7 +10,7 @@ namespace Kaneko.Server.Orleans.Grains
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
     [StorageProvider(ProviderName = GrainStorageKey.MongoDBStore)]
-    public abstract class ListStateGrain<PrimaryKey, TState> : StateBaseGrain<PrimaryKey, TState> where TState : IState
+    public abstract class ListStateGrain<PrimaryKey, TState> : StateBaseGrain<PrimaryKey, TState> where TState : class, IState
     {
         public override async Task OnActivateAsync()
         {

@@ -12,6 +12,9 @@ using TYSoft.Common.Model.ComConcrete;
 using TYSoft.Common.Model.EventBus;
 using MongoDB.Driver;
 using DotNetCore.CAP;
+using Orleans.MultiClient;
+using YTSoft.BasicData.IGrains.DataDictionary;
+using Orleans;
 
 namespace YTSoft.CC.Grains.TaskManager
 {
@@ -19,10 +22,12 @@ namespace YTSoft.CC.Grains.TaskManager
     public class ScheduleTaskStateGrain : StateGrain<long, ScheduleTaskState>, IScheduleTaskStateGrain
     {
         private readonly IScheduleTaskRepository _scheduleRepository;
+        private readonly IOrleansClient _orleansClient;
 
-        public ScheduleTaskStateGrain(IScheduleTaskRepository scheduleTaskRepository)
+        public ScheduleTaskStateGrain(IScheduleTaskRepository scheduleTaskRepository, IOrleansClient orleansClient)
         {
             this._scheduleRepository = scheduleTaskRepository;
+            _orleansClient = orleansClient;
         }
 
 
@@ -58,11 +63,11 @@ namespace YTSoft.CC.Grains.TaskManager
             return result;
         }
 
-        public Task<ApiResult<ScheduleTaskVO>> GetAsync()
-        {
+        public async Task<ApiResult<ScheduleTaskVO>> GetAsync()
+        { 
             var state = this.State;
             var scheduleVO = this.ObjectMapper.Map<ScheduleTaskVO>(state);
-            return Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
+            return await Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
         }
 
         public async Task<ApiResult> AddAsync(SubmitDTO<ScheduleTaskDTO> model)

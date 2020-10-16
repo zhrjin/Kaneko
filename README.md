@@ -8,8 +8,8 @@
 - [x] 5.网关ocelot
 - [x] 6.熔断与降级Polly
 - [x] 7.api文档swagger
-- [ ] 8.同一配置中心Consul
-- [ ] 9.APM工具SkyWalking
+- [ ] 8.统一配置中心Consul
+- [x] 9.APM工具SkyWalking
 - [ ] 10.CICD工具Jenkins
 - [x] 11.缓存redis/mongodb
 - [x] 12.消息中间件rabbitmq

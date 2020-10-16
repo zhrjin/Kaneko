@@ -1,6 +1,7 @@
 ﻿using Orleans.Providers;
 using Kaneko.Core.Contract;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -10,7 +11,7 @@ namespace Kaneko.Server.Orleans.Grains
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
     [StorageProvider(ProviderName = GrainStorageKey.RedisStore)]
-    public abstract class StateGrain<PrimaryKey, TState> : StateBaseGrain<PrimaryKey, TState> where TState : IState
+    public abstract class StateGrain<PrimaryKey, TState> : StateBaseGrain<PrimaryKey, TState> where TState : class, IState
     {
         public override async Task OnActivateAsync()
         {

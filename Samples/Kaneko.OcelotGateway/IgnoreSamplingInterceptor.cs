@@ -14,8 +14,7 @@ namespace Kaneko.OcelotGateway
             "/health",
             "/swagger",
             "/kv/orleans",
-            "/v1/txn",
-            "v1/catalog/nodes"
+            "/v1/"
         };
 
         public int Priority { get; } = 0;

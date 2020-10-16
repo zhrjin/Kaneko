@@ -1,4 +1,5 @@
 ﻿using SkyApm;
+using SkyApm.AspNetCore.Diagnostics;
 using SkyApm.Common;
 using SkyApm.Diagnostics;
 using SkyApm.Tracing;
@@ -31,16 +32,18 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
             _exitSegmentContextAccessor = exitSegmentContextAccessor;
         }
 
+
         [DiagnosticName(KanekoDiagnosticListenerNames.OrleansInvokeBefore)]
         public void OrleansInvokeBefore([Object] KanekoExcuteData eventData)
         {
-            var context = _tracingContext.CreateLocalSegmentContext(eventData.OperatioName);
+            //var context = _tracingContext.CreateLocalSegmentContext(eventData.OperatioName);
 
-            //var context = _tracingContext.CreateEntrySegmentContext(eventData.OperatioName,
-            //    new TextCarrierHeaderCollection(new Dictionary<string, string>()));
+            //var context = _tracingContext.CreateExitSegmentContext(eventData.OperatioName, eventData.GetRuntimeIdentity(), eventData.HttpRequestHeader);
+
+            var context = _tracingContext.CreateEntrySegmentContext(eventData.OperatioName, new HttpRequestCarrierHeaderCollection(eventData.SW8));
 
             context.Span.Component = GetComponent();
-
+            context.Span.Peer = new StringOrIntValue(eventData.GetRuntimeIdentity());
             context.Span.AddTag("grain.instance", eventData.GrainType);
             context.Span.AddTag("grain.method", eventData.GrainMethod);
             context.Span.AddTag("grain.identity", eventData.GrainId);
@@ -54,7 +57,7 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
         [DiagnosticName(KanekoDiagnosticListenerNames.OrleansInvokeAfter)]
         public void OrleansInvokeAfter([Object] KanekoExcuteData eventData)
         {
-            var context = _localSegmentContextAccessor.Context;
+            var context = _entrySegmentContextAccessor.Context;
             if (context == null) return;
 
             context.Span.AddTag("grain.instance", eventData.GrainType);
@@ -71,7 +74,7 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
         [DiagnosticName(KanekoDiagnosticListenerNames.OrleansInvokeError)]
         public void OrleansInvokeError([Object] KanekoExcuteData eventData)
         {
-            var context = _localSegmentContextAccessor.Context;
+            var context = _entrySegmentContextAccessor.Context;
             if (context == null) return;
 
             context.Span.AddTag("grain.instance", eventData.GrainType);
@@ -87,7 +90,7 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
 
         private StringOrIntValue GetComponent()
         {
-            return "orleans";
+            return new StringOrIntValue(3017, "Orleans");
         }
     }
 }

@@ -11,5 +11,11 @@ namespace Kaneko.Server.Orleans.Grains
         /// </summary>
         /// <returns></returns>
         Task<ApiResult> ReinstantiateState(TState state = default);
+
+        /// <summary>
+        /// 获取状态值
+        /// </summary>
+        /// <returns></returns>
+        Task<TState> GetState();
     }
 }

@@ -21,6 +21,9 @@ using System.Linq;
 using SkyApm.Tracing;
 using SkyApm.Tracing.Segments;
 using Kaneko.Server.SkyAPM.Orleans.Diagnostic;
+using Kaneko.Core.Utils;
+using Microsoft.AspNetCore.Http;
+using Kaneko.Server.SkyAPM;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -29,7 +32,7 @@ namespace Kaneko.Server.Orleans.Grains
     /// </summary>
     /// <typeparam name="PrimaryKey"></typeparam>
     /// <typeparam name="TState"></typeparam>
-    public abstract class StateBaseGrain<PrimaryKey, TState> : Grain<TState>, IIncomingGrainCallFilter where TState : IState
+    public abstract class StateBaseGrain<PrimaryKey, TState> : Grain<TState>, IIncomingGrainCallFilter where TState : class, IState
     {
         private static readonly DiagnosticListener _diagnosticListener =
           new DiagnosticListener(KanekoDiagnosticListenerNames.DiagnosticListenerName);
@@ -197,8 +200,9 @@ namespace Kaneko.Server.Orleans.Grains
         /// <returns></returns>
         public async Task Invoke(IIncomingGrainCallContext context)
         {
+            string sw8 = RequestContext.Get(IdentityServerConsts.ClaimTypes.SkyWalking) as string;
             string OperId = this.GrainId.ToString();
-            var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId);
+            var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, sw8);
             var timer = Stopwatch.StartNew();
             try
             {
@@ -209,7 +213,7 @@ namespace Kaneko.Server.Orleans.Grains
 
                 timer.Stop();
 
-                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId);
+                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId,this.RuntimeIdentity);
             }
             catch (Exception exception)
             {
@@ -221,7 +225,7 @@ namespace Kaneko.Server.Orleans.Grains
                     await FuncExceptionHandler(exception);
                 }
 
-                _diagnosticListener.OrleansInvokeError(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, exception);
+                _diagnosticListener.OrleansInvokeError(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, exception);
 
                 throw exception;
             }
@@ -308,6 +312,16 @@ namespace Kaneko.Server.Orleans.Grains
                 Data = eventData
             };
             await Observer.PublishAsync(eventName, @event);
+        }
+
+        /// <summary>
+        /// 获取状态值
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task<TState> GetState()
+        {
+            var temp = this.State.ToObjectCopy();
+            return Task.FromResult(temp);
         }
 
     }

@@ -116,7 +116,11 @@ namespace YTSoft.BasicData.Grains.DataSync
             var bRet = await _systemInfoRepository.BeginTransactionAsync(async transaction =>
             {
                 var result = await _systemInfoRepository.AddAsync(systemInfoDO);
+
+                _tableInfoRepository.Transaction = transaction;
                 result &= await _tableInfoRepository.AddAsync(tableInfos.ToArray());
+
+                _columnInfoRepository.Transaction = transaction;
                 result &= await _columnInfoRepository.AddAsync(columnInfos.ToArray());
                 transaction.Commit();
                 return result;

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 
 namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
 {
     public static class DiagnosticExtension
     {
-        public static long? OrleansInvokeBefore(this DiagnosticListener listener, Type type, MethodInfo methodInfo, string grainId)
+        public static long? OrleansInvokeBefore(this DiagnosticListener listener, Type type, MethodInfo methodInfo, string grainId, string runtimeIdentity, string sw8)
         {
             if (listener.IsEnabled(KanekoDiagnosticListenerNames.OrleansInvokeBefore))
             {
@@ -20,6 +18,8 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
                     GrainType = type?.FullName,
                     GrainMethod = methodInfo?.Name,
                     OperationTimestamp = now,
+                    RuntimeIdentity = runtimeIdentity,
+                    SW8 = sw8
                 };
                 listener.Write(KanekoDiagnosticListenerNames.OrleansInvokeBefore, excuteData);
 
@@ -29,7 +29,8 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
             return null;
         }
 
-        public static void OrleansInvokeAfter(this DiagnosticListener listener, long? tracingTimestamp, Type type, MethodInfo methodInfo, string grainId)
+        public static void OrleansInvokeAfter(this DiagnosticListener listener, long? tracingTimestamp, Type type, MethodInfo methodInfo,
+            string grainId, string runtimeIdentity)
         {
             if (listener.IsEnabled(KanekoDiagnosticListenerNames.OrleansInvokeAfter))
             {
@@ -40,13 +41,14 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
                     GrainType = type?.FullName,
                     GrainMethod = methodInfo?.Name,
                     OperatioName = type?.Name + "." + methodInfo?.Name,
-                    ElapsedTimeMs = now - tracingTimestamp.Value
+                    ElapsedTimeMs = now - tracingTimestamp.Value,
+                    RuntimeIdentity = runtimeIdentity
                 };
                 listener.Write(KanekoDiagnosticListenerNames.OrleansInvokeAfter, excuteData);
             }
         }
 
-        public static void OrleansInvokeError(this DiagnosticListener listener, long? tracingTimestamp, Type type, MethodInfo methodInfo, string grainId, Exception exception)
+        public static void OrleansInvokeError(this DiagnosticListener listener, long? tracingTimestamp, Type type, MethodInfo methodInfo, string grainId, string runtimeIdentity, Exception exception)
         {
             if (listener.IsEnabled(KanekoDiagnosticListenerNames.OrleansInvokeError))
             {
@@ -58,7 +60,8 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
                     GrainMethod = methodInfo?.Name,
                     OperatioName = type?.Name + "." + methodInfo?.Name,
                     Exception = exception,
-                    ElapsedTimeMs = now - tracingTimestamp.Value
+                    ElapsedTimeMs = now - tracingTimestamp.Value,
+                    RuntimeIdentity = runtimeIdentity
                 };
                 listener.Write(KanekoDiagnosticListenerNames.OrleansInvokeError, excuteData);
             }

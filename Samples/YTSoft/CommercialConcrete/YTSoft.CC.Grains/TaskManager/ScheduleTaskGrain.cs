@@ -84,6 +84,8 @@ namespace YTSoft.CC.Grains.TaskManager
 
             var ddd = await _clusterClient.GetGrain<IDictDataTypeStateGrain>("we").GetListAsync();
 
+            var ddd2 = await this.GrainFactory.GetGrain<IScheduleTaskStateGrain>(1111).GetAsync();
+
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri("http://127.0.0.1:6114");
             Dictionary<string, string> postForm = new Dictionary<string, string>
@@ -95,7 +97,7 @@ namespace YTSoft.CC.Grains.TaskManager
                     { "Data.SortNo", "1" },
                     { "Data.Firm", "YT001" }
                 };
-            var task =await client.PostKanekoAsync("/BasicData/api/Dict/add", "", null, postForm);
+            var task = await client.PostKanekoAsync("/BasicData/api/Dict/add", "", null, postForm);
 
             return ApiResultUtil.IsSuccess(scheduleTaskVOs, count);
         }
