@@ -63,7 +63,7 @@ namespace YTSoft.BasicData.Grains.PbCodeMaterialManager
         {
             if (this.State.Balance.Any(mbox => model.Ids.Contains(mbox.PCM_ID)))
             {
-                return Task.FromResult(ApiResultUtil.IsSuccess(this.State.Balance.Where(mbox => model.Ids.Contains(mbox.PCM_ID))?.ToList()));
+                return Task.FromResult(ApiResultUtil.IsSuccess<PbCodeMaterialDO>(this.State.Balance.Where(mbox => model.Ids.Contains(mbox.PCM_ID))?.ToList()));
             }
             return Task.FromResult(ApiResultUtil.IsFailedList<PbCodeMaterialDO>("无数据！"));
         }

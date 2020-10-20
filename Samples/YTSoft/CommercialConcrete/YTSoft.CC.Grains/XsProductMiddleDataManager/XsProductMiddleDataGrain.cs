@@ -36,7 +36,7 @@ namespace YTSoft.CC.Grains.XsProductMiddleDataManager
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var entities = await _xsLadeBaseRepository.GetAllAsync(expression, isMaster: false, orderByFields: orders);
-            return ApiResultUtil.IsSuccess(entities?.ToList());
+            return ApiResultUtil.IsSuccess<XsProductMiddleDataDO>(entities?.ToList());
         }
 
         /// <summary>

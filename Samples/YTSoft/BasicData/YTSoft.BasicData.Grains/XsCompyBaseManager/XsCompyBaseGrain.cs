@@ -29,7 +29,7 @@ namespace YTSoft.BasicData.Grains.XsCompyBaseManager
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var entities = await _pbBasicFirmRepository.GetAllAsync(expression, isMaster: false, orderByFields: orders);
-            return ApiResultUtil.IsSuccess(entities?.ToList());
+            return ApiResultUtil.IsSuccess<XsCompyBaseDO>(entities?.ToList());
         }
     }
 }

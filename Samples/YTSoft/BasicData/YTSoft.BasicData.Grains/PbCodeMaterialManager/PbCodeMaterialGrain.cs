@@ -29,7 +29,7 @@ namespace YTSoft.BasicData.Grains.PbCodeMaterialManager
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var entities = await _pbCodeMaterialRepository.GetAllAsync(expression, isMaster: false, orderByFields: orders);
-            return ApiResultUtil.IsSuccess(entities?.ToList());
+            return ApiResultUtil.IsSuccess<PbCodeMaterialDO>(entities?.ToList());
         }
     }
 }

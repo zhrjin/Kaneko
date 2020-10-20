@@ -29,7 +29,7 @@ namespace YTSoft.CC.Grains.XsReceReceivableManager
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var entities = await _xsReceReceivableRepository.GetAllAsync(expression, isMaster: false, orderByFields: orders);
-            return ApiResultUtil.IsSuccess(entities?.ToList());
+            return ApiResultUtil.IsSuccess<XsReceReceivableDO>(entities?.ToList());
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Kaneko.Hosts.Extensions
                 });
             });
 
-            hostBuilder.AddSkyAPM();
+            //hostBuilder.AddSkyAPM();
 
             return hostBuilder;
         }

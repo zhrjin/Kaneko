@@ -25,7 +25,7 @@ namespace YTSoft.CC.Grains.MaterialManager
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var entities = await _materialRepository.GetAllAsync(expression, isMaster: false, orderByFields: orders);
-            return ApiResultUtil.IsSuccess(entities?.ToList());
+            return ApiResultUtil.IsSuccess<MaterialDO>(entities?.ToList());
         }
 
         public async Task<ApiResult<MaterialDO>> GetSync(MaterialDTO model)

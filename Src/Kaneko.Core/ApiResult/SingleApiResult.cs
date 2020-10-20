@@ -7,7 +7,7 @@ namespace Kaneko.Core.ApiResult
     /// 单笔数据结果
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ApiResult<TVO> : ApiResult where TVO : IViewObject
+    public class ApiResult<TVO> : ApiResult //where TVO : IViewObject
     {
         /// <summary>
         /// 数据

@@ -28,7 +28,7 @@ namespace Kaneko.Core.ApiResult
         /// </summary>
         /// <param name="data"></param>
         /// <param name="message"></param>
-        public static ApiResult<TVO> IsSuccess<TVO>(TVO data, string message = "") where TVO : IViewObject
+        public static ApiResult<TVO> IsSuccess<TVO>(TVO data, string message = "")
         {
             return new ApiResult<TVO>()
             {

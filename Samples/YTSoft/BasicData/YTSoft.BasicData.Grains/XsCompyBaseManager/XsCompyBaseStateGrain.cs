@@ -63,7 +63,7 @@ namespace YTSoft.BasicData.Grains.XsCompyBaseManager
         {
             if (this.State.Balance.Any(mbox => model.Ids.Contains(mbox.XOB_ID)))
             {
-                return Task.FromResult(ApiResultUtil.IsSuccess(this.State.Balance.Where(mbox => model.Ids.Contains(mbox.XOB_ID))?.ToList()));
+                return Task.FromResult(ApiResultUtil.IsSuccess<XsCompyBaseDO>(this.State.Balance.Where(mbox => model.Ids.Contains(mbox.XOB_ID))?.ToList()));
             }
             return Task.FromResult(ApiResultUtil.IsFailedList<XsCompyBaseDO>("无数据！"));
         }

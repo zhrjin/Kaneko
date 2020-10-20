@@ -16,6 +16,12 @@ namespace Kaneko.Hosts.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            //string strName = "Learun_ADMS_V6.1_Token";
+            //if (context.HttpContext.Request.Cookies != null && context.HttpContext.Request.Cookies[strName] != null)
+            //{
+            //    var ddd = context.HttpContext.Request.Cookies[strName].ToString();
+            //}
+
             RequestContext.Set(IdentityServerConsts.ClaimTypes.SkyWalking, GetSkyWalkingHeaderSW8(context.HttpContext.Request));
             string userData = null;
             try { userData = context.HttpContext.Request.Headers[IdentityServerConsts.ClaimTypes.UserData].ToString(); } catch { }

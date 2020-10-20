@@ -42,7 +42,7 @@ namespace YTSoft.CC.Grains.XsLadeBaseManager
             var expression = model.GetExpression();
             var orders = model.GetOrder();
             var entities = await _xsLadeBaseRepository.GetAllAsync(expression, isMaster: false, orderByFields: orders);
-            return ApiResultUtil.IsSuccess(entities?.ToList());
+            return ApiResultUtil.IsSuccess<XsLadeBaseDO>(entities?.ToList());
         }
 
         /// <summary>

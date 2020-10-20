@@ -66,7 +66,7 @@ namespace Kaneko.Core.Contract
         /// <summary>
         /// 是否删除 1-已删除
         /// </summary>
-        [KanekoColumn(Name = "is_del", ColumnDefinition = "tinyint not null default 1")]
+        [KanekoColumn(Name = "is_del", ColumnDefinition = "tinyint not null default 0")]
         public virtual int IsDel { set; get; }
     }
 

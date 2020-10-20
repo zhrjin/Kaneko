@@ -171,7 +171,7 @@ namespace YTSoft.BasicData.Grains.DataDictionary
         {
             var balance = this.State.Balance;
             List<DictVO> dictVOs = this.ObjectMapper.Map<List<DictVO>>(balance);
-            return Task.FromResult(ApiResultUtil.IsSuccess(dictVOs));
+            return Task.FromResult(ApiResultUtil.IsSuccess<DictVO>(dictVOs));
         }
 
         public async Task<ApiResult> UpdateAsync(SubmitDTO<DictDTO> model)
