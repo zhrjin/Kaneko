@@ -1,7 +1,6 @@
 ﻿using Orleans.Providers;
 using Kaneko.Core.Contract;
 using System.Threading.Tasks;
-using System.Globalization;
 
 namespace Kaneko.Server.Orleans.Grains
 {

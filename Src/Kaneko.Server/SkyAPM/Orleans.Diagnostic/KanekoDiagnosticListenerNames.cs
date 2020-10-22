@@ -13,17 +13,7 @@
         public const string OrleansInvokeBefore = KanekoPrefix + "OrleansInvokeBefore";
         public const string OrleansInvokeAfter = KanekoPrefix + "OrleansInvokeAfter";
         public const string OrleansInvokeError = KanekoPrefix + "OrleansInvokeError";
+        public const string OrleansOnActivate = KanekoPrefix + "OrleansOnActivate";
 
-        public const string BeforePublish = KanekoPrefix + "WritePublishBefore";
-        public const string AfterPublish = KanekoPrefix + "WritePublishAfter";
-        public const string ErrorPublish = KanekoPrefix + "WritePublishError";
-
-        public const string BeforeConsume = KanekoPrefix + "WriteConsumeBefore";
-        public const string AfterConsume = KanekoPrefix + "WriteConsumeAfter";
-        public const string ErrorConsume = KanekoPrefix + "WriteConsumeError";
-
-        public const string BeforeSubscriberInvoke = KanekoPrefix + "WriteSubscriberInvokeBefore";
-        public const string AfterSubscriberInvoke = KanekoPrefix + "WriteSubscriberInvokeAfter";
-        public const string ErrorSubscriberInvoke = KanekoPrefix + "WriteSubscriberInvokeError";
     }
 }

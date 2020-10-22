@@ -17,8 +17,6 @@ namespace Kaneko.Server.SkyAPM.Orleans.Diagnostic
         /// </summary>
         public long? ElapsedTimeMs { get; set; }
 
-        public long? OperationTimestamp { get; set; }
-
         public string RuntimeIdentity { set; private get; }
 
         public Exception Exception { get; set; }

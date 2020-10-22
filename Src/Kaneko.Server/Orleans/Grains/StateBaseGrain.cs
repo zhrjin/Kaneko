@@ -4,26 +4,19 @@ using Kaneko.Server.AutoMapper;
 using Kaneko.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Orleans;
-using Orleans.Providers;
 using Kaneko.Core.IdentityServer;
 using Orleans.Runtime;
 using DotNetCore.CAP;
 using Kaneko.Core.Contract;
 using System.Diagnostics;
-using Kaneko.Core.Exceptions;
 using Kaneko.Core.ApiResult;
 using Kaneko.Core.Attributes;
 using Kaneko.Core.DependencyInjection;
 using Kaneko.Server.Orleans.Services;
 using StackExchange.Profiling;
 using System.Collections.Generic;
-using System.Linq;
-using SkyApm.Tracing;
-using SkyApm.Tracing.Segments;
 using Kaneko.Server.SkyAPM.Orleans.Diagnostic;
 using Kaneko.Core.Utils;
-using Microsoft.AspNetCore.Http;
-using Kaneko.Server.SkyAPM;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -68,6 +61,8 @@ namespace Kaneko.Server.Orleans.Grains
         /// </summary>
         protected IObjectMapper ObjectMapper { get; set; }
 
+        //private long TimestampOnActivate { get; set; }
+
         public StateBaseGrain()
         {
             this.GrainType = this.GetType();
@@ -84,6 +79,9 @@ namespace Kaneko.Server.Orleans.Grains
                 GrainId = guidKey;
             else
                 throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
+
+            //string sw8 = RequestContext.Get(IdentityServerConsts.ClaimTypes.SkyWalking) as string;
+            //TimestampOnActivate = _diagnosticListener.OrleansOnActivate(this.GrainType, GrainId.ToString(), this.RuntimeIdentity, sw8);
 
             DependencyInjection();
             base.OnActivateAsync();
@@ -124,34 +122,6 @@ namespace Kaneko.Server.Orleans.Grains
             {
                 await this.ClearStateAsync();
                 this.DeactivateOnIdle();
-            }
-        }
-
-        [Obsolete]
-        private async Task ProcessChange(Func<ICapPublisher, Task<IStatable<TState>>> commandFunc, Action<Exception> errorFunc)
-        {
-            try
-            {
-                var statable = await commandFunc.Invoke(this.Observer);
-                if (ProcessAction.Create == statable.GetAction() || ProcessAction.Update == statable.GetAction())
-                {
-                    this.State = statable.GetState();
-                    await WriteStateAsync();
-                }
-                else if (ProcessAction.Delete == statable.GetAction())
-                {
-                    await this.ClearStateAsync();
-                    this.DeactivateOnIdle();
-                }
-            }
-            catch (KanekoException ex)
-            {
-                errorFunc(ex);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("", ex);
-                errorFunc(ex);
             }
         }
 
@@ -203,7 +173,6 @@ namespace Kaneko.Server.Orleans.Grains
             string sw8 = RequestContext.Get(IdentityServerConsts.ClaimTypes.SkyWalking) as string;
             string OperId = this.GrainId.ToString();
             var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, sw8);
-            var timer = Stopwatch.StartNew();
             try
             {
                 string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
@@ -211,22 +180,17 @@ namespace Kaneko.Server.Orleans.Grains
 
                 await context.Invoke();
 
-                timer.Stop();
-
-                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId,this.RuntimeIdentity);
+                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp);
             }
             catch (Exception exception)
             {
-                timer.Stop();
-                double lElapsedMilliseconds = timer.Elapsed.TotalMilliseconds;
-                Logger.LogError($"Grain执行异常,耗时:{lElapsedMilliseconds:0.00}ms", exception);
+                Logger.LogError($"Grain执行异常", exception);
                 if (FuncExceptionHandler != null)
                 {
                     await FuncExceptionHandler(exception);
                 }
 
-                _diagnosticListener.OrleansInvokeError(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, exception);
-
+                _diagnosticListener.OrleansInvokeError(tracingTimestamp, exception);
                 throw exception;
             }
         }
@@ -320,7 +284,8 @@ namespace Kaneko.Server.Orleans.Grains
         /// <returns></returns>
         public virtual Task<TState> GetState()
         {
-            var temp = this.State.ToObjectCopy();
+            //var temp = this.State.ToObjectCopy();
+            var temp = this.State;
             return Task.FromResult(temp);
         }
 

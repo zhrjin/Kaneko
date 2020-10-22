@@ -24,11 +24,11 @@ namespace Orleans.Sagas
             try
             {
                 await context.Invoke();
-                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity);
+                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp);
             }
             catch (Exception exception)
             {
-                _diagnosticListener.OrleansInvokeError(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, exception);
+                _diagnosticListener.OrleansInvokeError(tracingTimestamp, exception);
                 throw exception;
             }
         }

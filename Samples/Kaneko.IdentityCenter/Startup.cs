@@ -23,6 +23,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.EntityFramework.Stores;
 using Kaneko.Core.IdentityServer;
+using System.Threading.Tasks;
 
 namespace Kaneko.IdentityCenter
 {
@@ -112,7 +113,7 @@ namespace Kaneko.IdentityCenter
 
             app.UseConsul();
 
-            //Task.Run(() => InitDatabase(app));
+            Task.Run(() => InitDatabase(app));
 
             //InitializeDatabase(app);
         }

@@ -136,6 +136,24 @@ namespace Kaneko.Core.ApiResult
         /// </summary>
         /// <typeparam name="TVO"></typeparam>
         /// <param name="message"></param>
+        /// <param name="data"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        public static ApiResult<TVO> IsFailed<TVO>(TVO data, string message, ApiResultCode resultCode = ApiResultCode.Fail)
+        {
+            return new ApiResult<TVO>()
+            {
+                Info = message,
+                Code = resultCode,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// 响应失败
+        /// </summary>
+        /// <typeparam name="TVO"></typeparam>
+        /// <param name="message"></param>
         /// <param name="resultCode"></param>
         /// <returns></returns>
         public static ApiResultList<TVO> IsFailedList<TVO>(string message = "", ApiResultCode resultCode = ApiResultCode.Fail) where TVO : IViewObject

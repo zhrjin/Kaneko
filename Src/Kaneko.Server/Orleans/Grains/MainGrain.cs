@@ -15,8 +15,6 @@ using Kaneko.Core.Contract;
 using StackExchange.Profiling;
 using System.Collections.Generic;
 using Kaneko.Server.SkyAPM.Orleans.Diagnostic;
-using Microsoft.AspNetCore.Http;
-using Kaneko.Server.SkyAPM;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -99,7 +97,6 @@ namespace Kaneko.Server.Orleans.Grains
             string sw8 = RequestContext.Get(IdentityServerConsts.ClaimTypes.SkyWalking) as string;
             string OperId = this.GrainId.ToString();
             var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, sw8);
-            var timer = Stopwatch.StartNew();
             try
             {
                 string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
@@ -107,21 +104,17 @@ namespace Kaneko.Server.Orleans.Grains
 
                 await context.Invoke();
 
-                timer.Stop();
-
-                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity);
+                _diagnosticListener.OrleansInvokeAfter(tracingTimestamp);
             }
             catch (Exception exception)
             {
-                timer.Stop();
-                double lElapsedMilliseconds = timer.Elapsed.TotalMilliseconds;
-                Logger.LogError($"Grain执行异常,耗时:{lElapsedMilliseconds:0.00}ms", exception);
+                Logger.LogError($"Grain执行异常", exception);
                 if (FuncExceptionHandler != null)
                 {
                     await FuncExceptionHandler(exception);
                 }
 
-                _diagnosticListener.OrleansInvokeError(tracingTimestamp, context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, exception);
+                _diagnosticListener.OrleansInvokeError(tracingTimestamp, exception);
 
                 throw exception;
             }
