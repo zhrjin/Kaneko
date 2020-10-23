@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Kaneko.Hosts.Validator;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using System.Collections.Generic;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -101,6 +102,17 @@ namespace Kaneko.Hosts.Extensions
                     Type = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        new List<string>()
+                    }
                 });
             });
 
