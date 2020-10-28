@@ -24,13 +24,13 @@ namespace YTSoft.BasicData.Grains.DataDictionary
     public class DictDataTypeStateGrain : StateGrain<string, DictState>, IDictDataTypeStateGrain
     {
         private readonly IDictRepository _dictRepository;
-        //private readonly IOrleansClient _orleansClient;
+        private readonly IOrleansClient _orleansClient;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DictDataTypeStateGrain(IDictRepository dictRepository/*, IOrleansClient orleansClient*/, IHttpClientFactory httpClientFactory)
+        public DictDataTypeStateGrain(IDictRepository dictRepository, IOrleansClient orleansClient, IHttpClientFactory httpClientFactory)
         {
             this._dictRepository = dictRepository;
-            //this._orleansClient = orleansClient;
+            this._orleansClient = orleansClient;
             _httpClientFactory = httpClientFactory;
         }
 

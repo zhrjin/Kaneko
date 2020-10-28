@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Kaneko.Server.Orleans.Services;
+using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Runtime;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -31,15 +33,9 @@ namespace TestDemo
                     var topupWatch = new Stopwatch();
                     topupWatch.Start();
 
-                    while (times > 0)
-                    {
-                        await client.GetGrain<IScheduleTaskStateGrain>(times).GetAsync();
+                    Enumerable.Range(0, times).Select(x => client.GetGrain<IUtcUID>(1).NewLongID());
+                    
 
-                        //using var httpclient = new HttpClient();
-                        //var httpContent = new StringContent("{}");
-                        //var resp = await httpclient.PostAsync(" http://127.0.0.1:8082/api/ScheduleTask/add", httpContent);
-                        times--;
-                    }
                     topupWatch.Stop();
 
                     Console.WriteLine($"{1000 } completed, time-consuming:{topupWatch.ElapsedMilliseconds}ms");
@@ -66,8 +62,8 @@ namespace TestDemo
                    .UseLocalhostClustering()
                    .Configure<ClusterOptions>(options =>
                     {
-                        options.ClusterId = "YTSoftCCHosts";
-                        options.ServiceId = "YTSoftCCHosts";
+                        options.ClusterId = "ComConcrete";
+                        options.ServiceId = "ComConcrete";
                     })
                    .ConfigureApplicationParts(parts =>
                    {

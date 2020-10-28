@@ -2,6 +2,6 @@
 {
     public class GrainIdKey
     {
-        public const long UtcUIDGrainKey = 20200923;
+        public const long UtcUIDGrainKey = 1024;
     }
 }

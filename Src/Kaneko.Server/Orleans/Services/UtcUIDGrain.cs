@@ -1,7 +1,9 @@
-﻿using Orleans;
+﻿using IdGen;
+using Orleans;
 using Orleans.Concurrency;
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kaneko.Server.Orleans.Services
@@ -9,74 +11,32 @@ namespace Kaneko.Server.Orleans.Services
     [Reentrant]
     public class UtcUIDGrain : Grain, IUtcUID
     {
-        private int startId = 1;
-        private string startString;
-        private long startLong;
-        private const int length = 19;
-
-        public UtcUIDGrain()
-        {
-            this.startString = DateTimeOffset.UtcNow.ToString("yyyyMMddHHmmss");
-            this.startLong = long.Parse(this.startString);
-        }
+        private static readonly DateTime _utcEpoch = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private IdGenerator _unitIdGen;
 
         public override Task OnActivateAsync()
         {
-            if (!this.GetPrimaryKeyLong().Equals(GrainIdKey.UtcUIDGrainKey))
-            {
-                throw new Exception("GrainId Need to use GrainIdKey.UtcUIDGrainKey!");
-            }
-
-            base.OnActivateAsync();
-
-            return Task.CompletedTask;
+            int grainId = (int)this.GetPrimaryKeyLong();
+            _unitIdGen = new IdGenerator(grainId, new IdGeneratorOptions(timeSource: new DefaultTimeSource(_utcEpoch)));
+            return base.OnActivateAsync();
         }
 
         public Task<string> NewID()
         {
-            return Task.FromResult(GenerateUtcId());
-            string GenerateUtcId()
-            {
-                var now_string = DateTimeOffset.UtcNow.ToString("yyyyMMddHHmmss");
-                var now_Long = long.Parse(now_string);
-                if (now_Long > this.startLong)
-                {
-                    Interlocked.Exchange(ref this.startString, now_string);
-                    Interlocked.Exchange(ref this.startLong, now_Long);
-                    Interlocked.Exchange(ref this.startId, 0);
-                }
-
-                var builder = new Span<char>(new char[length]);
-                var newTimes = Interlocked.Increment(ref this.startId);
-                if (newTimes <= 99999)
-                {
-                    this.startString.AsSpan().CopyTo(builder);
-
-                    var timesString = newTimes.ToString();
-                    for (int i = this.startString.Length; i < length - timesString.Length; i++)
-                    {
-                        builder[i] = '0';
-                    }
-
-                    var span = length - timesString.Length;
-                    for (int i = span; i < length; i++)
-                    {
-                        builder[i] = timesString[i - span];
-                    }
-
-                    return builder.ToString();
-                }
-                else
-                {
-                    return GenerateUtcId();
-                }
-            }
+            long id = _unitIdGen.CreateId();
+            return Task.FromResult(id.ToString());
         }
 
-        public async Task<long> NewLongID()
+        public Task<long> NewLongID()
         {
-            var newId = await NewID();
-            return long.Parse(newId);
+
+
+            return Task.FromResult(_unitIdGen.CreateId());
+        }
+
+        public Task<IEnumerable<long>> TakeNewID(int count)
+        {
+            return Task.FromResult(_unitIdGen.Take(count));
         }
     }
 }

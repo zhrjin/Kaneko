@@ -15,6 +15,7 @@ using Kaneko.Core.Contract;
 using YTSoft.BasicData.IGrains.DataDictionary;
 using System.Net.Http;
 using Kaneko.Core.Utils;
+using Kaneko.Server.Orleans.Services;
 
 namespace YTSoft.CC.Grains.TaskManager
 {
@@ -34,6 +35,8 @@ namespace YTSoft.CC.Grains.TaskManager
 
         public async Task<ApiResultPage<ScheduleTaskVO>> GetPageSync(SearchDTO<ScheduleTaskDTO> model)
         {
+            await Task.WhenAll(Enumerable.Range(0, 10).Select(x => NewLongID(x)));
+
             var dto = model.Data;
             var expression = dto.GetExpression();
             var orders = dto.GetOrder();
@@ -116,6 +119,16 @@ namespace YTSoft.CC.Grains.TaskManager
             var entities = await _scheduleRepository.GetListAsync(model.PageIndex, model.PageSize, expression, isMaster: false, orderByFields: orders);
             var scheduleTaskVOs = this.ObjectMapper.Map<List<ScheduleTaskVO>>(entities);
             return ApiResultUtil.IsSuccess(scheduleTaskVOs, count, model.PageIndex, model.PageSize);
+        }
+
+        public async Task Test()
+        {
+            await Task.WhenAll(Enumerable.Range(0, 10).Select(x => NewLongID(x)));
+        }
+        private async Task NewLongID(int x)
+        {
+            var id2 = await this.GrainFactory.GetGrain<IUtcUID>(GrainIdKey.UtcUIDGrainKey).NewID();
+            Console.WriteLine(id2);
         }
 
         /// <summary>

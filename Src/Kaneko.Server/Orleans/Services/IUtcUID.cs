@@ -1,5 +1,6 @@
 ﻿using Orleans;
 using Orleans.Concurrency;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Kaneko.Server.Orleans.Services
@@ -19,5 +20,13 @@ namespace Kaneko.Server.Orleans.Services
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [AlwaysInterleave]
         Task<long> NewLongID();
+
+        /// <summary>
+        /// 批量获取多个ID
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        [AlwaysInterleave]
+        Task<IEnumerable<long>> TakeNewID(int count);
     }
 }

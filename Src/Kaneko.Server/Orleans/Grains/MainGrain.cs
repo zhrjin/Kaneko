@@ -26,7 +26,26 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 上下文用户信息
         /// </summary>
-        protected ICurrentUser CurrentUser { get; private set; }
+        protected ICurrentUser CurrentUser
+        {
+            get
+            {
+                if (_currentUser == null)
+                {
+                    string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+                    if (!string.IsNullOrEmpty(userData))
+                    {
+                        _currentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData);
+                    }
+                }
+                return _currentUser;
+            }
+        }
+
+        /// <summary>
+        /// 上下文用户信息
+        /// </summary>
+        private ICurrentUser _currentUser;
 
         /// <summary>
         /// Log
@@ -36,7 +55,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 事件转发器
         /// </summary>
-        protected ICapPublisher Observer { get; set; }
+        protected ICapPublisher Observer { get; private set; }
 
         /// <summary>
         /// The real Type of the current Grain
@@ -52,7 +71,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// Reference to the object to object mapper.
         /// </summary>
-        public IObjectMapper ObjectMapper { get; set; }
+        public IObjectMapper ObjectMapper { get; private set; }
 
         private static readonly DiagnosticListener _diagnosticListener =
        new DiagnosticListener(KanekoDiagnosticListenerNames.DiagnosticListenerName);
@@ -99,11 +118,7 @@ namespace Kaneko.Server.Orleans.Grains
             var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, sw8);
             try
             {
-                string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
-                if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
-
                 await context.Invoke();
-
                 _diagnosticListener.OrleansInvokeAfter(tracingTimestamp);
             }
             catch (Exception exception)

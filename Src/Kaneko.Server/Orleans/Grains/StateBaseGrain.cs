@@ -16,7 +16,6 @@ using Kaneko.Server.Orleans.Services;
 using StackExchange.Profiling;
 using System.Collections.Generic;
 using Kaneko.Server.SkyAPM.Orleans.Diagnostic;
-using Kaneko.Core.Utils;
 
 namespace Kaneko.Server.Orleans.Grains
 {
@@ -33,7 +32,26 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 上下文用户信息
         /// </summary>
-        protected ICurrentUser CurrentUser { get; private set; }
+        protected ICurrentUser CurrentUser
+        {
+            get
+            {
+                if (_currentUser == null)
+                {
+                    string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
+                    if (!string.IsNullOrEmpty(userData))
+                    {
+                        _currentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData);
+                    }
+                }
+                return _currentUser;
+            }
+        }
+
+        /// <summary>
+        /// 上下文用户信息
+        /// </summary>
+        private ICurrentUser _currentUser;
 
         /// <summary>
         /// Log
@@ -48,7 +66,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// 事件转发器
         /// </summary>
-        protected ICapPublisher Observer { get; set; }
+        protected ICapPublisher Observer { get; private set; }
 
         /// <summary>
         /// Primary key of actor
@@ -59,7 +77,7 @@ namespace Kaneko.Server.Orleans.Grains
         /// <summary>
         /// Reference to the object to object mapper.
         /// </summary>
-        protected IObjectMapper ObjectMapper { get; set; }
+        protected IObjectMapper ObjectMapper { get; private set; }
 
         //private long TimestampOnActivate { get; set; }
 
@@ -79,9 +97,6 @@ namespace Kaneko.Server.Orleans.Grains
                 GrainId = guidKey;
             else
                 throw new ArgumentOutOfRangeException(typeof(PrimaryKey).FullName);
-
-            //string sw8 = RequestContext.Get(IdentityServerConsts.ClaimTypes.SkyWalking) as string;
-            //TimestampOnActivate = _diagnosticListener.OrleansOnActivate(this.GrainType, GrainId.ToString(), this.RuntimeIdentity, sw8);
 
             DependencyInjection();
             base.OnActivateAsync();
@@ -175,11 +190,7 @@ namespace Kaneko.Server.Orleans.Grains
             var tracingTimestamp = _diagnosticListener.OrleansInvokeBefore(context.Grain.GetType(), context.InterfaceMethod, OperId, this.RuntimeIdentity, sw8);
             try
             {
-                string userData = RequestContext.Get(IdentityServerConsts.ClaimTypes.UserData) as string;
-                if (!string.IsNullOrEmpty(userData)) { CurrentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUser>(userData); }
-
                 await context.Invoke();
-
                 _diagnosticListener.OrleansInvokeAfter(tracingTimestamp);
             }
             catch (Exception exception)

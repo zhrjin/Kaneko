@@ -23,5 +23,7 @@ namespace YTSoft.CC.IGrains.TaskManager
         /// </summary>
         /// <returns></returns>
         Task<ApiResultPageLR<ScheduleTaskVO>> GetPageLRSync(SearchDTO<ScheduleTaskDTO> model);
+
+        Task Test();
     }
 }

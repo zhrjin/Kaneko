@@ -23,8 +23,8 @@ using Kaneko.Core.Configuration;
 using Kaneko.Server.Orleans.HostServices;
 using Kaneko.Server.Orleans.Grains;
 using Microsoft.AspNetCore.Hosting;
-using SkyApm.Agent.GeneralHost;
 using Kaneko.Server.SkyAPM;
+using Kaneko.Server.Orleans.Client;
 
 namespace Kaneko.Hosts.Extensions
 {
@@ -114,8 +114,6 @@ namespace Kaneko.Hosts.Extensions
                     o.PerfCountersWriteInterval = TimeSpan.Parse(OrleansConfig.Orleans.MetricsTableWriteInterval);
                 });
             });
-
-            //hostBuilder.AddSkyAPM();
 
             return hostBuilder;
         }
@@ -311,40 +309,8 @@ namespace Kaneko.Hosts.Extensions
                 //AutoMapper 注入
                 services.AddAutoMapper(autoMapperAssembly);
 
-                try
-                {
-                    //添加多客户端
-                    if (OrleansConfig.Orleans.Clients.Count > 0)
-                    {
-                        services.AddOrleansMultiClient(build =>
-                        {
-                            foreach (var clusterConfig in OrleansConfig.Orleans.Clients)
-                            {
-                                int assCount = clusterConfig.ServiceAssembly.Length;
-                                Assembly[] assemblys = new Assembly[assCount];
-                                for (int i = 0; i < assCount; i++)
-                                {
-                                    assemblys[i] = Assembly.Load(clusterConfig.ServiceAssembly[i]);
-                                }
-
-                                build.AddClient(opt =>
-                                {
-                                    opt.ClusterId = clusterConfig.ClusterId;
-                                    opt.ServiceId = clusterConfig.ServiceId;
-                                    opt.SetServiceAssembly(assemblys);
-                                    opt.Configure = (b =>
-                                    {
-                                        b.UseConsulClustering(gatewayOptions =>
-                                        {
-                                            gatewayOptions.Address = new Uri($"http://{clusterConfig.Consul.HostName}:{clusterConfig.Consul.Port}");
-                                        });
-                                    });
-                                });
-                            }
-                        });
-                    }
-                }
-                catch { }
+                //添加多客户端
+                AddOrleansMultiClient(services);
 
                 //自动更新表结构
                 if (OrleansConfig.Orm.DDLAutoUpdate)
@@ -357,6 +323,49 @@ namespace Kaneko.Hosts.Extensions
                     });
                 }
             }).AddStartupTask<SiloStartupTask>();
+        }
+
+        private static void AddOrleansMultiClient(IServiceCollection services)
+        {
+            try
+            {
+                //添加多客户端
+                if (OrleansConfig.Orleans.Clients.Count > 0)
+                {
+                    services.AddOrleansMultiClient(build =>
+                    {
+                        foreach (var clusterConfig in OrleansConfig.Orleans.Clients)
+                        {
+                            int assCount = clusterConfig.ServiceAssembly.Length;
+                            Assembly[] assemblys = new Assembly[assCount];
+                            for (int i = 0; i < assCount; i++)
+                            {
+                                assemblys[i] = Assembly.Load(clusterConfig.ServiceAssembly[i]);
+                            }
+
+                            build.AddClient(opt =>
+                            {
+                                opt.ClusterId = clusterConfig.ClusterId;
+                                opt.ServiceId = clusterConfig.ServiceId;
+                                opt.SetServiceAssembly(assemblys);
+                                opt.Configure = (b =>
+                                {
+                                    b.UseConsulClustering(gatewayOptions =>
+                                    {
+                                        gatewayOptions.Address = new Uri($"http://{clusterConfig.Consul.HostName}:{clusterConfig.Consul.Port}");
+                                    });
+                                });
+                            });
+                        }
+                    });
+                }
+                else
+                {
+                    //注入一个空对象，避免构造引用IOrleansClient报错
+                    services.AddSingleton<IOrleansClient, NullOrleansClient>();
+                }
+            }
+            catch { }
         }
 
         private static List<Type> GetStateGrainTypesFromAssembly(Assembly a)

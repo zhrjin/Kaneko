@@ -15,6 +15,8 @@ using DotNetCore.CAP;
 using Orleans.MultiClient;
 using YTSoft.BasicData.IGrains.DataDictionary;
 using Orleans;
+using System.Linq;
+using Kaneko.Server.Orleans.Services;
 
 namespace YTSoft.CC.Grains.TaskManager
 {
@@ -64,10 +66,21 @@ namespace YTSoft.CC.Grains.TaskManager
         }
 
         public async Task<ApiResult<ScheduleTaskVO>> GetAsync()
-        { 
+        {
+            await Task.WhenAll(Enumerable.Range(0, 10).Select(x => NewLongID(x)));
+
             var state = this.State;
             var scheduleVO = this.ObjectMapper.Map<ScheduleTaskVO>(state);
             return await Task.FromResult(ApiResultUtil.IsSuccess(scheduleVO));
+        }
+
+        private async Task NewLongID(int x)
+        {
+            var id2 = await this.GrainFactory.GetGrain<IUtcUID>(x).TakeNewID(5);
+            foreach (var item in id2)
+            {
+                Console.WriteLine(item);
+            }
         }
 
         public async Task<ApiResult> AddAsync(SubmitDTO<ScheduleTaskDTO> model)

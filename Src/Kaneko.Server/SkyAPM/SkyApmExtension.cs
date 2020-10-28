@@ -20,7 +20,7 @@ namespace Kaneko.Server.SkyAPM
         /// <returns></returns>
         public static IServiceCollection UseSkyApm(this IServiceCollection services)
         {
-            //添加原始的Sky
+            //官方Skywalking添加
             services.AddSkyAPM(ext => ext.AddAspNetCoreHosting());
 
             //添加自定义

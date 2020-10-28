@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Kaneko.Hosts.Extensions
+namespace Kaneko.Hosts.JsonConvert
 {
     public class DatetimeJsonConverter : JsonConverter<DateTime>
     {
