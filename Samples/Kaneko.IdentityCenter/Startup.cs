@@ -113,9 +113,9 @@ namespace Kaneko.IdentityCenter
 
             app.UseConsul();
 
-            Task.Run(() => InitDatabase(app));
+            //Task.Run(() => InitDatabase(app));
 
-            //InitializeDatabase(app);
+            InitializeDatabase(app);
         }
 
         private void InitializeDatabase(IApplicationBuilder app)

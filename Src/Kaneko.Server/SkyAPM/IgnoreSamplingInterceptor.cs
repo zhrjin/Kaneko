@@ -14,7 +14,8 @@ namespace Kaneko.Server.SkyAPM
             "/health",
             "/swagger",
             "/kv/orleans",
-            "/v1/"
+            "/v1/",
+            "/stats"//Cap
         };
 
         public int Priority { get; } = 0;
